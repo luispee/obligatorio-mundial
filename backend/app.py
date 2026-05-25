@@ -1,11 +1,16 @@
 from flask import Flask
 import mysql.connector
 import os
+from prometheus_client import Counter, generate_latest
+from flask import Response
+
+REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
+    REQUEST_COUNT.inc()
     return "Hola desde Flask con MySQL conectado!"
 
 @app.route('/dbcheck')
@@ -21,3 +26,7 @@ def dbcheck():
         return "Conexión a MySQL exitosa!"
     except Exception as e:
         return f"Error de conexión: {str(e)}"
+
+@app.route("/metrics")
+def metrics():
+    return Response(generate_latest(), mimetype="text/plain")

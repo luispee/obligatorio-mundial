@@ -3,3 +3,4 @@ flask-cors
 Flask-Login
 mysql-connector-python
 python-dotenv
+prometheus_client

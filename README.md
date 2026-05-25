@@ -27,3 +27,6 @@ En la raíz del proyecto:
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5000
 - Health DB: http://localhost:5000/dbcheck
+- http://localhost:9090 → Prometheus
+- http://localhost:3000 → Grafana
+- http://localhost:9104/metrics → exporter
