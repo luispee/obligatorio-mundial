@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/usr/src/app
+      - frontend_node_modules:/usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+    stdin_open: true
+    tty: true
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/usr/src/app:cached
+
+  db:
+    image: mysql:8
+    env_file:
+      - ./backend/.env
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    # No se expone a menos que sea necesario:
+    # ports:
+    #   - "3307:3306"
+    networks:
+      - default
+
+volumes:
+  db_data:
+  frontend_node_modules:
