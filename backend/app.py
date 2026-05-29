@@ -6,6 +6,7 @@ from flask import Response
 
 from connect_to_db import connect_to_db
 from monitoring.massive_inserts import massive_inserts
+from monitoring.simulate_connections import create_connections
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
@@ -35,10 +36,16 @@ def metrics():
     return Response(generate_latest(), mimetype="text/plain")
 
 @app.route('/massive_inserts')
-def inserts():
+def massive_inserts_handler():
     conn = connect_to_db()
     if conn:
         massive_inserts(conn)
         return "Inserciones masivas completadas!"
     else:        return "Error al conectar a la base de datos."
 
+@app.route('/simulate_connections')
+def simulate_connections_handler():
+    # simulate_connections opens its own connections per thread
+    #for i in range(10):
+    create_connections(1)
+    return "Conexiones simultáneas simuladas!"
