@@ -30,3 +30,7 @@ def dbcheck():
 @app.route("/metrics")
 def metrics():
     return Response(generate_latest(), mimetype="text/plain")
+
+@app.route("/test")
+def test():
+    return "ok"
