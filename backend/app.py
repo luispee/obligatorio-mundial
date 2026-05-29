@@ -4,6 +4,9 @@ import os
 from prometheus_client import Counter, generate_latest
 from flask import Response
 
+from connect_to_db import connect_to_db
+from monitoring.massive_inserts import massive_inserts
+
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
 app = Flask(__name__)
@@ -31,6 +34,11 @@ def dbcheck():
 def metrics():
     return Response(generate_latest(), mimetype="text/plain")
 
-@app.route("/test")
-def test():
-    return "ok"
+@app.route('/massive_inserts')
+def inserts():
+    conn = connect_to_db()
+    if conn:
+        massive_inserts(conn)
+        return "Inserciones masivas completadas!"
+    else:        return "Error al conectar a la base de datos."
+
