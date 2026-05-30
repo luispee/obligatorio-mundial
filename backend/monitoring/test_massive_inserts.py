@@ -2,12 +2,15 @@ import time
 
 from connect_to_db import connect_to_db
 
-def massive_inserts():
+def massive_inserts(amount):
   conn = connect_to_db()
+  if not conn:
+    raise RuntimeError("No se pudo conectar a la base de datos")
+
   contador = 0
   cursor = conn.cursor()
 
-  while contador < 1000: 
+  while contador < amount:
     cursor.execute(
       "INSERT INTO logs (mensaje) VALUES (%s)",
       (f"Mensaje {contador}",)
@@ -20,3 +23,4 @@ def massive_inserts():
 
 
   cursor.close()
+  conn.close()

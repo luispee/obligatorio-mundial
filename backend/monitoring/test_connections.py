@@ -19,7 +19,7 @@ def connection_worker(i):
     print(f"Conexion {i} abierta")
 
     while running:
-        time.sleep(0.01)
+        time.sleep(0.001)
 
     conn.close()
 
@@ -49,7 +49,7 @@ def start_connections(amount=50, interval=1):
 
         threads.append(t)
 
-        time.sleep(interval)
+        # time.sleep(interval)
 
     return f"{amount} conexiones abiertas"
 
