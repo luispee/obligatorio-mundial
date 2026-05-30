@@ -1,6 +1,9 @@
 import time
 
-def massive_inserts(conn):
+from connect_to_db import connect_to_db
+
+def massive_inserts():
+  conn = connect_to_db()
   contador = 0
   cursor = conn.cursor()
 
@@ -15,6 +18,5 @@ def massive_inserts(conn):
     contador += 1
     print(f"Insert #{contador}")
 
-    time.sleep(0.01)
 
   cursor.close()

@@ -4,9 +4,10 @@ import os
 from prometheus_client import Counter, generate_latest
 from flask import Response
 
-from connect_to_db import connect_to_db
 from monitoring.massive_inserts import massive_inserts
-from monitoring.simulate_connections import create_connections
+from monitoring.test_connections import start_connections, stop_connections
+from monitoring.test_rollback import start_rollback_test
+from monitoring.test_transactional_log import start_transaction_log_test
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
@@ -37,15 +38,31 @@ def metrics():
 
 @app.route('/massive_inserts')
 def massive_inserts_handler():
-    conn = connect_to_db()
-    if conn:
-        massive_inserts(conn)
-        return "Inserciones masivas completadas!"
-    else:        return "Error al conectar a la base de datos."
+    massive_inserts()
+    return "Inserts masivos iniciados"
 
-@app.route('/simulate_connections')
-def simulate_connections_handler():
-    # simulate_connections opens its own connections per thread
-    #for i in range(10):
-    create_connections(1)
-    return "Conexiones simultáneas simuladas!"
+@app.route('/start_connections')
+def start_connections_handler():
+    message = start_connections()
+    return message
+
+@app.route('/stop_connections')
+def stop_connections_handler():
+    message = stop_connections()
+    return message
+
+@app.route('/test_rollback')
+def test_rollback_handler():
+    message = start_rollback_test()
+    return message
+
+@app.route('/test_transactional_log')
+def test_transactional_log_handler():
+    message = start_transaction_log_test()
+    return message
+
+@app.route('/test_table_lock')
+def test_table_lock_handler():
+    from monitoring.table_lock import start_table_lock_test
+    message = start_table_lock_test()
+    return message
