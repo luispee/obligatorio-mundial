@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import mysql.connector
 import os
 from prometheus_client import Counter, generate_latest
@@ -7,10 +8,12 @@ from flask import Response
 from monitoring.test_massive_inserts import massive_inserts
 from monitoring.test_connections import start_connections, stop_connections
 from monitoring.test_rollback import start_rollback_test
+from monitoring.test_row_lock import start_row_lock_test, start_waiting_updates_test
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/')
 def home():
@@ -52,7 +55,7 @@ def massive_inserts_handler():
         return jsonify({"error": "'amount' debe ser mayor a 0"}), 400
 
     massive_inserts(amount)
-    return jsonify({"message": "Inserts masivos completados", "amount": amount}), 200
+    return jsonify({"message": "Inserts completados", "amount": amount}), 200
 
 @app.route('/start_connections')
 def start_connections_handler():
@@ -69,8 +72,12 @@ def test_rollback_handler():
     message = start_rollback_test()
     return message
 
-@app.route('/test_table_lock')
-def test_table_lock_handler():
-    from monitoring.table_lock import start_table_lock_test
-    message = start_table_lock_test()
+@app.route('/test_row_lock')
+def test_row_lock_handler():
+    message = start_row_lock_test()
+    return message
+
+@app.route('/test_waiting_updates')
+def test_waiting_updates_handler():
+    message = start_waiting_updates_test()
     return message
