@@ -8,7 +8,7 @@ import {
   stopConcurrentConnections,
 } from "../services/monitoringApi";
 
-export const Monitoring = () => {
+export const Monitoring: React.FC = () => {
   const monitoringOptions = [
     {
       title: "Generar Inserts",
