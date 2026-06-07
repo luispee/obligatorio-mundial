@@ -1,6 +1,15 @@
 import { useState } from "react";
 
-export const MonitoringOption = ({
+interface MonitoringOptionProps {
+  title: string;
+  description: string;
+  actionLabel?: string;
+  onExecute?: (amount?: number) => Promise<string> | string;
+  showInsertAmountDropdown?: boolean;
+  dashboard?: number;
+}
+
+export const MonitoringOption: React.FC<MonitoringOptionProps> = ({
   title,
   description,
   actionLabel = "Ejecutar",
@@ -24,12 +33,10 @@ export const MonitoringOption = ({
       const result = await onExecute(
         showInsertAmountDropdown ? Number(insertAmount) : undefined,
       );
-      setStatusMessage(result);
+      setStatusMessage(String(result));
     } catch (error) {
       setStatusMessage(
-        error instanceof Error
-          ? error.message
-          : "No se pudo completar la acción",
+        error instanceof Error ? error.message : "No se pudo completar la acción",
       );
     } finally {
       setIsLoading(false);
@@ -56,9 +63,7 @@ export const MonitoringOption = ({
 
         {showInsertAmountDropdown ? (
           <label className="block space-y-2 pt-2">
-            <span className="text-sm font-medium text-slate-300">
-              Cantidad de inserts
-            </span>
+            <span className="text-sm font-medium text-slate-300">Cantidad de inserts</span>
             <select
               name="insertAmount"
               value={insertAmount}
@@ -89,9 +94,7 @@ export const MonitoringOption = ({
       </div>
 
       {statusMessage ? (
-        <p className="mt-4 rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm leading-6 text-slate-200">
-          {statusMessage}
-        </p>
+        <p className="mt-4 rounded-xl border border-slate-800 bg-slate-950/70 px-4 py-3 text-sm leading-6 text-slate-200">{statusMessage}</p>
       ) : null}
     </article>
   );

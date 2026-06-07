@@ -1,1 +1,35 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@theme {
+  --color-blue: #2a398d;
+  --color-red: #e61d25;
+  --color-green: #3cac3b;
+  --color-gray: #d1d4d1;
+  --color-gray-dark: #474a4a;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  background-color: #f1f1f1;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+.green-button {
+  background-color: var(--color-green);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.green-button:hover {
+  background-color: var(--color-green-700);
+  transform: scale(1.05);
+}
