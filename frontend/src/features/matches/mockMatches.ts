@@ -1,4 +1,4 @@
-import { Match } from './types/matchType';
+import { Match } from './types/match';
 
 const TEAMS = [
   'Argentina',
