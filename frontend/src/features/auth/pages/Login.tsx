@@ -5,8 +5,8 @@ import AuthInput from '../components/AuthInput';
 export default function Login() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-dark mb-6">Iniciar Sesión</h1>
       <form className="flex flex-col gap-12 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray">
+        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6">Iniciar Sesión</h1>
         <AuthInput
           label="Correo Electrónico"
           type="email"
