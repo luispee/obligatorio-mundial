@@ -7,9 +7,3 @@ CREATE TABLE logs (
     mensaje VARCHAR(255),
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE cuentas (
-    id INT PRIMARY KEY,
-    titular VARCHAR(100),
-    saldo DECIMAL(10,2)
-);
