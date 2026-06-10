@@ -9,7 +9,7 @@ INSERT INTO usuario (
   calle,
   numero_puerta,
   codigo_postal) VALUES
-('user@example.com', '$2b$12$Lkc2UiHt4XUC5zRnvDJ1geeo3d3s8z9Y/v5LyMk497ECgHusL98HK', 'URY', 3, '12345678', 'URY', 'Montevideo', 'Calle Falsa', 123, '1000'),
+('user@example.com', '$2b$12$Uv8x6YL1uToi1PfUyUnxTeuxD5SmJEcvFu5dSy8SCClM3z1mdw7Ku', 'URY', 3, '12345678', 'URY', 'Montevideo', 'Calle Falsa', 123, '1000'),
 ('adminCAN@fifa.com', '$2b$12$ppBt4Yolr72oWLfL66aKP.zuHKvQYqHePXH.Ie7zQeytKHRePO9CC', 'CAN', 2, '12345678', 'CAN', 'Toronto', 'Calle Falsa', 123, '1100'),
 ('adminMEX@fifa.com', '$2b$12$1qzi5/7FRr8VHHFvZ/HGH.vG5/dUGw8zuB3TqYWzj4xioXGzxqWUi', 'MEX', 2, '12345678', 'MEX', 'Ciudad de México', 'Calle Falsa', 123, '1200'),
 ('adminUSA@fifa.com', '$2b$12$zUjqJKUxFR.Nh2DvXgB1leyZ11lbBlHccXQMsnHSuPe9Ol0xOw9KK', 'USA', 2, '12345678', 'USA', 'New York', 'Calle Falsa', 123, '1300'),
