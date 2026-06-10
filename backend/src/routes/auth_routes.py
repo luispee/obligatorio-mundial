@@ -40,3 +40,14 @@ def register():
 @auth_routes.route('/logout', methods=['POST'])
 def logout():
   return jsonify({'message': 'Logout exitoso'}), 200
+
+@auth_routes.route('/auth/register-form', methods=['GET'])
+def register_form():
+  try:
+        
+        data = AuthService.get_register_form_data() 
+        
+        return jsonify(data), 200
+        
+  except Exception as e:
+        return jsonify({"error": str(e)}), 500
