@@ -1,8 +1,8 @@
 type SelectProps = {
   label?: string;
-  options: string[];
-  value: string;
-  onChange: (value: string) => void;
+  options: { value: string | number; label: string }[];
+  value: string | number;
+  onChange: (value: string | number) => void;
   whiteText?: boolean;
 };
 
@@ -37,8 +37,8 @@ export default function Select({
         onChange={(e) => onChange(e.target.value)}
       >
         {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
+          <option key={option.value} value={option.value}>
+            {option.label}
           </option>
         ))}
       </select>

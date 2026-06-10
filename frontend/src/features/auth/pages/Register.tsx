@@ -1,12 +1,30 @@
 import AuthInput from '../components/AuthInput';
 import Link from '../../../components/Link';
-import GreenButton from '../../../components/GreenButton';
 import Select from '../../../components/Select';
+import TelefonoSection from '../components/TelefonoSection';
+import Button from '../../../components/Button';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { RegisterFormDataResponse } from '../api/authResponses';
 
 export default function Register() {
+  const { getRegisterFormData } = useAuth();
+  const [formData, setFormData] = useState<RegisterFormDataResponse | null>(null);
+
+  useEffect(() => {
+    async function fetchRegisterFormData() {
+      try {
+        const data = await getRegisterFormData();
+        setFormData(data);
+      } catch (error) {
+        console.error('Error al obtener datos del formulario de registro:', error);
+      }
+    }
+    fetchRegisterFormData();
+  }, []);
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
-      <form className="flex flex-col gap-8 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray">
+      <form className="flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray">
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6">Registrarse</h1>
         <AuthInput
           label="Correo Electrónico"
@@ -30,18 +48,24 @@ export default function Register() {
           onChange={() => {}}
         />
 
+        <TelefonoSection />
+
         <hr className="border-gray-500" />
 
         <Select
           label="Tipo de documento"
-          options={['Cédula de identidad', 'DNI', 'Pasaporte']}
+          options={
+            formData?.tipos_documento.map((tipo) => ({ value: tipo.id, label: tipo.nombre })) || []
+          }
           value={''}
           onChange={() => {}}
         />
 
         <Select
           label="País del documento"
-          options={['Uruguay', 'Argentina', 'Brasil', 'Chile', 'Paraguay']}
+          options={
+            formData?.paises.map((pais) => ({ value: pais.codigo, label: pais.nombre })) || []
+          }
           value={''}
           onChange={() => {}}
         />
@@ -58,7 +82,9 @@ export default function Register() {
 
         <Select
           label="País de residencia"
-          options={['Uruguay', 'Argentina', 'Brasil', 'Chile', 'Paraguay']}
+          options={
+            formData?.paises.map((pais) => ({ value: pais.codigo, label: pais.nombre })) || []
+          }
           value={''}
           onChange={() => {}}
         />
@@ -92,7 +118,7 @@ export default function Register() {
           onChange={() => {}}
         />
 
-        <GreenButton text="Registrarse" onClick={() => {}} type="submit" />
+        <Button text="Registrarse" onClick={() => {}} type="submit" />
 
         <p>
           ¿Ya tienes cuenta? <Link href="/login" text="Inicia sesión aquí" />

@@ -51,7 +51,7 @@ class AuthService:
     hash_contrasena = PasswordHasher.hash_password(data['contrasena'])
 
     try:
-      UsuarioRepository.create_user(
+      UsuarioRepository.create_usuario(
         data,
         hash_contrasena
       )

@@ -1,4 +1,4 @@
-import { MonitoringOption } from "../components/MonitoringOption";
+import { MonitoringOption } from '../components/MonitoringOption';
 import {
   generateMassiveInserts,
   startConcurrentConnections,
@@ -6,55 +6,54 @@ import {
   startRowLockTest,
   startWaitingUpdatesTest,
   stopConcurrentConnections,
-} from "../services/monitoringApi";
+} from '../api/monitoringApi';
 
 export const Monitoring: React.FC = () => {
   const monitoringOptions = [
     {
-      title: "Generar Inserts",
+      title: 'Generar Inserts',
       description:
-        "Generar una carga de inserts en la base de datos para observar su comportamiento.",
-      actionLabel: "Ejecutar",
+        'Generar una carga de inserts en la base de datos para observar su comportamiento.',
+      actionLabel: 'Ejecutar',
       onExecute: generateMassiveInserts,
       showInsertAmountDropdown: true,
       dashboard: 1,
     },
     {
-      title: "Iniciar Conexiones Concurrentes",
-      description:
-        "Iniciar 50 conexiones concurrentes para observar el rendimiento del sistema.",
-      actionLabel: "Ejecutar",
+      title: 'Iniciar Conexiones Concurrentes',
+      description: 'Iniciar 50 conexiones concurrentes para observar el rendimiento del sistema.',
+      actionLabel: 'Ejecutar',
       onExecute: startConcurrentConnections,
       dashboard: 1,
     },
     {
-      title: "Cerrar Conexiones",
-      description: "Cerrar conexiones activas.",
-      actionLabel: "Ejecutar",
+      title: 'Cerrar Conexiones',
+      description: 'Cerrar conexiones activas.',
+      actionLabel: 'Ejecutar',
       onExecute: stopConcurrentConnections,
       dashboard: 1,
     },
     {
-      title: "Generar Inserts + Rollbacks",
+      title: 'Generar Inserts + Rollbacks',
       description:
-        "Generar varias cargas de inserts en la base de datos y luego realizar rollbacks para observar su comportamiento.",
-      actionLabel: "Ejecutar",
+        'Generar varias cargas de inserts en la base de datos y luego realizar rollbacks para observar su comportamiento.',
+      actionLabel: 'Ejecutar',
       onExecute: startRollbackTest,
       dashboard: 2,
     },
     {
-      title: "Bloqueo de Fila",
+      title: 'Bloqueo de Fila',
       description:
-        "Bloquear un registro específico en la tabla logs para observar el comportamiento de locks a nivel de registro.",
-      actionLabel: "Bloquear fila",
+        'Bloquear un registro específico en la tabla logs para observar el comportamiento de locks a nivel de registro.',
+      actionLabel: 'Bloquear fila',
       onExecute: startRowLockTest,
       dashboard: 2,
     },
     {
-      title: "Generar Updates",
+      title: 'Generar Updates',
       description:
-        "Lanzar múltiples updates concurrentes sobre el regsitro bloqueado para ver cómo se acumulan las esperas.",
-      actionLabel: "Lanzar updates",
+        'Lanzar múltiples updates concurrentes sobre el regsitro bloqueado para ver cómo se acumulan las esperas.',
+      actionLabel: 'Lanzar updates',
       onExecute: startWaitingUpdatesTest,
       dashboard: 2,
     },

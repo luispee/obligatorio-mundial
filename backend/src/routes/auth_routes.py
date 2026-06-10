@@ -21,7 +21,7 @@ def login():
   if data is None:
     return jsonify({'error': 'Credenciales inválidas'}), 401
   
-  return jsonify({'message': 'Login exitoso', 'data': data}), 200
+  return jsonify({'message': 'Login exitoso', 'token': data.get('token'), 'usuario': { 'mail': data.get('mail'), 'role': data.get('role') }}), 200
 
 @auth_routes.route('/register', methods=['POST'])
 def register():
@@ -36,7 +36,3 @@ def register():
 
   except Exception as e:
     return jsonify({'error': str(e)}), 500
-
-@auth_routes.route('/logout', methods=['POST'])
-def logout():
-  return jsonify({'message': 'Logout exitoso'}), 200
