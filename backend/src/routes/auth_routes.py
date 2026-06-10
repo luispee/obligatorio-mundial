@@ -36,3 +36,14 @@ def register():
 
   except Exception as e:
     return jsonify({'error': str(e)}), 500
+
+@auth_routes.route('/auth/register-form', methods=['GET'])
+def register_form():
+  try:
+        
+        data = AuthService.get_register_form_data() 
+        
+        return jsonify(data), 200
+        
+  except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -93,7 +93,7 @@ class UsuarioRepository:
       cursor.execute("INSERT INTO cliente (mail, fecha_registro, verificado) VALUES (%s, %s, %s)", (data['mail'], datetime.now(), False))
 
       #telefonos
-
+      
       for telefono in data['telefonos']:
         cursor.execute("INSERT INTO telefono_usuario (mail, telefono) VALUES (%s, %s)", (data['mail'], telefono))
       
