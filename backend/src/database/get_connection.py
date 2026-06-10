@@ -1,7 +1,8 @@
 import mysql.connector
 import os
 
-def connect_to_db():
+
+def get_connection():
   try:
     conn = mysql.connector.connect(
       host=os.getenv("DATABASE_HOST"),

@@ -25,13 +25,6 @@ CREATE TABLE usuario (
     CONSTRAINT fk_usuario_tipo_documento
         FOREIGN KEY (id_tipo_documento)
         REFERENCES tipo_documento(id),
-
-    CONSTRAINT uq_documento
-        UNIQUE (
-            codigo_pais_documento,
-            id_tipo_documento,
-            numero_documento
-        )
 );
 
 CREATE TABLE administrador (

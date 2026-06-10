@@ -1,7 +1,7 @@
 import threading
 import time
 
-from src.database.db_mysql import connect_to_db
+from src.database.get_connection import get_connection
 
 connections = []
 threads = []
@@ -13,7 +13,7 @@ lock_test_running = False
 def connection_worker(i):
     global running
 
-    conn = connect_to_db()
+    conn = get_connection()
     connections.append(conn)
 
     print(f"Conexion {i} abierta")
@@ -62,7 +62,7 @@ def stop_connections():
 
 
 def massive_inserts(amount):
-    conn = connect_to_db()
+    conn = get_connection()
 
     if not conn:
         raise RuntimeError("No se pudo conectar a la base de datos")
@@ -90,7 +90,7 @@ def rollback_cycles_worker(
 ):
     global rollback_test_running
 
-    conn = connect_to_db()
+    conn = get_connection()
 
     try:
         cursor = conn.cursor()
@@ -161,7 +161,7 @@ def row_lock_worker(
 ):
     global lock_test_running
 
-    conn = connect_to_db()
+    conn = get_connection()
 
     try:
         cursor = conn.cursor()
@@ -224,7 +224,7 @@ def start_row_lock_test(
 
 
 def waiting_update_worker(thread_id, row_id):
-    conn = connect_to_db()
+    conn = get_connection()
 
     try:
         cursor = conn.cursor()

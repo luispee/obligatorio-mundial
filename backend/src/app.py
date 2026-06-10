@@ -4,20 +4,25 @@ import mysql.connector
 import os
 from prometheus_client import Counter
 
+from src.routes.auth_routes import auth_routes
 from src.routes.monitoring_routes import monitoring_routes
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
 app = Flask(__name__)
 CORS(app)
-app.register_blueprint(monitoring_routes)
 
-@app.route('/')
+API_PREFIX = '/api/'
+
+app.register_blueprint(monitoring_routes, url_prefix=API_PREFIX)
+app.register_blueprint(auth_routes, url_prefix=API_PREFIX)
+
+@app.route('/api/')
 def home():
     REQUEST_COUNT.inc()
     return "Hola desde Flask con MySQL conectado!"
 
-@app.route('/dbcheck')
+@app.route('/api/dbcheck')
 def dbcheck():
     try:
         conn = mysql.connector.connect(
