@@ -1,4 +1,5 @@
 from src.repositories.usuario_repository import UsuarioRepository
+from src.repositories.auth_repository import AuthRepository
 from src.utils.jwt import JwtUtils
 from src.utils.password_hasher import PasswordHasher
 
@@ -57,3 +58,8 @@ class AuthService:
       )
     except Exception as e:
       raise RuntimeError(f'Error al crear el usuario: {str(e)}')
+    
+  @staticmethod
+  def get_register_form_data():
+    
+    return AuthRepository.get_form_data()
