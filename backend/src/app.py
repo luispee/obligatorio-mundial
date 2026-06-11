@@ -6,6 +6,7 @@ from prometheus_client import Counter
 
 from src.routes.auth_routes import auth_routes
 from src.routes.monitoring_routes import monitoring_routes
+from src.routes.evento_routes import evento_routes
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
@@ -14,6 +15,7 @@ CORS(app)
 
 app.register_blueprint(monitoring_routes, url_prefix="/api/metrics")
 app.register_blueprint(auth_routes, url_prefix="/api/auth")
+app.register_blueprint(evento_routes, url_prefix="/api/eventos")
 
 @app.route('/api/')
 def home():
