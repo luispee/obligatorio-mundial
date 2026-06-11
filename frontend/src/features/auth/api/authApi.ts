@@ -17,7 +17,7 @@ export function register(data: RegisterRequest) {
 }
 
 export function getRegisterFormData(): Promise<RegisterFormDataResponse> {
-  return request('/auth/register-form-data', {
+  return request('/auth/register/form-data', {
     method: 'GET',
   });
 }
