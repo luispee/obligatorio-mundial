@@ -14,7 +14,7 @@ class AuthRepository:
         cursor.execute("SELECT codigo, nombre FROM pais ORDER BY nombre ASC")
         paises = cursor.fetchall()
         
-        cursor.execute("SELECT id, tipo FROM tipo_documento ORDER BY tipo ASC")
+        cursor.execute("SELECT id, nombre FROM tipo_documento ORDER BY nombre ASC")
         tipos_documento = cursor.fetchall()
         
         return {

@@ -37,7 +37,7 @@ def register():
   except Exception as e:
     return jsonify({'error': str(e)}), 500
 
-@auth_routes.route('/auth/register-form', methods=['GET'])
+@auth_routes.route('/register-form-data', methods=['GET'])
 def register_form():
   try:
         

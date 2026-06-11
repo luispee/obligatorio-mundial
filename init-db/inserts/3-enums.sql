@@ -1,4 +1,4 @@
-INSERT INTO tipo_documento (tipo) VALUES
+INSERT INTO tipo_documento (nombre) VALUES
 ('DNI'),
 ('Pasaporte'),
 ('Cédula de Identidad');

@@ -40,6 +40,13 @@ class AuthService:
     if missing_fields:
       raise ValueError(f'Faltan campos requeridos: {", ".join(missing_fields)}')
 
+    for field in required_fields:
+      if field in data and isinstance(data[field], str) and not data[field].strip():
+        raise ValueError('Hay campos incompletos')
+
+    if not data.get('telefonos') or all(not t.strip() for t in data['telefonos']):
+      raise ValueError('Debe ingresar al menos un teléfono')
+
     if data['mail'] is None or '@' not in data['mail']:
       raise ValueError('Mail inválido')
 
@@ -50,6 +57,8 @@ class AuthService:
       raise ValueError('Ya existe un usuario con ese mail')
 
     hash_contrasena = PasswordHasher.hash_password(data['contrasena'])
+
+    data['telefonos'] = [t.strip() for t in data['telefonos'] if t.strip()]
 
     try:
       UsuarioRepository.create_usuario(

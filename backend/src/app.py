@@ -12,10 +12,8 @@ REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 app = Flask(__name__)
 CORS(app)
 
-API_PREFIX = '/api/'
-
-app.register_blueprint(monitoring_routes, url_prefix=API_PREFIX)
-app.register_blueprint(auth_routes, url_prefix=API_PREFIX)
+app.register_blueprint(monitoring_routes, url_prefix="/api/metrics")
+app.register_blueprint(auth_routes, url_prefix="/api/auth")
 
 @app.route('/api/')
 def home():

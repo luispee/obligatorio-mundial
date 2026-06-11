@@ -6,10 +6,41 @@ import Button from '../../../components/Button';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { RegisterFormDataResponse } from '../api/authResponses';
+import { RegisterRequest } from '../api/authRequests';
+import FlagSelect from '../../../components/PaisSelect';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
-  const { getRegisterFormData } = useAuth();
+  const { getRegisterFormData, register, error, loading, clearError } = useAuth();
   const [formData, setFormData] = useState<RegisterFormDataResponse | null>(null);
+  const [confirmContrasena, setConfirmContrasena] = useState('');
+  const [contrasenaError, setContrasenaError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState<RegisterRequest>({
+    mail: '',
+    contrasena: '',
+    codigo_pais_documento: 'URY',
+    id_tipo_documento: 3,
+    numero_documento: '',
+    codigo_pais_residencia: 'URY',
+    localidad: '',
+    calle: '',
+    numero_puerta: '',
+    codigo_postal: '',
+    telefonos: [''],
+  });
+
+  const handleChange =
+    (field: keyof RegisterRequest) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+  const handleSelectChange = (field: keyof RegisterRequest) => (value: string | number) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
   useEffect(() => {
     async function fetchRegisterFormData() {
@@ -22,33 +53,59 @@ export default function Register() {
     }
     fetchRegisterFormData();
   }, []);
+
+  const handleSubmit = async () => {
+    clearError();
+    if (form.contrasena !== confirmContrasena) {
+      setContrasenaError('Las contraseñas no coinciden');
+      return;
+    }
+    setContrasenaError(null);
+    try {
+      console.log('Datos a enviar en registro:', form);
+      await register(form);
+      navigate('/register/verify-mail');
+    } catch (err) {
+      console.error('Error en registro', err);
+    }
+  };
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
-      <form className="flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray">
+      <form
+        className="flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit();
+        }}
+      >
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6">Registrarse</h1>
         <AuthInput
           label="Correo Electrónico"
-          type="email"
+          type="text"
           placeholder="Ingresa tu correo electrónico"
-          value={''}
-          onChange={() => {}}
+          value={form.mail}
+          onChange={handleChange('mail')}
         />
         <AuthInput
           label="Contraseña"
           type="password"
           placeholder="Ingresa tu contraseña"
-          value={''}
-          onChange={() => {}}
+          value={form.contrasena}
+          onChange={handleChange('contrasena')}
         />
         <AuthInput
           label="Confirmar Contraseña"
           type="password"
           placeholder="Confirma tu contraseña"
-          value={''}
-          onChange={() => {}}
+          value={confirmContrasena}
+          onChange={(e) => setConfirmContrasena(e.target.value)}
         />
 
-        <TelefonoSection />
+        <TelefonoSection
+          telefonos={form.telefonos}
+          onChange={(telefonos) => setForm({ ...form, telefonos })}
+        />
 
         <hr className="border-gray-500" />
 
@@ -57,68 +114,71 @@ export default function Register() {
           options={
             formData?.tipos_documento.map((tipo) => ({ value: tipo.id, label: tipo.nombre })) || []
           }
-          value={''}
-          onChange={() => {}}
+          value={form.id_tipo_documento}
+          onChange={handleSelectChange('id_tipo_documento')}
         />
 
-        <Select
+        <FlagSelect
           label="País del documento"
           options={
             formData?.paises.map((pais) => ({ value: pais.codigo, label: pais.nombre })) || []
           }
-          value={''}
-          onChange={() => {}}
+          value={form.codigo_pais_documento}
+          onChange={handleSelectChange('codigo_pais_documento')}
         />
 
         <AuthInput
           label="Número de documento"
           type="text"
           placeholder="Ingresa nº documento"
-          value={''}
-          onChange={() => {}}
+          value={form.numero_documento}
+          onChange={handleChange('numero_documento')}
         />
 
         <hr className="border-gray-500" />
 
-        <Select
+        <FlagSelect
           label="País de residencia"
           options={
             formData?.paises.map((pais) => ({ value: pais.codigo, label: pais.nombre })) || []
           }
-          value={''}
-          onChange={() => {}}
+          value={form.codigo_pais_residencia}
+          onChange={handleSelectChange('codigo_pais_residencia')}
         />
+
         <AuthInput
           label="Localidad"
           type="text"
           placeholder="Ingresa tu localidad"
-          value={''}
-          onChange={() => {}}
+          value={form.localidad}
+          onChange={handleChange('localidad')}
         />
         <AuthInput
           label="Calle"
           type="text"
           placeholder="Ingresa tu calle"
-          value={''}
-          onChange={() => {}}
+          value={form.calle}
+          onChange={handleChange('calle')}
         />
         <AuthInput
           label="Número de puerta"
           type="number"
           placeholder="Ingresa el número de puerta"
-          value={''}
-          onChange={() => {}}
+          value={form.numero_puerta}
+          onChange={handleChange('numero_puerta')}
         />
 
         <AuthInput
           label="Código postal"
           type="text"
           placeholder="Ingresa tu código postal"
-          value={''}
-          onChange={() => {}}
+          value={form.codigo_postal}
+          onChange={handleChange('codigo_postal')}
         />
 
-        <Button text="Registrarse" onClick={() => {}} type="submit" />
+        <p className="text-center text-red-500 min-h-[20px]">{contrasenaError || error || ''}</p>
+
+        <Button text="Registrarse" type="submit" disabled={loading} />
 
         <p>
           ¿Ya tienes cuenta? <Link href="/login" text="Inicia sesión aquí" />

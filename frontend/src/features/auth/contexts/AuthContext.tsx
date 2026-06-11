@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { LoginResponse, RegisterFormDataResponse } from '../api/authResponses';
-import { LoginRequest } from '../api/authRequests';
+import { LoginRequest, RegisterRequest } from '../api/authRequests';
 import { login as apiLogin } from '../api/authApi';
 import { setAuthToken } from '../../../httpClient';
 import { getRegisterFormData as apiGetRegisterFormData } from '../api/authApi';
+import { register as apiRegister } from '../api/authApi';
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -17,6 +18,7 @@ type AuthContextType = {
   clearError: () => void;
   loading: boolean;
   getRegisterFormData: () => Promise<RegisterFormDataResponse>;
+  register: (data: RegisterRequest) => Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -81,6 +83,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const register = useCallback(async (data: RegisterRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiRegister(data);
+      return res;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to register';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
@@ -109,6 +126,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearError,
         loading,
         getRegisterFormData,
+        register,
       }}
     >
       {children}

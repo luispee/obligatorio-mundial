@@ -18,7 +18,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`button bg-${color} text-${textColor}`}
+      className={`button bg-${color} text-${textColor} shadow-md hover:shadow-lg transition-shadow duration-300`}
       onClick={onClick}
       disabled={disabled}
     >

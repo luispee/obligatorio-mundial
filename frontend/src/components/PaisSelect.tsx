@@ -1,20 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 
-type SelectProps = {
+type PaisSelectProps = {
   label?: string;
   options: { value: string | number; label: string }[];
   value: string | number;
   onChange: (value: string | number) => void;
-  whiteText?: boolean;
+  flagsPath?: string;
 };
 
-export default function Select({
+export default function PaisSelect({
   label,
   options,
   value,
   onChange,
-  whiteText = false,
-}: SelectProps) {
+  flagsPath = '/flags',
+}: PaisSelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -30,21 +30,27 @@ export default function Select({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const textColor = whiteText ? 'text-white' : 'text-gray-700';
-  const borderColor = whiteText ? 'border-white/40' : 'border-gray-300';
-
   return (
     <div ref={ref} style={{ position: 'relative' }}>
-      {label && <label className={`block font-semibold mb-2 ${textColor}`}>{label}</label>}
+      {label && <label className="block font-semibold text-gray-700 mb-2">{label}</label>}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`block w-full rounded border ${borderColor} px-3 py-2.5 text-left ${textColor} shadow-sm focus:outline-none focus:ring focus:ring-green cursor-pointer flex items-center`}
+        className="block w-full rounded border border-gray-300 px-3 py-2.5 text-left text-gray-700 shadow-sm focus:outline-none focus:ring focus:ring-green cursor-pointer flex items-center gap-2"
       >
-        <span className="flex-1">
-          {selected ? selected.label : <span className="text-gray-400">Seleccionar...</span>}
-        </span>
-        <span>▾</span>
+        {selected ? (
+          <>
+            <img
+              src={`${flagsPath}/${selected.value}.svg`}
+              alt=""
+              className="w-5 h-4 object-cover rounded-sm"
+            />
+            <span>{selected.label}</span>
+          </>
+        ) : (
+          <span className="text-gray-400">Seleccionar...</span>
+        )}
+        <span className="ml-auto">▾</span>
       </button>
 
       {open && (
@@ -56,9 +62,14 @@ export default function Select({
                 onChange(option.value);
                 setOpen(false);
               }}
-              className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+              className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
             >
-              {option.label}
+              <img
+                src={`${flagsPath}/${option.value}.svg`}
+                alt=""
+                className="w-5 h-4 object-cover rounded-sm"
+              />
+              <span>{option.label}</span>
             </li>
           ))}
         </ul>
