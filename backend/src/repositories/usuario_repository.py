@@ -67,7 +67,7 @@ class UsuarioRepository:
     return None
 
   @staticmethod
-  def create_user(data, hash_contrasena):
+  def create_usuario(data, hash_contrasena):
     conn = get_connection()
     if not conn:
       raise RuntimeError("No se pudo conectar a la base de datos")
@@ -106,6 +106,3 @@ class UsuarioRepository:
     finally:
       cursor.close()
       conn.close()
-
-
-    

@@ -2,8 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import mockEventos from '../mockEventos';
 import Select from '../../../components/Select';
-import GreenButton from '../../../components/GreenButton';
 import SelectedEntradas from '../components/SelectedEntradas';
+import Button from '../../../components/Button';
 
 export default function EventoDetail() {
   const [EntradasQuantity, setEntradasQuantity] = useState('1');
@@ -72,7 +72,7 @@ export default function EventoDetail() {
 
         <div className="w-full flex flex-col md:flex-row items-center justify-end mt-6">
           <span className="text-lg font-bold text-gray-dark mr-4">Total: $---</span>
-          <GreenButton text="Proceder al pago" onClick={() => {}} />
+          <Button text="Proceder al pago" onClick={() => {}} />
         </div>
       </div>
     </main>

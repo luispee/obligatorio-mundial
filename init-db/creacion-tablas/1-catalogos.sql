@@ -27,7 +27,7 @@ CREATE TABLE seleccion (
 
 CREATE TABLE tipo_documento (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tipo VARCHAR(50) NOT NULL UNIQUE
+    nombre VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE estado_venta (

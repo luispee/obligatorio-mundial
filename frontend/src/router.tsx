@@ -6,6 +6,7 @@ import Login from './features/auth/pages/Login';
 import NotFound from './pages/NotFound';
 import Register from './features/auth/pages/Register';
 import EventoDetail from './features/evento/pages/EventoDetail';
+import VerifyMail from './features/auth/pages/VerifyMail';
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: '/register',
         element: <Register />,
+      },
+      {
+        path: '/register/verify-mail',
+        element: <VerifyMail />,
       },
     ],
   },

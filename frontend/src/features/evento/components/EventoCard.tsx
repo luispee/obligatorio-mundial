@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Evento } from '../types/evento';
-import GreenButton from '../../../components/GreenButton';
+import Button from '../../../components/Button';
 
 type EventoCardProps = {
   evento: Evento;
@@ -37,7 +37,7 @@ export default function EventoCard({ evento }: EventoCardProps) {
       <p className="text-gray-dark mb-4">Hora: {evento.hora}</p>
       <p className="text-gray-dark mb-4">Lugar: {evento.ubicacion}</p>
       <div className="flex justify-end">
-        <GreenButton text="Comprar" onClick={() => navigate(`/events/${evento.id}`)} />
+        <Button text="Comprar" onClick={() => navigate(`/events/${evento.id}`)} />
       </div>
     </div>
   );
