@@ -31,5 +31,7 @@ class EventoValidator:
 
       if 'precio' not in sector:
         raise ValueError('Missing sector.precio')
+      if not isinstance(sector['precio'], (int, float)) or sector['precio'] < 0:
+        raise ValueError('El precio del sector debe ser un número positivo')
 
     

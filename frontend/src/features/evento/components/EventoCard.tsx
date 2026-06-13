@@ -16,23 +16,23 @@ export default function EventoCard({ evento }: EventoCardProps) {
       <div className="relative flex flex-row justify-between items-center mb-4">
         <div className="flex flex-col">
           <img
-            src={`/flags/${evento.seleccionLocal.codigo}.svg`}
-            alt={evento.seleccionLocal.nombre}
+            src={`/flags/${evento.seleccion_local.codigo}.svg`}
+            alt={evento.seleccion_local.nombre}
             className="w-20 h-14 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
           />
           <h2 className="text-xl text-gray-dark font-semibold mb-2 uppercase">
-            {evento.seleccionLocal.nombre}
+            {evento.seleccion_local.nombre}
           </h2>
         </div>
         <p className="absolute left-1/2 text-gray-dark mb-4">vs</p>
         <div className="flex flex-col items-end">
           <img
-            src={`/flags/${evento.seleccionVisitante.codigo}.svg`}
-            alt={evento.seleccionVisitante.nombre}
+            src={`/flags/${evento.seleccion_visitante.codigo}.svg`}
+            alt={evento.seleccion_visitante.nombre}
             className="w-20 h-14 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
           />
           <h2 className="text-xl text-end text-gray-dark font-semibold mb-2 uppercase">
-            {evento.seleccionVisitante.nombre}
+            {evento.seleccion_visitante.nombre}
           </h2>
         </div>
       </div>

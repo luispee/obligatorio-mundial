@@ -6,10 +6,12 @@ import Button from '../../../components/Button';
 import SectorRow from '../components/SectorRow';
 import { useEvento } from '../contexts/EventoContext';
 import { FormEventoResponse } from '../api/eventoResponses';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateEvento() {
-  const { loading, error, getFormData, createEvento } = useEvento();
+  const { loading, error, getFormData, createEvento, clearError } = useEvento();
   const [formData, setFormData] = useState<FormEventoResponse | null>(null);
+  const [emptyPrecio, setEmptyPrecio] = useState(false);
   const [form, setForm] = useState<CreateEventoForm>({
     codigo_seleccion_local: '',
     codigo_seleccion_visitante: '',
@@ -19,6 +21,8 @@ export default function CreateEvento() {
       sectores: [],
     },
   });
+
+  const navigate = useNavigate();
 
   const handleChange =
     (field: keyof CreateEventoForm) =>
@@ -67,18 +71,32 @@ export default function CreateEvento() {
   }, []);
 
   const handleSubmit = async () => {
-    const request: CreateEventoRequest = {
-      ...form,
-      estadio: {
-        ...form.estadio,
-        sectores: form.estadio.sectores.map((s) => ({
-          id: s.id,
-          precio: Number(s.precio.replace(',', '.')),
-        })),
-      },
-    };
+    setEmptyPrecio(false);
+    clearError();
+    try {
+      for (let i = 0; i < form.estadio.sectores.length; i++) {
+        if (!form.estadio.sectores[i].precio) {
+          setEmptyPrecio(true);
+          return;
+        }
+      }
 
-    await createEvento(request);
+      const request: CreateEventoRequest = {
+        ...form,
+        estadio: {
+          ...form.estadio,
+          sectores: form.estadio.sectores.map((s) => ({
+            id: s.id,
+            precio: Number(s.precio.replace(',', '.')),
+          })),
+        },
+      };
+
+      await createEvento(request);
+      navigate('/');
+    } catch (error) {
+      console.error('Error al crear el evento:', error);
+    }
   };
 
   const selectedEstadio = formData?.estadios.find((e) => e.id === form.estadio.id);
@@ -159,7 +177,7 @@ export default function CreateEvento() {
             type="datetime-local"
           />
         </ul>
-        <p>Capacidad: {capacidadTotal()}</p>
+        {selectedEstadio && <p>Capacidad: {capacidadTotal()}</p>}
 
         <div className="flex flex-col gap-2">
           {selectedEstadio?.sectores.map((sector, index) => (
@@ -185,7 +203,9 @@ export default function CreateEvento() {
           ))}
         </div>
 
-        <div className="text-center text-red-500 min-h-[20px]">{error ?? ''}</div>
+        <div className="text-center text-red-500 min-h-[20px]">
+          {emptyPrecio ? 'Debe ingresar un precio para cada sector seleccionado' : error ?? ''}
+        </div>
 
         <Button text={` ${loading ? 'Cargando...' : 'Crear Evento'}`} type="submit" />
 
