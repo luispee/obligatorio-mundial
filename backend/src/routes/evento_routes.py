@@ -39,3 +39,15 @@ def update_evento(id):
     return jsonify({"error": str(e)}), 400
   except Exception as e:
     return jsonify({"error": str(e)}), 500
+
+@evento_routes.route('/<int:id>', methods=['GET'])
+def get_evento(id):
+  try:
+    evento = EventoService.get_evento(id)
+    if evento is None:
+      return jsonify({"error": "Evento no encontrado"}), 404
+    return jsonify(evento), 200
+  except ValueError as e:
+    return jsonify({"error": str(e)}), 400
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
