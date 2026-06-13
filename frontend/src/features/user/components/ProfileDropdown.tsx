@@ -55,7 +55,7 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
     <div
       ref={dropdownRef}
       onTransitionEnd={handleTransitionEnd}
-      className={`fixed right-0 top-24 min-w-[240px] 
+      className={`fixed right-0 top-20 md:top-24 min-w-[240px] 
         w-max bg-blue rounded-b-xl shadow-lg shadow-black p-2 z-10
         border border-transparent border-t-secondary/20
         transform motion-safe:transition-all 

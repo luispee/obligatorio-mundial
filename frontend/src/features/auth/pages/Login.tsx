@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Link from '../../../components/Link';
-import AuthInput from '../components/AuthInput';
+import AuthInput from '../../../components/Input';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/Button';
@@ -32,7 +32,9 @@ export default function Login() {
           handleSubmit();
         }}
       >
-        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6">Iniciar Sesión</h1>
+        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
+          Iniciar Sesión
+        </h1>
         <AuthInput
           label="Correo Electrónico"
           type="email"
@@ -48,7 +50,11 @@ export default function Login() {
           onChange={(e) => setContrasena(e.target.value)}
         />
         <p className="text-center text-red-500 min-h-[20px]">{error ?? ''}</p>
-        <Button text="Iniciar Sesión" type="submit" disabled={loading} />
+        <Button
+          text={` ${loading ? 'Cargando...' : 'Iniciar Sesión'}`}
+          type="submit"
+          disabled={loading}
+        />
         <p>
           ¿No tienes cuenta? <Link href="/register" text="Regístrate aquí" />
         </p>

@@ -1,4 +1,4 @@
-import AuthInput from '../components/AuthInput';
+import AuthInput from '../../../components/Input';
 import Link from '../../../components/Link';
 import Select from '../../../components/Select';
 import TelefonoSection from '../components/TelefonoSection';
@@ -21,10 +21,10 @@ export default function Register() {
   const [form, setForm] = useState<RegisterRequest>({
     mail: '',
     contrasena: '',
-    codigo_pais_documento: 'URY',
-    id_tipo_documento: 3,
+    codigo_pais_documento: '',
+    id_tipo_documento: 2,
     numero_documento: '',
-    codigo_pais_residencia: 'URY',
+    codigo_pais_residencia: '',
     localidad: '',
     calle: '',
     numero_puerta: '',
@@ -62,7 +62,6 @@ export default function Register() {
     }
     setContrasenaError(null);
     try {
-      console.log('Datos a enviar en registro:', form);
       await register(form);
       navigate('/register/verify-mail');
     } catch (err) {
@@ -79,7 +78,9 @@ export default function Register() {
           handleSubmit();
         }}
       >
-        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6">Registrarse</h1>
+        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
+          Registrarse
+        </h1>
         <AuthInput
           label="Correo Electrónico"
           type="text"
@@ -178,7 +179,11 @@ export default function Register() {
 
         <p className="text-center text-red-500 min-h-[20px]">{contrasenaError || error || ''}</p>
 
-        <Button text="Registrarse" type="submit" disabled={loading} />
+        <Button
+          text={` ${loading ? 'Cargando...' : 'Registrarse'}`}
+          type="submit"
+          disabled={loading}
+        />
 
         <p>
           ¿Ya tienes cuenta? <Link href="/login" text="Inicia sesión aquí" />

@@ -1,6 +1,6 @@
-import { Pais } from '../types/pais';
-import { Role } from '../types/role';
-import { TipoDocumento } from '../types/documento';
+import { Pais } from '../../../types/pais';
+import { Role } from '../../../types/role';
+import { TipoDocumento } from '../../../types/documento';
 
 export type LoginResponse = {
   token: string;

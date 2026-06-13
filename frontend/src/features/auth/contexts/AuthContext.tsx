@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 import { LoginResponse, RegisterFormDataResponse } from '../api/authResponses';
 import { LoginRequest, RegisterRequest } from '../api/authRequests';
 import { login as apiLogin } from '../api/authApi';
-import { setAuthToken } from '../../../httpClient';
+import { setAuthToken } from '../../../utils/httpClient';
 import { getRegisterFormData as apiGetRegisterFormData } from '../api/authApi';
 import { register as apiRegister } from '../api/authApi';
 
@@ -19,6 +19,7 @@ type AuthContextType = {
   loading: boolean;
   getRegisterFormData: () => Promise<RegisterFormDataResponse>;
   register: (data: RegisterRequest) => Promise<any>;
+  token: string | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -107,6 +108,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('user');
   }, []);
 
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      logout();
+    };
+
+    window.addEventListener('unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('unauthorized', handleUnauthorized);
+    };
+  }, [logout]);
+
   const isAuthenticated = !!token;
   const isAdministrador = user?.role === 'ADMINISTRADOR';
   const isCliente = user?.role === 'CLIENTE';
@@ -127,6 +140,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loading,
         getRegisterFormData,
         register,
+        token,
       }}
     >
       {children}
