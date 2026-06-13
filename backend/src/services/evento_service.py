@@ -14,6 +14,13 @@ class EventoService:
     return EventoRepository.get_eventos()
 
   @staticmethod
+  def get_evento(id):
+    evento = EventoRepository.get_evento_by_id(id)
+    if not evento:
+      raise ValueError("Evento no encontrado")
+    return evento
+
+  @staticmethod
   def get_eventos_form_data():
     pais_sede = AdministradorRepository.get_pais_sede_administrador()
     selecciones = SeleccionRepository.get_selecciones()

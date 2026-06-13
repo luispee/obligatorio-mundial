@@ -24,7 +24,7 @@ export default function EventoCard({ evento }: EventoCardProps) {
             alt={evento.seleccion_local.nombre}
             className="w-20 h-14 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
           />
-          <h2 className="text-xl text-gray-dark font-semibold mb-2 uppercase">
+          <h2 className="text-xl text-gray-dark font-semibold mb-2 uppercase h-10 max-w-[160px]">
             {evento.seleccion_local.nombre}
           </h2>
         </div>
@@ -35,7 +35,7 @@ export default function EventoCard({ evento }: EventoCardProps) {
             alt={evento.seleccion_visitante.nombre}
             className="w-20 h-14 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
           />
-          <h2 className="text-xl text-end text-gray-dark font-semibold mb-2 uppercase">
+          <h2 className="text-xl text-end text-gray-dark font-semibold mb-2 uppercase h-10 max-w-[160px]">
             {evento.seleccion_visitante.nombre}
           </h2>
         </div>

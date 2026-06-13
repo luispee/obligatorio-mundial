@@ -5,6 +5,81 @@ from src.repositories.estadio_repository import EstadioRepository
 class EventoRepository:
 
   @staticmethod
+  def get_evento_by_id(id):
+    conn = get_connection()
+    if not conn:
+      raise RuntimeError("No se pudo conectar a la base de datos")
+    
+    try:
+      cursor = conn.cursor(dictionary=True)
+      cursor.execute(
+        """
+        SELECT
+          e.codigo_seleccion_local,
+          pl.nombre AS nombre_seleccion_local,
+          e.codigo_seleccion_visitante,
+          pv.nombre AS nombre_seleccion_visitante,
+          e.fecha_hora,
+          est.id AS estadio_id,
+          est.ciudad,
+          est.nombre AS estadio_nombre,
+          p.nombre AS pais_sede
+        FROM evento e
+        JOIN estadio est ON est.id = e.id_estadio
+        JOIN pais p ON p.codigo = est.codigo_pais_sede
+        JOIN pais pl ON pl.codigo = e.codigo_seleccion_local
+        JOIN pais pv ON pv.codigo = e.codigo_seleccion_visitante
+        WHERE e.id = %s
+        """, (id,)
+      )
+      row = cursor.fetchone()
+
+      if not row:
+        return None
+
+      cursor.execute(
+        """
+        SELECT
+          s.id,
+          se.precio,
+          se.capacidad_disponible > 0 AS disponibilidad
+        FROM sector_evento se
+        JOIN sector s ON s.id = se.id_sector
+        WHERE se.id_evento = %s
+        """, (id,)
+      )
+      sectores = cursor.fetchall()
+
+      return {
+        "id": id,
+        "seleccion_local": {
+          "codigo": row['codigo_seleccion_local'],
+          "nombre": row['nombre_seleccion_local']
+        },
+        "seleccion_visitante": {
+          "codigo": row['codigo_seleccion_visitante'],
+          "nombre": row['nombre_seleccion_visitante']
+        },
+        "fecha_hora": row['fecha_hora'].isoformat(),
+        "estadio": {
+          "id": row['estadio_id'],
+          "nombre": row['estadio_nombre'],
+          "ciudad": row['ciudad'],
+          "pais_sede": row['pais_sede'],
+          "sectores": [
+          {
+            "id": s['id'],
+            "precio": float(s['precio']),
+            "disponible": bool(s['disponibilidad'])
+          } for s in sectores
+        ]
+        },
+      }
+    finally:
+      cursor.close()
+      conn.close()
+
+  @staticmethod
   def get_eventos():
     conn = get_connection()
     if not conn:
