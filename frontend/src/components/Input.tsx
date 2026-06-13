@@ -1,12 +1,13 @@
-type AuthInputProps = {
+type InputProps = {
   label: string;
   type: string;
   placeholder: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   value: string;
+  step?: string;
 };
 
-export default function AuthInput({ label, type, placeholder, onChange, value }: AuthInputProps) {
+export default function Input({ label, type, placeholder, onChange, value, step }: InputProps) {
   const inputId = label.toLowerCase().replace(/\s+/g, '-');
 
   return (
@@ -21,6 +22,7 @@ export default function AuthInput({ label, type, placeholder, onChange, value }:
         onChange={onChange}
         placeholder={placeholder}
         className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-green"
+        step={step}
       />
     </div>
   );

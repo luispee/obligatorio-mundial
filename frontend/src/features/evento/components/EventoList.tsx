@@ -1,11 +1,11 @@
-import type { Evento } from '../types/evento';
+import type { EventoSummary } from '../../../types/evento';
 import EventoCard from './EventoCard';
 
-type EventosListProps = {
-  eventos: Evento[];
+type EventoListProps = {
+  eventos: EventoSummary[];
 };
 
-export default function EventosList({ eventos }: EventosListProps) {
+export default function EventoList({ eventos }: EventoListProps) {
   return (
     <div className="flex w-full flex-col items-center gap-6">
       {eventos.length === 0 ? (

@@ -1,4 +1,4 @@
-import { request } from '../../../httpClient';
+import { request } from '../../../utils/httpClient';
 
 export function generateMassiveInserts(amount?: number) {
   return request(`/api/massive_inserts`, {

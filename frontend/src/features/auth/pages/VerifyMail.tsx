@@ -1,5 +1,5 @@
 import Button from '../../../components/Button';
-import AuthInput from '../components/AuthInput';
+import AuthInput from '../../../components/Input';
 
 export default function VerifyMail() {
   return (

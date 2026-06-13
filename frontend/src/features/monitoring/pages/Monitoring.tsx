@@ -64,7 +64,7 @@ export const Monitoring: React.FC = () => {
       <div className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
         <header className="mb-10 flex flex-col gap-4 border-b border-slate-800 pb-8">
           <div className="max-w-3xl space-y-4">
-            <h1 className="text-3xl text-center font-semibold font-semibold uppercase tracking-[0.35em] text-cyan-400 sm:text-4xl">
+            <h1 className="text-3xl text-center font-semibold uppercase tracking-[0.35em] text-cyan-400 sm:text-4xl">
               Monitoreo PoC
             </h1>
             <p className="max-w-2xl text-base leading-7 text-slate-300 sm:text-lg"></p>

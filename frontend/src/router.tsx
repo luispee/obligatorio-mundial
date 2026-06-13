@@ -7,6 +7,9 @@ import NotFound from './pages/NotFound';
 import Register from './features/auth/pages/Register';
 import EventoDetail from './features/evento/pages/EventoDetail';
 import VerifyMail from './features/auth/pages/VerifyMail';
+import CreateEvento from './features/evento/pages/CreateEvento';
+import ProtectedRoute from './components/ProtectedRoute';
+import EditEvento from './features/evento/pages/EditEvento';
 
 export const router = createBrowserRouter([
   {
@@ -21,8 +24,25 @@ export const router = createBrowserRouter([
         element: <NotFound />,
       },
       {
-        path: '/events/:id',
-        element: <EventoDetail />,
+        path: 'events',
+        children: [
+          {
+            path: 'create',
+            element: (
+              <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+                <CreateEvento />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/edit',
+            element: <EditEvento />,
+          },
+          {
+            path: ':id',
+            element: <EventoDetail />,
+          },
+        ],
       },
     ],
   },

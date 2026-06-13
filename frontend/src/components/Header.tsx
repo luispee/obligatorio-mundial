@@ -14,7 +14,7 @@ type HeaderProps = {
 
 export default function Header({ variant }: HeaderProps) {
   const profileIconRef: RefObject<HTMLDivElement | null> = useRef(null);
-  const { isCliente, isAdministrador, isAuthenticated } = useAuth();
+  const { isAdministrador, isAuthenticated } = useAuth();
   const { toggleDisplayProfile, displayProfile } = useUI();
 
   return (
@@ -25,7 +25,9 @@ export default function Header({ variant }: HeaderProps) {
           onClick={() => (window.location.href = '/')}
         >
           <LogoIcon className="h-16 w-16 md:h-20 md:w-20" />
-          <h1 className="hidden md:flex text-3xl font-bold">Fifa World Cup 2026 Tickets</h1>
+          <h1 className="hidden md:flex text-3xl font-bold uppercase">
+            Fifa World Cup 2026 Tickets
+          </h1>
         </div>
         {variant === 'default' &&
           (!isAuthenticated ? (
@@ -39,7 +41,7 @@ export default function Header({ variant }: HeaderProps) {
             <div className="flex items-center gap-4">
               {isAdministrador && (
                 <a
-                  href="/events/new"
+                  href="/events/create"
                   className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
                 >
                   Agregar Evento

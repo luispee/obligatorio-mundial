@@ -1,4 +1,4 @@
-import AuthInput from './AuthInput';
+import AuthInput from '../../../components/Input';
 
 type TelefonoSectionProps = {
   telefonos: string[];

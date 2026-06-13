@@ -1,5 +1,5 @@
 import Select from '../../../components/Select';
-import type { Evento } from '../types/evento';
+import type { Evento } from '../../../types/evento';
 
 type SelectedEntradasProps = {
   cantidad: number;

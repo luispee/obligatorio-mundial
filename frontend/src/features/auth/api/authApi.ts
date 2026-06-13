@@ -1,4 +1,4 @@
-import { request } from '../../../httpClient';
+import { request } from '../../../utils/httpClient';
 import { LoginRequest, RegisterRequest } from './authRequests';
 import { LoginResponse, RegisterFormDataResponse } from './authResponses';
 

@@ -1,16 +1,15 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import mockEventos from '../mockEventos';
 import Select from '../../../components/Select';
 import SelectedEntradas from '../components/SelectedEntradas';
 import Button from '../../../components/Button';
+import { Evento } from '../../../types/evento';
 
 export default function EventoDetail() {
   const [EntradasQuantity, setEntradasQuantity] = useState('1');
   const { id } = useParams();
 
-  // mock para mostrar la info del partido
-  const evento = mockEventos.find((m) => m.id === Number(id));
+  const [evento, setEvento] = useState<Evento | null>(null);
 
   useEffect(() => {
     //llamada a la api
@@ -24,43 +23,43 @@ export default function EventoDetail() {
             <div className="flex flex-col gap-8">
               <p className="text-lg font-bold text-gray-dark mb-2">Información del Partido</p>
               <p>
-                <strong>Fecha:</strong> {evento?.fecha}
+                <strong>Fecha:</strong> {evento?.fecha_hora}
               </p>
               <p>
-                <strong>Hora:</strong> {evento?.hora}
+                <strong>Hora:</strong> {evento?.fecha_hora}
               </p>
               <p>
-                <strong>Estadio:</strong> {evento?.ubicacion}
+                <strong>Estadio:</strong> {evento?.estadio.nombre}
               </p>
 
-              <Select
+              {/* <Select
                 label="Cantidad de entradas"
                 options={['1', '2', '3', '4', '5']}
                 value={EntradasQuantity}
                 onChange={setEntradasQuantity}
-              />
+              /> */}
             </div>
           </div>
 
           <div className="flex flex-row justify-between mx-auto items-center gap-8">
             <div className="flex flex-col items-center">
               <img
-                src={`/flags/${evento?.seleccionLocal.id}.svg`}
+                src={`/flags/${evento?.seleccionLocal.codigo}.svg`}
                 alt={evento?.seleccionLocal.nombre}
                 className="w-24 h-18 md:w-48 md:h-32 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
               />
-              <h2 className="text-xl text-gray-dark font-semibold mb-2">
+              <h2 className="text-xl text-gray-dark font-semibold mb-2 uppercase">
                 {evento?.seleccionLocal.nombre}
               </h2>
             </div>
             <p className="text-2xl font-bold text-gray-dark">vs</p>
             <div className="flex flex-col items-center">
               <img
-                src={`/flags/${evento?.seleccionVisitante.id}.svg`}
+                src={`/flags/${evento?.seleccionVisitante.codigo}.svg`}
                 alt={evento?.seleccionVisitante.nombre}
                 className="w-24 h-18 md:w-48 md:h-32 rounded-md border border-gray-300 mb-2 object-cover shadow-gray shadow-md"
               />
-              <h2 className="text-xl text-gray-dark font-semibold mb-2">
+              <h2 className="text-xl text-gray-dark font-semibold mb-2 uppercase">
                 {evento?.seleccionVisitante.nombre}
               </h2>
             </div>
