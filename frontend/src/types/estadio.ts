@@ -8,5 +8,5 @@ export type Estadio = {
 };
 
 export type EstadioSummary = Omit<Estadio, 'sectores'> & {
-  pais: string;
+  pais_sede: string;
 };
