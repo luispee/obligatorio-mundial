@@ -83,6 +83,16 @@ export default function CreateEvento() {
 
   const selectedEstadio = formData?.estadios.find((e) => e.id === form.estadio.id);
 
+  const capacidadTotal = () => {
+    let capacidad = 0;
+    for (let i = 0; i < selectedEstadio?.sectores.length!; i++) {
+      if (form.estadio.sectores.some((s) => s.id === selectedEstadio?.sectores[i].id)) {
+        capacidad += selectedEstadio?.sectores[i].capacidad!;
+      }
+    }
+    return capacidad;
+  };
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       <form
@@ -149,6 +159,7 @@ export default function CreateEvento() {
             type="datetime-local"
           />
         </ul>
+        <p>Capacidad: {capacidadTotal()}</p>
 
         <div className="flex flex-col gap-2">
           {selectedEstadio?.sectores.map((sector, index) => (

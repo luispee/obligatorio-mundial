@@ -30,17 +30,18 @@ export default function SectorRow({
         >
           <span className="text-sm font-semibold text-white">{number}</span>
         </div>
-        <div className={`flex-row ${opacityClass}`}>
-          <div className="flex items-center justify-between">
+        <div className={`flex items-center gap-6 ${opacityClass}`}>
+          <div className="flex flex-col items-start">
             <h3 className="text-lg font-semibold text-gray-dark">{sector.nombre}</h3>
-            <input
-              className="w-4 h-4 cursor-pointer"
-              type="checkbox"
-              checked={isSelected}
-              onChange={(e) => onToggle(sector.id)}
-            />
+            <p className="text-sm text-gray-dark">Capacidad: {sector.capacidad}</p>
           </div>
-          <p className="text-sm text-gray-dark">Capacidad: {sector.capacidad} personas</p>
+
+          <input
+            className="w-4 h-4 cursor-pointer"
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => onToggle(sector.id)}
+          />
         </div>
       </div>
 
