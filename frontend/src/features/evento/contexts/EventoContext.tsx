@@ -2,6 +2,7 @@ import { useState, useEffect, createContext, ReactNode, useContext } from 'react
 import { fetchFormEventoData } from '../api/eventoApi';
 import { FormEventoResponse } from '../api/eventoResponses';
 import { EventoSummary } from '../../../types/evento';
+import { createEvento as createEventoApi } from '../api/eventoApi';
 
 type EventoContextType = {
   loading: boolean;
@@ -9,6 +10,7 @@ type EventoContextType = {
   getFormData: () => Promise<FormEventoResponse | null>;
   createEvento: (form: CreateEventoRequest) => Promise<void>;
   eventoList: EventoSummary[];
+  clearError: () => void;
 };
 
 export const EventoContext = createContext<EventoContextType | undefined>(undefined);
@@ -32,21 +34,23 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      if (form.codigo_seleccion_local === form.codigo_seleccion_visitante) {
-        setError('La selección local y visitante no pueden ser la misma');
-        return;
-      }
-      console.log('Creando evento con datos:', form);
-      // Aquí iría la lógica para crear el evento, por ejemplo, una llamada a la API
-    } catch (err) {
-      setError('Error al crear el evento');
+      const response = await createEventoApi(form);
+      setEventoList((prev) => [...prev, response.evento]);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Login failed';
+      setError(message);
+      throw e;
     } finally {
       setLoading(false);
     }
   };
 
+  const clearError = () => setError(null);
+
   return (
-    <EventoContext.Provider value={{ loading, error, getFormData, createEvento, eventoList }}>
+    <EventoContext.Provider
+      value={{ loading, error, getFormData, createEvento, eventoList, clearError }}
+    >
       {children}
     </EventoContext.Provider>
   );

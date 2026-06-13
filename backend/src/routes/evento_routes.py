@@ -14,7 +14,7 @@ def get_eventos():
 def get_eventos_form_data():
   return jsonify(EventoService.get_eventos_form_data()), 200
 
-@evento_routes.route('/', methods=['POST'])
+@evento_routes.route('', methods=['POST'])
 @admin_required
 def create_evento():
   data = request.get_json()

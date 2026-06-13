@@ -11,3 +11,7 @@ export type CreateEventoResponse = {
   message: string;
   evento: EventoSummary;
 };
+
+export type GetEventosResponse = {
+  eventos: EventoSummary[];
+};

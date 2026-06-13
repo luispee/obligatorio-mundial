@@ -4,8 +4,8 @@ import { Seleccion } from './seleccion';
 
 export type Evento = {
   id: number;
-  seleccionLocal: Seleccion;
-  seleccionVisitante: Seleccion;
+  seleccion_local: Seleccion;
+  seleccion_visitante: Seleccion;
   fecha_hora: string;
   estadio: Estadio;
 };
