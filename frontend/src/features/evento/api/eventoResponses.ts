@@ -12,6 +12,4 @@ export type CreateEventoResponse = {
   evento: EventoSummary;
 };
 
-export type GetEventosResponse = {
-  eventos: EventoSummary[];
-};
+export type GetEventosResponse = EventoSummary[];

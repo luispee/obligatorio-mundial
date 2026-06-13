@@ -3,7 +3,7 @@ from datetime import datetime
 class EventoValidator:
 
   @staticmethod
-  def validate_create_evento(data):
+  def validate_evento(data):
     required_fields = [
       'codigo_seleccion_local',
       'codigo_seleccion_visitante',

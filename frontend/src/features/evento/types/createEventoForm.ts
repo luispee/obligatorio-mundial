@@ -1,4 +1,4 @@
-type CreateEventoForm = {
+export type CreateEventoForm = {
   codigo_seleccion_local: string;
   codigo_seleccion_visitante: string;
   fecha_hora: string;

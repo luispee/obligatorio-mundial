@@ -1,16 +1,21 @@
 import { useState, useEffect, createContext, ReactNode, useContext } from 'react';
-import { fetchFormEventoData } from '../api/eventoApi';
+import { fetchEventos, fetchFormEventoData } from '../api/eventoApi';
 import { FormEventoResponse } from '../api/eventoResponses';
 import { EventoSummary } from '../../../types/evento';
 import { createEvento as createEventoApi } from '../api/eventoApi';
+import { updateEvento as updateEventoApi } from '../api/eventoApi';
+import { CreateEventoRequest } from '../api/eventoRequests';
+import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
 
 type EventoContextType = {
   loading: boolean;
   error: string | null;
   getFormData: () => Promise<FormEventoResponse | null>;
   createEvento: (form: CreateEventoRequest) => Promise<void>;
+  updateEvento: (id: number, form: UpdateEventoRequest) => Promise<void>;
   eventoList: EventoSummary[];
   clearError: () => void;
+  getEventos: () => Promise<void>;
 };
 
 export const EventoContext = createContext<EventoContextType | undefined>(undefined);
@@ -19,6 +24,11 @@ export function EventoProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [eventoList, setEventoList] = useState<EventoSummary[]>([]);
+
+  useEffect(() => {
+    console.log('EventoProvider mounted');
+    return () => console.log('EventoProvider unmounted');
+  }, []);
 
   const getFormData = async (): Promise<FormEventoResponse | null> => {
     try {
@@ -34,8 +44,7 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await createEventoApi(form);
-      setEventoList((prev) => [...prev, response.evento]);
+      await createEventoApi(form);
     } catch (e: any) {
       const message = e?.code || e?.message || 'Login failed';
       setError(message);
@@ -45,11 +54,47 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const updateEvento = async (id: number, form: UpdateEventoRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await updateEventoApi(id, form);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Login failed';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+  const getEventos = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const eventos = await fetchEventos();
+      setEventoList(eventos);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to fetch eventos';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = () => setError(null);
 
   return (
     <EventoContext.Provider
-      value={{ loading, error, getFormData, createEvento, eventoList, clearError }}
+      value={{
+        loading,
+        error,
+        getFormData,
+        createEvento,
+        updateEvento,
+        eventoList,
+        clearError,
+        getEventos,
+      }}
     >
       {children}
     </EventoContext.Provider>
