@@ -1,4 +1,4 @@
-type CreateEventoRequest = {
+export type CreateEventoRequest = {
   codigo_seleccion_local: string;
   codigo_seleccion_visitante: string;
   fecha_hora: string;

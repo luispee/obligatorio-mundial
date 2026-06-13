@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Evento, EventoSummary } from '../../../types/evento';
 import Button from '../../../components/Button';
 import { useAuth } from '../../auth/contexts/AuthContext';
+import { formatDate } from '../../../utils/data';
 
 type EventoCardProps = {
   evento: EventoSummary;
@@ -10,6 +11,9 @@ type EventoCardProps = {
 export default function EventoCard({ evento }: EventoCardProps) {
   const { isAdministrador } = useAuth();
   const navigate = useNavigate();
+
+  const fecha = formatDate(evento.fecha_hora.split('T')[0]);
+  const hora = evento.fecha_hora.split('T')[1].slice(0, 5);
 
   return (
     <div className="rounded-lg bg-white border border-gray-300 p-4 shadow-gray shadow-lg">
@@ -36,8 +40,8 @@ export default function EventoCard({ evento }: EventoCardProps) {
           </h2>
         </div>
       </div>
-      <p className="text-gray-dark mb-4">Fecha: {''}</p>
-      <p className="text-gray-dark mb-4">Hora: {''}</p>
+      <p className="text-gray-dark mb-4">Fecha: {fecha}</p>
+      <p className="text-gray-dark mb-4">Hora: {hora}</p>
       <p className="text-gray-dark mb-4">Estadio: {evento.estadio.nombre}</p>
       <p className="text-gray-dark mb-4">
         Lugar: {evento.estadio.pais_sede}, {evento.estadio.ciudad}

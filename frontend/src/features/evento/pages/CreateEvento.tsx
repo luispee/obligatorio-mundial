@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PaisSelect from '../../../components/PaisSelect';
 import Select from '../../../components/Select';
 import Input from '../../../components/Input';
@@ -7,7 +7,8 @@ import SectorRow from '../components/SectorRow';
 import { useEvento } from '../contexts/EventoContext';
 import { FormEventoResponse } from '../api/eventoResponses';
 import { useNavigate } from 'react-router-dom';
-
+import { CreateEventoForm } from '../types/createEventoForm';
+import { CreateEventoRequest } from '../api/eventoRequests';
 export default function CreateEvento() {
   const { loading, error, getFormData, createEvento, clearError } = useEvento();
   const [formData, setFormData] = useState<FormEventoResponse | null>(null);
@@ -64,7 +65,7 @@ export default function CreateEvento() {
         const data = await getFormData();
         setFormData(data);
       } catch (error) {
-        console.error('Error al obtener datos del formulario de registro:', error);
+        console.error('Error al obtener datos del formmulario:', error);
       }
     }
     fetchFormData();
@@ -74,8 +75,8 @@ export default function CreateEvento() {
     setEmptyPrecio(false);
     clearError();
     try {
-      for (let i = 0; i < form.estadio.sectores.length; i++) {
-        if (!form.estadio.sectores[i].precio) {
+      for (const sector of form.estadio.sectores) {
+        if (!sector.precio) {
           setEmptyPrecio(true);
           return;
         }
@@ -103,9 +104,9 @@ export default function CreateEvento() {
 
   const capacidadTotal = () => {
     let capacidad = 0;
-    for (let i = 0; i < selectedEstadio?.sectores.length!; i++) {
-      if (form.estadio.sectores.some((s) => s.id === selectedEstadio?.sectores[i].id)) {
-        capacidad += selectedEstadio?.sectores[i].capacidad!;
+    for (const sector of selectedEstadio?.sectores || []) {
+      if (form.estadio.sectores.some((s) => s.id === sector.id)) {
+        capacidad += sector.capacidad!;
       }
     }
     return capacidad;
