@@ -5,6 +5,76 @@ from src.repositories.estadio_repository import EstadioRepository
 class EventoRepository:
 
   @staticmethod
+  def get_eventos():
+    conn = get_connection()
+    if not conn:
+      raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+      cursor = conn.cursor(dictionary=True)
+      cursor.execute("""
+        SELECT
+          e.id,
+          e.fecha_hora,
+
+          e.codigo_seleccion_local,
+          pl.nombre AS nombre_seleccion_local,
+
+          e.codigo_seleccion_visitante,
+          pv.nombre AS nombre_seleccion_visitante,
+
+          est.id AS estadio_id,
+          est.nombre AS estadio_nombre,
+          est.ciudad,
+          pe.nombre AS pais_sede
+
+        FROM evento e
+
+        JOIN seleccion sl ON sl.codigo_pais = e.codigo_seleccion_local
+
+        JOIN pais pl ON pl.codigo = sl.codigo_pais
+
+        JOIN seleccion sv ON sv.codigo_pais = e.codigo_seleccion_visitante
+
+        JOIN pais pv ON pv.codigo = sv.codigo_pais
+
+        JOIN estadio est ON est.id = e.id_estadio
+
+        JOIN pais pe ON pe.codigo = est.codigo_pais_sede
+
+        ORDER BY e.fecha_hora ASC
+      """)
+
+      rows = cursor.fetchall()
+
+      eventos = []
+
+      for row in rows:
+        eventos.append({
+          "id": row['id'],
+          "fecha_hora": row['fecha_hora'].isoformat(),
+          "seleccion_local": {
+            "codigo": row['codigo_seleccion_local'],
+            "nombre": row['nombre_seleccion_local']
+          },
+          "seleccion_visitante": {
+            "codigo": row['codigo_seleccion_visitante'],
+            "nombre": row['nombre_seleccion_visitante']
+          },
+          "estadio": {
+            "id": row['estadio_id'],
+            "nombre": row['estadio_nombre'],
+            "ciudad": row['ciudad'],
+            "pais_sede": row['pais_sede']
+          }
+        })
+
+      return eventos
+    finally:
+      cursor.close()
+      conn.close()
+
+  @staticmethod
   def get_evento_summary(id):
     conn = get_connection()
     if not conn:

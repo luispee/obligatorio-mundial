@@ -10,6 +10,10 @@ from datetime import datetime
 class EventoService:
 
   @staticmethod
+  def get_eventos():
+    return EventoRepository.get_eventos()
+
+  @staticmethod
   def get_eventos_form_data():
     pais_sede = AdministradorRepository.get_pais_sede_administrador()
     selecciones = SeleccionRepository.get_selecciones()

@@ -7,7 +7,7 @@ evento_routes = Blueprint('evento_routes', __name__)
 
 @evento_routes.route('/', methods=['GET'])
 def get_eventos():
-  return "To be done"
+  return jsonify(EventoService.get_eventos()), 200
 
 @evento_routes.route('/form-data', methods=['GET'])
 @admin_required
