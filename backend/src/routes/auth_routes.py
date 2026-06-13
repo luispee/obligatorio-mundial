@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, Response
 from src.services.auth_service import AuthService
 from src.decorators.jwt_required import jwt_required
 from src.decorators.roles import admin_required
+from src.validators.auth_validator import AuthValidator
 
 auth_routes = Blueprint('auth_routes', __name__)
 
@@ -10,13 +11,12 @@ def login():
 
   data = request.get_json()
 
-  mail = data.get('mail')
-  contrasena = data.get('contrasena')
+  try:
+    AuthValidator.validate_login(data)
+  except ValueError as e:
+    return jsonify({'error': str(e)}), 400
 
-  if not mail or not contrasena:
-    return jsonify({'error': 'Mail y contraseña son requeridos'}), 400
-  
-  data = AuthService.login(mail, contrasena)
+  data = AuthService.login(data)
 
   if data is None:
     return jsonify({'error': 'Credenciales inválidas'}), 401
@@ -28,6 +28,7 @@ def register():
   data = request.get_json()
 
   try: 
+    AuthValidator.validate_register(data)
     AuthService.register(data)
     return jsonify({'message': 'Registro exitoso'}), 201
 
@@ -41,9 +42,9 @@ def register():
 def register_form():
   try:
         
-        data = AuthService.get_register_form_data() 
-        
-        return jsonify(data), 200
+    data = AuthService.get_register_form_data() 
+    
+    return jsonify(data), 200
         
   except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    return jsonify({"error": str(e)}), 500

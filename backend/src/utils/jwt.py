@@ -14,7 +14,7 @@ class JwtUtils:
     payload = {
       "mail": mail,
       "role": role,
-      "exp": datetime.utcnow() + timedelta(hours=0.00277778) # Token válido por 10 segundos
+      "exp": datetime.utcnow() + timedelta(hours=8)
     }
 
     return jwt.encode(

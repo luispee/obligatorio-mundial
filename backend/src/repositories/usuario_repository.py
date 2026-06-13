@@ -1,5 +1,4 @@
 from src.database.get_connection import get_connection
-from src.models.usuario import Usuario
 from datetime import datetime
 
 class UsuarioRepository:
@@ -21,19 +20,19 @@ class UsuarioRepository:
     
     row: dict = row
     
-    return Usuario(
-      mail=row['mail'],
-      hash_contrasena=row['hash_contrasena'],
-      codigo_pais_documento=row['codigo_pais_documento'],
-      id_tipo_documento=row['id_tipo_documento'],
-      numero_documento=row['numero_documento'],
-      codigo_pais_residencia=row['codigo_pais_residencia'],
-      localidad=row['localidad'],
-      calle=row['calle'],
-      numero_puerta=row['numero_puerta'],
-      codigo_postal=row['codigo_postal']
-    )
-  
+    return {
+      "mail": row['mail'],
+      "hash_contrasena": row['hash_contrasena'],
+      "codigo_pais_documento": row['codigo_pais_documento'],
+      "id_tipo_documento": row['id_tipo_documento'],
+      "numero_documento": row['numero_documento'],
+      "codigo_pais_residencia": row['codigo_pais_residencia'],
+      "localidad": row['localidad'],
+      "calle": row['calle'],
+      "numero_puerta": row['numero_puerta'],
+      "codigo_postal": row['codigo_postal']
+    }
+
   @staticmethod
   def get_role(mail):
     conn = get_connection()
