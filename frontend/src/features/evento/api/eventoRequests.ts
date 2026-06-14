@@ -7,3 +7,7 @@ export type CreateEventoRequest = {
     sectores: { id: number; precio: number }[];
   };
 };
+
+export type VerifyUserRequest = {
+  mail: string;
+};

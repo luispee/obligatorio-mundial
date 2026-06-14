@@ -58,4 +58,10 @@ class AuthService:
       if user is None:
           raise ValueError('No existe un usuario con ese mail')
 
+      try:
+        UsuarioRepository.verify_user(mail)
+
+      except Exception as e:
+        raise RuntimeError(f'Error al verificar el usuario: {str(e)}')
+
       return True

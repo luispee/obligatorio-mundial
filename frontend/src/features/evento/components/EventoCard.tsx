@@ -40,11 +40,17 @@ export default function EventoCard({ evento }: EventoCardProps) {
           </h2>
         </div>
       </div>
-      <p className="text-gray-dark mb-4">Fecha: {fecha}</p>
-      <p className="text-gray-dark mb-4">Hora: {hora}</p>
-      <p className="text-gray-dark mb-4">Estadio: {evento.estadio.nombre}</p>
       <p className="text-gray-dark mb-4">
-        Lugar: {evento.estadio.pais_sede}, {evento.estadio.ciudad}
+        <strong>Fecha:</strong> {fecha}
+      </p>
+      <p className="text-gray-dark mb-4">
+        <strong>Hora:</strong> {hora}
+      </p>
+      <p className="text-gray-dark mb-4">
+        <strong>Estadio:</strong> {evento.estadio.nombre}
+      </p>
+      <p className="text-gray-dark mb-4">
+        <strong>Lugar:</strong> {evento.estadio.pais_sede}, {evento.estadio.ciudad}
       </p>
       <div className="flex justify-end">
         {isAdministrador ? (

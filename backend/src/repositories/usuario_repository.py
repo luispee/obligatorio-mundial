@@ -105,3 +105,15 @@ class UsuarioRepository:
     finally:
       cursor.close()
       conn.close()
+
+  @staticmethod
+  def verify_user(mail):
+    conn = get_connection()
+    if not conn:
+      raise RuntimeError("No se pudo conectar a la base de datos")
+
+    cursor = conn.cursor()
+    cursor.execute("UPDATE cliente SET verificado = %s WHERE mail = %s", (True, mail))
+    conn.commit()
+    cursor.close()
+    conn.close()

@@ -16,7 +16,7 @@ class EstadioRepository:
                             s.id AS id_sector,
                             e.nombre AS nombre_estadio,
                             e.ciudad,
-                            s.nombre_sector,
+                            s.nombre,
                             s.capacidad_maxima AS capacidad_maxima
                         FROM estadio e
                         JOIN sector s ON e.id = s.id_estadio
@@ -41,7 +41,7 @@ class EstadioRepository:
 
         estadios[estadio_id]["sectores"].append({
           "id": row["id_sector"],
-          "nombre": row["nombre_sector"],
+          "nombre": row["nombre"],
           "capacidad": row["capacidad_maxima"]
         })
 

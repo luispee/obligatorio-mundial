@@ -43,7 +43,7 @@ export default function PaisSelect({
             <img
               src={`${flagsPath}/${selected.value}.svg`}
               alt=""
-              className="w-5 h-4 object-cover rounded-sm"
+              className="w-5 h-4 object-cover rounded-sm border border-gray-300"
             />
             <span>{selected.label}</span>
           </>
@@ -67,7 +67,7 @@ export default function PaisSelect({
               <img
                 src={`${flagsPath}/${option.value}.svg`}
                 alt=""
-                className="w-5 h-4 object-cover rounded-sm"
+                className="w-5 h-4 object-cover rounded-sm border border-gray-300"
               />
               <span>{option.label}</span>
             </li>

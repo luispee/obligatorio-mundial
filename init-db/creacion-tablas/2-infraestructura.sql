@@ -11,7 +11,7 @@ CREATE TABLE estadio (
 
 CREATE TABLE sector (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_sector VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
     capacidad_maxima INT NOT NULL,
     id_estadio INT NOT NULL,
 

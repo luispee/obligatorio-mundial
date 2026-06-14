@@ -1,5 +1,4 @@
-import { EstadioSummary } from './estadio';
-import { Estadio } from './estadio';
+import { EstadioSummary, ExtendedEstadio } from './estadio';
 import { Seleccion } from './seleccion';
 
 export type Evento = {
@@ -7,7 +6,7 @@ export type Evento = {
   seleccion_local: Seleccion;
   seleccion_visitante: Seleccion;
   fecha_hora: string;
-  estadio: Estadio;
+  estadio: ExtendedEstadio;
 };
 
 export type EventoSummary = Omit<Evento, 'estadio'> & {
