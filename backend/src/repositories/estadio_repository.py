@@ -50,3 +50,83 @@ class EstadioRepository:
     finally:
       cursor.close()
       conn.close()
+
+  @staticmethod
+  def get_all_estadios():
+      conn = get_connection()
+
+      if not conn:
+          raise RuntimeError("No se pudo conectar a la base de datos")
+
+      try:
+          cursor = conn.cursor(dictionary=True)
+
+          cursor.execute("""
+              SELECT
+                  e.id,
+                  e.nombre,
+                  e.ciudad,
+                  p.nombre AS pais_sede
+              FROM estadio e
+              JOIN pais p
+                  ON p.codigo = e.codigo_pais_sede
+              ORDER BY e.nombre
+          """)
+
+          return cursor.fetchall()
+
+      finally:
+          cursor.close()
+          conn.close()
+
+  @staticmethod
+  def get_estadio_by_id(id_estadio):
+      conn = get_connection()
+
+      if not conn:
+          raise RuntimeError("No se pudo conectar a la base de datos")
+
+      try:
+          cursor = conn.cursor(dictionary=True)
+
+          cursor.execute("""
+              SELECT
+                  e.id,
+                  e.ciudad,
+                  p.nombre AS pais_sede,
+                  s.id AS id_sector,
+                  s.nombre AS nombre_sector,
+                  s.capacidad_maxima
+              FROM estadio e
+              JOIN pais p
+                  ON p.codigo = e.codigo_pais_sede
+              JOIN sector s
+                  ON s.id_estadio = e.id
+              WHERE e.id = %s
+          """, (id_estadio,))
+
+          rows = cursor.fetchall()
+
+          if not rows:
+              return None
+
+          estadio = {
+              "id": rows[0]["id"],
+              "ciudad": rows[0]["ciudad"],
+              "pais_sede": rows[0]["pais_sede"],
+              "sectores": []
+          }
+
+          for row in rows:
+              estadio["sectores"].append({
+                  "id": row["id_sector"],
+                  "nombre": row["nombre_sector"],
+                  "capacidad": row["capacidad_maxima"]
+              })
+
+          return estadio
+
+      finally:
+          cursor.close()
+          conn.close()
+
