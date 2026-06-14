@@ -12,7 +12,7 @@ import { CreateVentaRequest } from '../../venta/api/ventaRequests';
 export default function EventoDetail() {
   const { getEvento } = useEvento();
   const [cantidadEntradas, setCantidadEntradas] = useState(1);
-  const [selectedEntradas, setSelectedEntradas] = useState<CreateVentaRequest>([]);
+  const [selectedEntradas, setSelectedEntradas] = useState<{ id_sector: number }[]>([]);
 
   const { id } = useParams();
 
@@ -49,10 +49,7 @@ export default function EventoDetail() {
 
   const handleSectorChange = (index: number, sectorId: number) => {
     const updatedEntradas = [...selectedEntradas];
-    updatedEntradas[index] = {
-      id_evento: evento.id,
-      id_sector: sectorId,
-    };
+    updatedEntradas[index] = { id_sector: sectorId };
     setSelectedEntradas(updatedEntradas);
   };
 

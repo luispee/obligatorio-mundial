@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 
 type PaisSelectProps = {
   label?: string;
@@ -20,15 +21,7 @@ export default function PaisSelect({
 
   const selected = options.find((o) => o.value === value);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useOnClickOutside(ref, () => setOpen(false));
 
   return (
     <div ref={ref} style={{ position: 'relative' }}>

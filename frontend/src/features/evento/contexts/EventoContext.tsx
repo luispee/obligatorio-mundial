@@ -7,6 +7,7 @@ import { updateEvento as updateEventoApi } from '../api/eventoApi';
 import { fetchEvento } from '../api/eventoApi';
 import { CreateEventoRequest } from '../api/eventoRequests';
 import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
+import { deactivateEvento as deactivateEventoApi } from '../api/eventoApi';
 
 type EventoContextType = {
   loading: boolean;
@@ -18,6 +19,7 @@ type EventoContextType = {
   clearError: () => void;
   getEventos: () => Promise<void>;
   getEvento: (id: number) => Promise<Evento | null>;
+  deactivateEvento: (id: number) => Promise<void>;
 };
 
 export const EventoContext = createContext<EventoContextType | undefined>(undefined);
@@ -93,6 +95,19 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const deactivateEvento = async (id: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deactivateEventoApi(id);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to deactivate evento';
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = () => setError(null);
 
   return (
@@ -107,6 +122,7 @@ export function EventoProvider({ children }: { children: ReactNode }) {
         clearError,
         getEventos,
         getEvento,
+        deactivateEvento,
       }}
     >
       {children}

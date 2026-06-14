@@ -15,6 +15,7 @@ export default function CantidadEntradasButton({
         selected ? 'bg-green text-white' : 'bg-gray'
       } cursor-pointer shadow shadow-md shadow-gray border border-gray hover:border-green transition-colors`}
       onClick={onClick}
+      type="button"
     >
       {label}
     </button>

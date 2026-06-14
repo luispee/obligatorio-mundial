@@ -119,6 +119,8 @@ class EventoRepository:
 
         JOIN pais pe ON pe.codigo = est.codigo_pais_sede
 
+        WHERE e.activo = 1
+
         ORDER BY e.fecha_hora ASC
       """)
 

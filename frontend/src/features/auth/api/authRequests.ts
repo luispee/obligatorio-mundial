@@ -6,3 +6,5 @@ export type LoginRequest = {
 };
 
 export type RegisterRequest = Usuario;
+
+export type UpdateUserRequest = Omit<Usuario, 'mail' | 'contrasena'>;

@@ -1,6 +1,6 @@
 import { useUI } from '../contexts/UIContext';
 import { useAuth } from '../features/auth/contexts/AuthContext';
-import ProfileDropdown from '../features/user/components/ProfileDropdown';
+import ProfileDropdown from '../features/auth/components/ProfileDropdown';
 import { LogoIcon } from '../icons/LogoIcon';
 import { UserFilledIcon } from '../icons/UserFilledIcon';
 import { UserIcon } from '../icons/UserIcon';

@@ -65,3 +65,36 @@ class AuthService:
         raise RuntimeError(f'Error al verificar el usuario: {str(e)}')
 
       return True
+
+  @staticmethod
+  def get_user_data(mail):
+    usuario = UsuarioRepository.find_by_mail(mail)
+    if usuario is None:
+      return None
+    role = UsuarioRepository.get_role(mail)
+    del usuario['hash_contrasena']
+    telefonos = UsuarioRepository.get_telefonos(mail)
+    usuario['telefonos'] = telefonos
+    if role == 'CLIENTE':
+      is_verified = UsuarioRepository.is_verified(mail)
+      usuario['verificado'] = is_verified
+    else:
+      usuario['verificado'] = True
+    return usuario
+
+  @staticmethod
+  def update_user(mail, data):
+    user = UsuarioRepository.find_by_mail(mail)
+
+    if user is None:
+      raise ValueError('No existe un usuario con ese mail')
+
+    data['telefonos'] = [t.strip() for t in data['telefonos'] if t.strip()]
+
+    try:
+      UsuarioRepository.update_usuario(mail, data)
+    except Exception as e:
+      raise RuntimeError(f'Error al actualizar el usuario: {str(e)}')
+      
+    
+    
