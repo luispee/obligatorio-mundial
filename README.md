@@ -20,6 +20,15 @@ En la raíz del proyecto:
      docker compose up --build
      `
 
+## Generación de respaldo de la base de datos
+
+En la raíz del proyecto:
+
+`bash
+    ./backup_db.sh
+    `
+
+
 ## Accesos
 
 - Frontend: http://localhost:5173
