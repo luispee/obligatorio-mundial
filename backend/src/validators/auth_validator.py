@@ -1,7 +1,7 @@
 from flask import jsonify
 
 class AuthValidator:
-  
+
   @staticmethod
   def validate_login(data):
     mail = data.get('mail')
@@ -9,6 +9,18 @@ class AuthValidator:
 
     if not mail or not contrasena:
       raise ValueError('Mail y contraseña son requeridos')
+
+  @staticmethod
+  def validate_verify(data):
+
+      mail = data.get('mail')
+
+      if not mail:
+          raise ValueError('Mail requerido')
+
+      if '@' not in mail:
+          raise ValueError('Mail inválido')
+
 
   @staticmethod
   def validate_register(data):

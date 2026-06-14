@@ -14,9 +14,9 @@ class AuthService:
 
     if user is None:
       return None
-    
+
     valid_contrasena = PasswordHasher.verify_password(contrasena, user['hash_contrasena'])
-    
+
     if not valid_contrasena:
       return None
 
@@ -42,8 +42,20 @@ class AuthService:
       )
     except Exception as e:
       raise RuntimeError(f'Error al crear el usuario: {str(e)}')
-    
+
   @staticmethod
   def get_register_form_data():
-    
+
     return AuthRepository.get_form_data()
+
+  @staticmethod
+  def verify(data):
+
+      mail = data.get('mail')
+
+      user = UsuarioRepository.find_by_mail(mail)
+
+      if user is None:
+          raise ValueError('No existe un usuario con ese mail')
+
+      return True

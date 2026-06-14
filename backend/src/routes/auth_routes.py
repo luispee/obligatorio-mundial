@@ -20,14 +20,14 @@ def login():
 
   if data is None:
     return jsonify({'error': 'Credenciales inválidas'}), 401
-  
+
   return jsonify({'message': 'Login exitoso', 'token': data.get('token'), 'usuario': { 'mail': data.get('mail'), 'role': data.get('role') }}), 200
 
 @auth_routes.route('/register', methods=['POST'])
 def register():
   data = request.get_json()
 
-  try: 
+  try:
     AuthValidator.validate_register(data)
     AuthService.register(data)
     return jsonify({'message': 'Registro exitoso'}), 201
@@ -38,13 +38,33 @@ def register():
   except Exception as e:
     return jsonify({'error': str(e)}), 500
 
+@auth_routes.route('/verify', methods=['POST'])
+def verify():
+
+    data = request.get_json()
+
+    try:
+        AuthValidator.validate_verify(data)
+
+        AuthService.verify(data)
+
+        return jsonify({
+            'message': 'Código enviado con exito'
+        }), 200
+
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @auth_routes.route('/register/form-data', methods=['GET'])
 def register_form():
   try:
-        
-    data = AuthService.get_register_form_data() 
-    
+
+    data = AuthService.get_register_form_data()
+
     return jsonify(data), 200
-        
+
   except Exception as e:
     return jsonify({"error": str(e)}), 500
