@@ -29,6 +29,8 @@ CREATE TABLE evento (
 
     id_estadio INT NOT NULL,
 
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+
     CONSTRAINT fk_evento_local
         FOREIGN KEY (codigo_seleccion_local)
         REFERENCES seleccion(codigo_pais),

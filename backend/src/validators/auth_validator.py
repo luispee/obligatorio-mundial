@@ -50,3 +50,26 @@ class AuthValidator:
 
     if data['contrasena'] is None or len(data['contrasena']) < 6:
       raise ValueError('La contraseña debe tener al menos 6 caracteres')
+
+  @staticmethod
+  def validate_update_user(data):
+    required_fields = [
+      'codigo_pais_documento', 'id_tipo_documento', 'numero_documento',
+      'codigo_pais_residencia', 'localidad', 'calle', 'numero_puerta', 'telefonos'
+    ]
+
+    missing_fields = []
+
+    for field in required_fields:
+      if field not in data:
+        missing_fields.append(field)
+        continue
+
+      if isinstance(data[field], str) and not data[field].strip():
+        raise ValueError(f'El campo {field} no puede estar vacío')
+
+      if missing_fields:
+        raise ValueError(f'Missing fields: {", ".join(missing_fields)}')
+
+    if not data.get('telefonos') or all(not t.strip() for t in data['telefonos']):
+      raise ValueError('Debe ingresar al menos un teléfono')

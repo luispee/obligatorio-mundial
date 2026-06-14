@@ -176,6 +176,7 @@ export default function CreateEvento() {
             onChange={handleChange('fecha_hora')}
             placeholder=""
             type="datetime-local"
+            pointer
           />
         </ul>
         {selectedEstadio && <p>Capacidad: {capacidadTotal()}</p>}
@@ -209,8 +210,6 @@ export default function CreateEvento() {
         </div>
 
         <Button text={` ${loading ? 'Cargando...' : 'Crear Evento'}`} type="submit" />
-
-        <div></div>
       </form>
     </main>
   );

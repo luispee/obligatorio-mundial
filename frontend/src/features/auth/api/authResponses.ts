@@ -1,6 +1,7 @@
 import { Pais } from '../../../types/pais';
 import { Role } from '../../../types/role';
 import { TipoDocumento } from '../../../types/documento';
+import { Usuario } from '../../../types/usuario';
 
 export type LoginResponse = {
   token: string;
@@ -14,4 +15,8 @@ export type LoginResponse = {
 export type RegisterFormDataResponse = {
   paises: Pais[];
   tipos_documento: TipoDocumento[];
+};
+
+export type GetUserResponse = Omit<Usuario, 'contrasena'> & {
+  verificado: boolean;
 };

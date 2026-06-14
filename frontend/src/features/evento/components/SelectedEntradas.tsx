@@ -5,7 +5,7 @@ import { CreateVentaRequest } from '../../venta/api/ventaRequests';
 type SelectedEntradasProps = {
   cantidad: number;
   evento: Evento;
-  selectedEntradas: CreateVentaRequest;
+  selectedEntradas: { id_sector: number }[];
   onChange: (index: number, sectorId: number) => void;
 };
 

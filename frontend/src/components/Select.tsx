@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 
 type SelectProps = {
   label?: string;
@@ -22,15 +23,7 @@ export default function Select({
 
   const selected = options.find((o) => o.value === value);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  useOnClickOutside(ref, () => setOpen(false));
 
   const borderColor = textColor === 'white' ? 'border-white/40' : 'border-gray-300';
 

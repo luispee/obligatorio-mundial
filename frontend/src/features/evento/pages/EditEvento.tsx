@@ -9,10 +9,14 @@ import Button from '../../../components/Button';
 import SectorRow from '../components/SectorRow';
 import { CreateEventoForm as UpdateEventoForm } from '../types/createEventoForm';
 import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
+import ConfirmBajaModal from '../components/ConfirmBajaModal';
+
 export default function EditEvento() {
-  const { loading, error, getFormData, clearError, updateEvento, getEvento } = useEvento();
+  const { loading, error, getFormData, clearError, updateEvento, getEvento, deactivateEvento } =
+    useEvento();
   const [formData, setFormData] = useState<FormEventoResponse | null>(null);
   const [emptyPrecio, setEmptyPrecio] = useState(false);
+  const [showBajaConfirm, setShowBajaConfirm] = useState(false);
   const [form, setForm] = useState<UpdateEventoForm>({
     codigo_seleccion_local: '',
     codigo_seleccion_visitante: '',
@@ -86,6 +90,15 @@ export default function EditEvento() {
     fetchAll();
   }, []);
 
+  const handleDeactivate = async () => {
+    try {
+      await deactivateEvento(Number(id));
+      navigate('/');
+    } catch (error) {
+      console.error('Error al dar de baja el evento:', error);
+    }
+  };
+
   const handleSubmit = async () => {
     setEmptyPrecio(false);
     clearError();
@@ -130,15 +143,29 @@ export default function EditEvento() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       <form
-        className="flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray"
+        className="relative flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray"
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
       >
+        {showBajaConfirm && (
+          <ConfirmBajaModal
+            onClose={() => setShowBajaConfirm(false)}
+            onConfirm={handleDeactivate}
+          />
+        )}
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
           Editar Evento
         </h1>
+        <div className="absolute top-4 right-4">
+          <Button
+            text="Dar de baja"
+            color="red"
+            onClick={() => setShowBajaConfirm(true)}
+            type="button"
+          />
+        </div>
 
         <ul className="grid w-full grid-cols-2 gap-4 md:grid-cols-2">
           <PaisSelect
@@ -191,6 +218,7 @@ export default function EditEvento() {
             onChange={handleChange('fecha_hora')}
             placeholder=""
             type="datetime-local"
+            pointer
           />
         </ul>
         {selectedEstadio && <p>Capacidad: {capacidadTotal()}</p>}
@@ -224,8 +252,6 @@ export default function EditEvento() {
         </div>
 
         <Button text={` ${loading ? 'Cargando...' : 'Editar Evento'}`} type="submit" />
-
-        <div></div>
       </form>
     </main>
   );

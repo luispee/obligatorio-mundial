@@ -1,12 +1,13 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { LoginResponse, RegisterFormDataResponse } from '../api/authResponses';
-import { LoginRequest, RegisterRequest } from '../api/authRequests';
-import { login as apiLogin } from '../api/authApi';
+import { LoginRequest, RegisterRequest, UpdateUserRequest } from '../api/authRequests';
+import { login as apiLogin, fetchUser } from '../api/authApi';
 import { setAuthToken } from '../../../utils/httpClient';
 import { getRegisterFormData as apiGetRegisterFormData } from '../api/authApi';
 import { register as apiRegister } from '../api/authApi';
 import { verifyUser as apiVerifyUser } from '../api/authApi';
 import { VerifyUserRequest } from '../../evento/api/eventoRequests';
+import { updateUser as updateUserApi } from '../api/authApi';
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -23,6 +24,8 @@ type AuthContextType = {
   register: (data: RegisterRequest) => Promise<any>;
   verifyUser: (data: VerifyUserRequest) => Promise<any>;
   token: string | null;
+  getUserData: () => Promise<any>;
+  updateUser: (data: UpdateUserRequest) => Promise<any>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -138,6 +141,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const getUserData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetchUser();
+      return res;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to fetch user data';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const updateUser = useCallback(async (data: UpdateUserRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await updateUserApi(data);
+      return res;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to update user data';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const isAuthenticated = !!token;
   const isAdministrador = user?.role === 'ADMINISTRADOR';
   const isCliente = user?.role === 'CLIENTE';
@@ -160,6 +193,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         token,
         verifyUser,
+        getUserData,
+        updateUser,
       }}
     >
       {children}

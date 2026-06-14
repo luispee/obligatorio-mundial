@@ -1,26 +1,20 @@
-import Input from '../../../components/Input';
-import Link from '../../../components/Link';
-import Select from '../../../components/Select';
-import TelefonoSection from '../components/TelefonoSection';
-import Button from '../../../components/Button';
-import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { RegisterFormDataResponse } from '../api/authResponses';
-import { RegisterRequest } from '../api/authRequests';
+import Button from '../../../components/Button';
+import Input from '../../../components/Input';
+import Select from '../../../components/Select';
 import FlagSelect from '../../../components/PaisSelect';
-import { useNavigate } from 'react-router-dom';
+import TelefonoSection from '../components/TelefonoSection';
+import { useEffect, useState } from 'react';
+import { RegisterFormDataResponse } from '../api/authResponses';
+import { UpdateUserRequest } from '../api/authRequests';
+import { Link } from 'react-router-dom';
 
-export default function Register() {
-  const { getRegisterFormData, register, error, loading, clearError } = useAuth();
+export default function Profile() {
+  const { getRegisterFormData, error, loading, getUserData, updateUser } = useAuth();
   const [formData, setFormData] = useState<RegisterFormDataResponse | null>(null);
-  const [confirmContrasena, setConfirmContrasena] = useState('');
-  const [contrasenaError, setContrasenaError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
-
-  const [form, setForm] = useState<RegisterRequest>({
-    mail: '',
-    contrasena: '',
+  const [verified, setVerified] = useState(false);
+  const [updated, setUpdated] = useState(false);
+  const [form, setForm] = useState<UpdateUserRequest>({
     codigo_pais_documento: '',
     id_tipo_documento: 2,
     numero_documento: '',
@@ -32,43 +26,39 @@ export default function Register() {
     telefonos: [''],
   });
 
-  const handleChange =
-    (field: keyof RegisterRequest) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setForm((prev) => ({ ...prev, [field]: e.target.value }));
-    };
-
-  const handleSelectChange = (field: keyof RegisterRequest) => (value: string | number) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
+  const { user } = useAuth();
 
   useEffect(() => {
-    async function fetchRegisterFormData() {
+    async function fetchData() {
       try {
-        const data = await getRegisterFormData();
-        setFormData(data);
+        const formData = await getRegisterFormData();
+        setFormData(formData);
+        const userData = await getUserData();
+        setVerified(userData.verificado);
+        setForm(userData);
       } catch (error) {
         console.error('Error al obtener datos del formulario de registro:', error);
       }
     }
-    fetchRegisterFormData();
+    fetchData();
   }, []);
 
-  const handleSubmit = async () => {
-    clearError();
-    if (form.contrasena !== confirmContrasena) {
-      setContrasenaError('Las contraseñas no coinciden');
-      return;
-    }
-    setContrasenaError(null);
-    try {
-      await register(form);
-      navigate('/register/verify-mail');
-    } catch (err) {
-      console.error('Error en registro', err);
-    }
+  const handleChange =
+    (field: keyof UpdateUserRequest) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    };
+
+  const handleSelectChange = (field: keyof UpdateUserRequest) => (value: string | number) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSubmit = async () => {
+    await updateUser(form);
+    setUpdated(true);
+  };
+
+  const successMessage = updated ? 'Datos actualizados correctamente' : null;
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       <form
@@ -78,30 +68,10 @@ export default function Register() {
           handleSubmit();
         }}
       >
-        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
-          Registrarse
-        </h1>
-        <Input
-          label="Correo Electrónico"
-          type="text"
-          placeholder="Ingresa tu correo electrónico"
-          value={form.mail}
-          onChange={handleChange('mail')}
-        />
-        <Input
-          label="Contraseña"
-          type="password"
-          placeholder="Ingresa tu contraseña"
-          value={form.contrasena}
-          onChange={handleChange('contrasena')}
-        />
-        <Input
-          label="Confirmar Contraseña"
-          type="password"
-          placeholder="Confirma tu contraseña"
-          value={confirmContrasena}
-          onChange={(e) => setConfirmContrasena(e.target.value)}
-        />
+        <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">TUS DATOS</h1>
+        <p>
+          <strong>Mail:</strong> {user?.mail}
+        </p>
 
         <TelefonoSection
           telefonos={form.telefonos}
@@ -176,18 +146,28 @@ export default function Register() {
           value={form.codigo_postal}
           onChange={handleChange('codigo_postal')}
         />
+        {!verified && (
+          <div className="flex flex-row items-center gap-4">
+            <p className="strong text-left">Tu cuenta no está verificada.</p>
+            <Link to="/register/verify-mail" className="text-green-600 hover:underline">
+              Verificar cuenta
+            </Link>
+          </div>
+        )}
 
-        <p className="text-center text-red-500 min-h-[20px]">{contrasenaError || error || ''}</p>
+        <div className="text-center min-h-[20px]">
+          {error ? (
+            <p className="text-red-500">{error}</p>
+          ) : (
+            <p className="text-green-500">{successMessage}</p>
+          )}
+        </div>
 
         <Button
-          text={` ${loading ? 'Cargando...' : 'Registrarse'}`}
+          text={` ${loading ? 'Cargando...' : 'Guardar Cambios'}`}
           type="submit"
           disabled={loading}
         />
-
-        <p>
-          ¿Ya tienes cuenta? <Link href="/login" text="Inicia sesión aquí" />
-        </p>
       </form>
     </main>
   );

@@ -10,6 +10,7 @@ import VerifyMail from './features/auth/pages/VerifyMail';
 import CreateEvento from './features/evento/pages/CreateEvento';
 import ProtectedRoute from './components/ProtectedRoute';
 import EditEvento from './features/evento/pages/EditEvento';
+import Profile from './features/auth/pages/Profile';
 
 export const router = createBrowserRouter([
   {
@@ -22,6 +23,14 @@ export const router = createBrowserRouter([
       {
         path: '*',
         element: <NotFound />,
+      },
+      {
+        path: '/profile',
+        element: (
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        ),
       },
       {
         path: 'events',

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, Response
+from flask import Blueprint, jsonify, request, Response, g
 from src.services.auth_service import AuthService
 from src.decorators.jwt_required import jwt_required
 from src.decorators.roles import admin_required
@@ -68,3 +68,29 @@ def register_form():
 
   except Exception as e:
     return jsonify({"error": str(e)}), 500
+
+@auth_routes.route('/me', methods=['GET'])
+@jwt_required
+def me():
+  try:
+    mail = g.user_mail
+    usuario = AuthService.get_user_data(mail)
+    if usuario is None:
+      return jsonify({'error': 'Usuario no encontrado'}), 404
+    return jsonify(usuario), 200
+  except Exception as e:
+    return jsonify({'error': str(e)}), 500
+
+@auth_routes.route('/me', methods=['PATCH'])
+@jwt_required
+def update_me():
+  try:
+    mail = g.user_mail
+    data = request.get_json()
+    AuthValidator.validate_update_user(data)
+    AuthService.update_user(mail, data)
+    return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
+  except ValueError as e:
+    return jsonify({'error': str(e)}), 400
+  except Exception as e:
+    return jsonify({'error': str(e)}), 500

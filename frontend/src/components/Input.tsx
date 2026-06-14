@@ -5,9 +5,18 @@ type InputProps = {
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   value: string;
   step?: string;
+  pointer?: boolean;
 };
 
-export default function Input({ label, type, placeholder, onChange, value, step }: InputProps) {
+export default function Input({
+  label,
+  type,
+  placeholder,
+  onChange,
+  value,
+  step,
+  pointer,
+}: InputProps) {
   const inputId = label.toLowerCase().replace(/\s+/g, '-');
 
   return (
@@ -23,6 +32,7 @@ export default function Input({ label, type, placeholder, onChange, value, step 
         placeholder={placeholder}
         className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-green"
         step={step}
+        style={pointer ? { cursor: 'pointer' } : {}}
       />
     </div>
   );

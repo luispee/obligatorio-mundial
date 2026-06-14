@@ -3,7 +3,7 @@ type ButtonProps = {
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  color?: 'green' | 'red' | 'white';
+  color?: 'green' | 'red' | 'white' | 'gray';
   textColor?: 'white' | 'black' | 'blue';
 };
 

@@ -33,3 +33,9 @@ export function updateEvento(id: number, data: UpdateEventoRequest): Promise<Cre
 export function fetchEvento(id: number): Promise<GetEventoResponse> {
   return request(`/eventos/${id}`);
 }
+
+export function deactivateEvento(id: number) {
+  return request(`/eventos/${id}/baja`, {
+    method: 'PATCH',
+  });
+}

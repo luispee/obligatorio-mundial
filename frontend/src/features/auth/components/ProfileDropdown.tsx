@@ -1,8 +1,8 @@
 import useOnClickOutside from '../../../hooks/useOnClickOutside';
 import { useUI } from '../../../contexts/UIContext';
 import { useRef, useState, useEffect, type RefObject } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../auth/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Button from '../../../components/Button';
 
 type Props = {

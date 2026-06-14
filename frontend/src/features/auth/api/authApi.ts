@@ -1,7 +1,7 @@
 import { request } from '../../../utils/httpClient';
 import { VerifyUserRequest } from '../../evento/api/eventoRequests';
-import { LoginRequest, RegisterRequest } from './authRequests';
-import { LoginResponse, RegisterFormDataResponse } from './authResponses';
+import { LoginRequest, RegisterRequest, UpdateUserRequest } from './authRequests';
+import { GetUserResponse, LoginResponse, RegisterFormDataResponse } from './authResponses';
 
 export function login(data: LoginRequest): Promise<LoginResponse> {
   return request('/auth/login', {
@@ -26,6 +26,19 @@ export function getRegisterFormData(): Promise<RegisterFormDataResponse> {
 export function verifyUser(data: VerifyUserRequest) {
   return request('/auth/verify', {
     method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function fetchUser(): Promise<GetUserResponse> {
+  return request('/auth/me', {
+    method: 'GET',
+  });
+}
+
+export function updateUser(data: UpdateUserRequest) {
+  return request('/auth/me', {
+    method: 'PATCH',
     body: JSON.stringify(data),
   });
 }
