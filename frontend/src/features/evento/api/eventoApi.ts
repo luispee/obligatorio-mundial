@@ -1,4 +1,9 @@
-import { CreateEventoResponse, FormEventoResponse, GetEventosResponse } from './eventoResponses';
+import {
+  CreateEventoResponse,
+  FormEventoResponse,
+  GetEventoResponse,
+  GetEventosResponse,
+} from './eventoResponses';
 import { request } from '../../../utils/httpClient';
 import { CreateEventoRequest } from './eventoRequests';
 import { CreateEventoRequest as UpdateEventoRequest } from './eventoRequests';
@@ -23,4 +28,8 @@ export function updateEvento(id: number, data: UpdateEventoRequest): Promise<Cre
     method: 'PUT',
     body: JSON.stringify(data),
   });
+}
+
+export function fetchEvento(id: number): Promise<GetEventoResponse> {
+  return request(`/eventos/${id}`);
 }

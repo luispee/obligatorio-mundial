@@ -5,7 +5,8 @@ type SelectProps = {
   options: { value: string | number; label: string }[];
   value: string | number;
   onChange: (value: string | number) => void;
-  whiteText?: boolean;
+  textColor?: string;
+  whiteLabel?: boolean;
 };
 
 export default function Select({
@@ -13,7 +14,8 @@ export default function Select({
   options,
   value,
   onChange,
-  whiteText = false,
+  textColor = 'gray-700',
+  whiteLabel = false,
 }: SelectProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -30,19 +32,24 @@ export default function Select({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const textColor = whiteText ? 'text-white' : 'text-gray-700';
-  const borderColor = whiteText ? 'border-white/40' : 'border-gray-300';
+  const borderColor = textColor === 'white' ? 'border-white/40' : 'border-gray-300';
 
   return (
-    <div ref={ref} style={{ position: 'relative' }}>
-      {label && <label className={`block font-semibold mb-2 ${textColor}`}>{label}</label>}
+    <div ref={ref} className="relative min-w-[240px]">
+      {label && (
+        <label
+          className={`block font-semibold mb-2 ${whiteLabel ? 'text-white' : 'text-' + textColor}`}
+        >
+          {label}
+        </label>
+      )}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className={`block w-full rounded border ${borderColor} px-3 py-2.5 text-left ${textColor} shadow-sm focus:outline-none focus:ring focus:ring-green cursor-pointer flex items-center`}
+        className={`block w-full bg-white rounded border ${borderColor} px-3 py-2.5 text-left text-${textColor} shadow-sm focus:outline-none focus:ring focus:ring-green cursor-pointer flex items-center`}
       >
         <span className="flex-1">
-          {selected ? selected.label : <span className="text-gray-400">Seleccionar...</span>}
+          {selected ? selected.label : <span className={`text-${textColor}`}>Seleccionar...</span>}
         </span>
         <span>▾</span>
       </button>
@@ -56,7 +63,7 @@ export default function Select({
                 onChange(option.value);
                 setOpen(false);
               }}
-              className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-gray-700"
+              className={`px-3 py-2 hover:bg-gray-100 cursor-pointer text-${textColor}`}
             >
               {option.label}
             </li>

@@ -1,4 +1,4 @@
-import { Sector } from './sector';
+import { Sector, ExtendedSector } from './sector';
 
 export type Estadio = {
   id: number;
@@ -9,4 +9,9 @@ export type Estadio = {
 
 export type EstadioSummary = Omit<Estadio, 'sectores'> & {
   pais_sede: string;
+};
+
+export type ExtendedEstadio = Omit<Estadio, 'sectores'> & {
+  pais_sede: string;
+  sectores: ExtendedSector[];
 };

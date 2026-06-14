@@ -41,6 +41,7 @@ class EventoRepository:
         """
         SELECT
           s.id,
+          s.nombre,
           se.precio,
           se.capacidad_disponible > 0 AS disponibilidad
         FROM sector_evento se
@@ -70,6 +71,7 @@ class EventoRepository:
           {
             "id": s['id'],
             "precio": float(s['precio']),
+            "nombre": s['nombre'],
             "disponible": bool(s['disponibilidad'])
           } for s in sectores
         ]

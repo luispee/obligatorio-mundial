@@ -5,6 +5,8 @@ import { login as apiLogin } from '../api/authApi';
 import { setAuthToken } from '../../../utils/httpClient';
 import { getRegisterFormData as apiGetRegisterFormData } from '../api/authApi';
 import { register as apiRegister } from '../api/authApi';
+import { verifyUser as apiVerifyUser } from '../api/authApi';
+import { VerifyUserRequest } from '../../evento/api/eventoRequests';
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -19,6 +21,7 @@ type AuthContextType = {
   loading: boolean;
   getRegisterFormData: () => Promise<RegisterFormDataResponse>;
   register: (data: RegisterRequest) => Promise<any>;
+  verifyUser: (data: VerifyUserRequest) => Promise<any>;
   token: string | null;
 };
 
@@ -120,6 +123,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [logout]);
 
+  const verifyUser = useCallback(async (data: VerifyUserRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiVerifyUser(data);
+      return res;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to verify user';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   const isAuthenticated = !!token;
   const isAdministrador = user?.role === 'ADMINISTRADOR';
   const isCliente = user?.role === 'CLIENTE';
@@ -141,6 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         getRegisterFormData,
         register,
         token,
+        verifyUser,
       }}
     >
       {children}

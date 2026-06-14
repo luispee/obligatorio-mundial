@@ -49,7 +49,7 @@ def verify():
         AuthService.verify(data)
 
         return jsonify({
-            'message': 'Código enviado con exito'
+            'message': 'Usuario verificado con éxito'
         }), 200
 
     except ValueError as e:

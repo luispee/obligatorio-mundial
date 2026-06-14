@@ -10,7 +10,7 @@ import SectorRow from '../components/SectorRow';
 import { CreateEventoForm as UpdateEventoForm } from '../types/createEventoForm';
 import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
 export default function EditEvento() {
-  const { loading, error, getFormData, clearError, updateEvento } = useEvento();
+  const { loading, error, getFormData, clearError, updateEvento, getEvento } = useEvento();
   const [formData, setFormData] = useState<FormEventoResponse | null>(null);
   const [emptyPrecio, setEmptyPrecio] = useState(false);
   const [form, setForm] = useState<UpdateEventoForm>({
@@ -62,15 +62,28 @@ export default function EditEvento() {
   };
 
   useEffect(() => {
-    async function fetchFormData() {
+    async function fetchAll() {
       try {
-        const data = await getFormData();
+        const [evento, data] = await Promise.all([getEvento(Number(id)), getFormData()]);
         setFormData(data);
+        setForm({
+          codigo_seleccion_local: evento?.seleccion_local.codigo || '',
+          codigo_seleccion_visitante: evento?.seleccion_visitante.codigo || '',
+          fecha_hora: evento?.fecha_hora.slice(0, 16) || '',
+          estadio: {
+            id: evento?.estadio.id || 0,
+            sectores:
+              evento?.estadio.sectores.map((s) => ({
+                id: s.id,
+                precio: String(s.precio),
+              })) || [],
+          },
+        });
       } catch (error) {
-        console.error('Error al obtener datos del formulario:', error);
+        console.error('Error al obtener datos:', error);
       }
     }
-    fetchFormData();
+    fetchAll();
   }, []);
 
   const handleSubmit = async () => {

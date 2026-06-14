@@ -1,6 +1,6 @@
 import { Seleccion } from '../../../types/seleccion';
 import { Estadio } from '../../../types/estadio';
-import { EventoSummary } from '../../../types/evento';
+import { Evento, EventoSummary } from '../../../types/evento';
 
 export type FormEventoResponse = {
   selecciones: Seleccion[];
@@ -13,3 +13,5 @@ export type CreateEventoResponse = {
 };
 
 export type GetEventosResponse = EventoSummary[];
+
+export type GetEventoResponse = Evento;
