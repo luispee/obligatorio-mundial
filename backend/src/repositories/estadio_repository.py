@@ -95,6 +95,7 @@ class EstadioRepository:
               SELECT
                   e.id,
                   e.ciudad,
+                  e.nombre,
                   p.nombre AS pais_sede,
                   s.id AS id_sector,
                   s.nombre AS nombre_sector,
@@ -114,6 +115,7 @@ class EstadioRepository:
 
           estadio = {
               "id": rows[0]["id"],
+              "nombre": rows[0]["nombre"],
               "ciudad": rows[0]["ciudad"],
               "pais_sede": rows[0]["pais_sede"],
               "sectores": []

@@ -3,17 +3,23 @@ import Button from '../../../components/Button';
 import { GetEstadiosResponse } from '../api/estadioResponses';
 import EstadioList from '../components/EstadioList';
 import { useEffect, useState } from 'react';
+import { useEstadio } from '../contexts/EstadioContext';
 
 export default function Estadios() {
+  const { getEstadios } = useEstadio();
   const [estadios, setEstadios] = useState<GetEstadiosResponse>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Aquí iría la lógica para cargar los estadios desde la API
-    setEstadios([
-      { id: 1, nombre: 'MetLife', ciudad: 'Dallas', pais_sede: 'Estados Unidos' },
-      { id: 2, nombre: 'Maracaná', ciudad: 'Río de Janeiro', pais_sede: 'Brasil' },
-    ]);
+    const fetchData = async () => {
+      try {
+        const data = await getEstadios();
+        setEstadios(data);
+      } catch (error) {
+        console.error('Error fetching estadios:', error);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleSubmit = () => {

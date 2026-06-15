@@ -107,8 +107,8 @@ export default function EditEstadio() {
         </div>
         {estadio.sectores.map((sector, i) => (
           <>
-            <SectorInputs key={i} index={i} sector={sector} onChange={handleSectorChange} />
             <hr className="text-gray-300" />
+            <SectorInputs key={i} index={i} sector={sector} onChange={handleSectorChange} />
           </>
         ))}
 

@@ -7,8 +7,8 @@ from prometheus_client import Counter
 from src.routes.auth_routes import auth_routes
 from src.routes.monitoring_routes import monitoring_routes
 from src.routes.evento_routes import evento_routes
-from src.routes.ventas_routes import ventas_bp
-from src.routes.estadio_routes import estadio_bp
+from src.routes.venta_routes import venta_routes
+from src.routes.estadio_routes import estadio_routes
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
@@ -18,8 +18,8 @@ CORS(app)
 app.register_blueprint(monitoring_routes, url_prefix="/api/metrics")
 app.register_blueprint(auth_routes, url_prefix="/api/auth")
 app.register_blueprint(evento_routes, url_prefix="/api/eventos")
-app.register_blueprint(ventas_bp, url_prefix="/api/ventas")
-app.register_blueprint(estadio_bp)
+app.register_blueprint(venta_routes, url_prefix="/api/ventas")
+app.register_blueprint(estadio_routes, url_prefix="/api/estadios")
 
 @app.route('/api/')
 def home():

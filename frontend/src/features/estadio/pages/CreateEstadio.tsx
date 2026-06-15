@@ -97,8 +97,8 @@ export default function CreateEstadio() {
         </div>
         {estadio.sectores.map((sector, i) => (
           <>
-            <SectorInputs index={i} sector={sector} onChange={handleSectorChange} />
             <hr className="text-gray-300" />
+            <SectorInputs index={i} sector={sector} onChange={handleSectorChange} />
           </>
         ))}
 
