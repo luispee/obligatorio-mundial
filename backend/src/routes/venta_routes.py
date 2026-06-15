@@ -59,7 +59,7 @@ def cancelar_venta(id):
         return jsonify({
             "error": str(e)
         }), 400
-    # except Exception as e:
-    #     return jsonify({
-    #         "error": str(e)
-    #     }), 500
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
