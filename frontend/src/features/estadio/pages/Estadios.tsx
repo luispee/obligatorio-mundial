@@ -36,7 +36,7 @@ export default function Estadios() {
           }}
         >
           <div className="absolute top-4 right-4">
-            <Button text="Nuevo Estadio" onClick={() => navigate('/stadiums/create')} />
+            <Button text="Nuevo Estadio" onClick={() => navigate('/estadios/crear')} />
           </div>
           <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">Estadios</h1>
 

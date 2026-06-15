@@ -54,9 +54,9 @@ export default function EventoCard({ evento }: EventoCardProps) {
       </p>
       <div className="flex justify-end">
         {isAdministrador ? (
-          <Button text="Editar" onClick={() => navigate(`/events/${evento.id}/edit`)} />
+          <Button text="Editar" onClick={() => navigate(`/eventos/${evento.id}/editar`)} />
         ) : (
-          <Button text="Comprar" onClick={() => navigate(`/events/${evento.id}`)} />
+          <Button text="Comprar" onClick={() => navigate(`/eventos/${evento.id}`)} />
         )}
       </div>
     </div>

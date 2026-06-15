@@ -5,14 +5,14 @@ import { CreateVentaRequest } from '../../venta/api/ventaRequests';
 type SelectedEntradasProps = {
   cantidad: number;
   evento: Evento;
-  selectedEntradas: { id_sector: number }[];
+  selectedSectores: { id: number }[];
   onChange: (index: number, sectorId: number) => void;
 };
 
 export default function SelectedEntradas({
   cantidad,
   evento,
-  selectedEntradas,
+  selectedSectores,
   onChange,
 }: SelectedEntradasProps) {
   const precio = (sectorId: number) => {
@@ -34,7 +34,7 @@ export default function SelectedEntradas({
               value: sector.id.toString(),
               label: sector.nombre + ' ($' + sector.precio.toFixed(2) + ')',
             }))}
-            value={selectedEntradas[i]?.id_sector.toString() || ''}
+            value={selectedSectores[i]?.id.toString() || ''}
             onChange={(value) => onChange(i, Number(value))}
             whiteLabel
             textColor="blue"

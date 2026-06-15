@@ -70,7 +70,7 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
         <p className="text-white truncate max-w-[160px]">{user?.mail}</p>
         <Button
           text="Mi Perfil"
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate('/perfil')}
           color="white"
           textColor="blue"
         />
@@ -78,13 +78,13 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
           <>
             <Button
               text="Mis Entradas"
-              onClick={() => navigate('/my-tickets')}
+              onClick={() => navigate('/mis-entradas')}
               color="white"
               textColor="blue"
             />
             <Button
               text="Notificaciones"
-              onClick={() => navigate('/notifications')}
+              onClick={() => navigate('/notificaciones')}
               color="white"
               textColor="blue"
             />

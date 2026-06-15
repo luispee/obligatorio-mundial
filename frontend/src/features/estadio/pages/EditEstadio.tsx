@@ -72,7 +72,7 @@ export default function EditEstadio() {
       };
       console.log('Request to update estadio:', request);
       updateEstadio(Number(id), request);
-      navigate('/stadiums');
+      navigate('/estadios');
     } catch (error) {
       console.error('Error updating estadio:', error);
     }

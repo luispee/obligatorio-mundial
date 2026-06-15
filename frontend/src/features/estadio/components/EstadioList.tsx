@@ -26,7 +26,7 @@ export default function EstadioList({ estadios }: EstadioListProps) {
             text="Editar"
             color="white"
             textColor="blue"
-            onClick={() => navigate(`/stadiums/${estadio.id}/edit`)}
+            onClick={() => navigate(`/estadios/${estadio.id}/editar`)}
           />
         </div>
       ))}

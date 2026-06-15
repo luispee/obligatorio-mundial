@@ -56,7 +56,7 @@ export default function Login() {
           disabled={loading}
         />
         <p>
-          ¿No tienes cuenta? <Link href="/register" text="Regístrate aquí" />
+          ¿No tienes cuenta? <Link href="/registro" text="Regístrate aquí" />
         </p>
       </form>
     </main>

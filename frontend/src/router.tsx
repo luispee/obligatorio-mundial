@@ -14,6 +14,7 @@ import Profile from './features/auth/pages/Profile';
 import Estadios from './features/estadio/pages/Estadios';
 import CreateEstadio from './features/estadio/pages/CreateEstadio';
 import EditEstadio from './features/estadio/pages/EditEstadio';
+import ConfirmarCompra from './features/venta/pages/ConfirmarCompra';
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
         element: <NotFound />,
       },
       {
-        path: '/profile',
+        path: '/perfil',
         element: (
           <ProtectedRoute>
             <Profile />
@@ -36,7 +37,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/stadiums',
+        path: '/estadios',
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
             <Estadios />
@@ -44,7 +45,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/stadiums/create',
+        path: '/estadios/crear',
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
             <CreateEstadio />
@@ -52,7 +53,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: '/stadiums/:id/edit',
+        path: '/estadios/:id/editar',
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
             <EditEstadio />
@@ -60,10 +61,18 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: 'events',
+        path: '/confirmar-compra/:id',
+        element: (
+          <ProtectedRoute requiredRoles={['CLIENTE']}>
+            <ConfirmarCompra />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/eventos',
         children: [
           {
-            path: 'create',
+            path: 'crear',
             element: (
               <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
                 <CreateEvento />
@@ -71,7 +80,7 @@ export const router = createBrowserRouter([
             ),
           },
           {
-            path: ':id/edit',
+            path: ':id/editar',
             element: (
               <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
                 <EditEvento />
@@ -80,7 +89,11 @@ export const router = createBrowserRouter([
           },
           {
             path: ':id',
-            element: <EventoDetail />,
+            element: (
+              <ProtectedRoute requiredRoles={['CLIENTE']}>
+                <EventoDetail />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -94,11 +107,11 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: '/register',
+        path: '/registro',
         element: <Register />,
       },
       {
-        path: '/register/verify-mail',
+        path: '/registro/verificar-mail',
         element: <VerifyMail />,
       },
     ],

@@ -177,6 +177,7 @@ export default function CreateEvento() {
             placeholder=""
             type="datetime-local"
             pointer
+            step="900"
           />
         </ul>
         {selectedEstadio && <p>Capacidad: {capacidadTotal()}</p>}
