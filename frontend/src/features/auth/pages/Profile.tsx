@@ -149,7 +149,7 @@ export default function Profile() {
         {!verified && (
           <div className="flex flex-row items-center gap-4">
             <p className="strong text-left">Tu cuenta no está verificada.</p>
-            <Link to="/register/verify-mail" className="text-green-600 hover:underline">
+            <Link to="/registro/verificar-mail" className="text-green-600 hover:underline">
               Verificar cuenta
             </Link>
           </div>

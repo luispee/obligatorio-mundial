@@ -20,3 +20,13 @@ class VentaService:
             sectores[id_sector] = sectores.get(id_sector, 0) + 1
 
         return VentaRepository.crear_venta_transaction(mail_cliente, id_evento, sectores)
+
+    @staticmethod
+    def pagar_venta(id):
+        mail_cliente = g.user_mail
+        return VentaRepository.pagar_venta_transaction(id, mail_cliente)
+
+    @staticmethod
+    def cancelar_venta(id):
+        mail_cliente = g.user_mail
+        return VentaRepository.cancelar_venta_transaction(id, mail_cliente)

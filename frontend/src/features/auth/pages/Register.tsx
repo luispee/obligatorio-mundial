@@ -63,7 +63,7 @@ export default function Register() {
     setContrasenaError(null);
     try {
       await register(form);
-      navigate('/register/verify-mail');
+      navigate('/registro/verificar-mail');
     } catch (err) {
       console.error('Error en registro', err);
     }

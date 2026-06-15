@@ -17,7 +17,9 @@ def crear_venta():
         result = VentaService.crear_venta(data)
 
         return jsonify({
-            "message": "Venta creada con exito."
+            "message": "Venta creada con exito.", 
+            "id_venta": result.get("id_venta"),
+            "porcentaje_comision": result.get("porcentaje_comision")
         }), 201
     except ValueError as e:
         return jsonify({
@@ -27,3 +29,37 @@ def crear_venta():
         return jsonify({
             "error": str(e)
         }), 500
+
+@venta_routes.route("<int:id>/pagar", methods=["PATCH"])
+@cliente_required
+def pagar_venta(id):
+    try:
+        result = VentaService.pagar_venta(id)
+        return jsonify({
+            "message": "Compra realizada con exito.", 
+        }), 200
+    except ValueError as e:
+        return jsonify({
+            "error": str(e)
+        }), 400
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500
+
+@venta_routes.route("/<int:id>/cancelar", methods=["PATCH"])
+@cliente_required
+def cancelar_venta(id):
+    try:
+        result = VentaService.cancelar_venta(id)
+        return jsonify({
+            "message": "Venta cancelada con exito."
+        }), 200
+    except ValueError as e:
+        return jsonify({
+            "error": str(e)
+        }), 400
+    # except Exception as e:
+    #     return jsonify({
+    #         "error": str(e)
+    #     }), 500

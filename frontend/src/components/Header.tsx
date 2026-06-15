@@ -42,13 +42,13 @@ export default function Header({ variant }: HeaderProps) {
               {isAdministrador && (
                 <div className="flex items-center gap-4">
                   <a
-                    href="/stadiums"
+                    href="/estadios"
                     className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
                   >
                     Estadios
                   </a>
                   <a
-                    href="/events/create"
+                    href="/eventos/crear"
                     className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
                   >
                     Agregar Evento
