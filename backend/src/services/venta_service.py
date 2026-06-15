@@ -1,31 +1,22 @@
 from src.repositories.venta_repository import VentaRepository
+from flask import g
 
 class VentaService:
 
     @staticmethod
     def crear_venta(data):
 
-        if not data:
-            raise ValueError("Body vacío")
-
-        if "id_evento" not in data:
-            raise ValueError("id_evento obligatorio")
-
-        if "entradas" not in data:
-            raise ValueError("entradas obligatorias")
-
         id_evento = data["id_evento"]
-        entradas = data["entradas"]
+        sectores_lista = data["sectores"]
 
-        # agrupar sectores
-        sectores = {}
+        mail_cliente = g.user_mail
 
-        for e in entradas:
-            sector = e["id_sector"]
-            sectores[sector] = sectores.get(sector, 0) + 1
-
-        # regla: max 5 sectores
-        if len(sectores) > 5:
+        if len(sectores_lista) > 5:
             raise ValueError("Maximo 5 sectores por venta")
 
-        return VentaRepository.crear_venta_transaction(id_evento, sectores, data)
+        sectores = {}
+        for e in sectores_lista:
+            id_sector = e["id"]
+            sectores[id_sector] = sectores.get(id_sector, 0) + 1
+
+        return VentaRepository.crear_venta_transaction(mail_cliente, id_evento, sectores)

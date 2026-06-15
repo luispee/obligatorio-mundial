@@ -1,14 +1,17 @@
 from flask import Blueprint, jsonify
 from src.services.estadio_service import EstadioService
+from src.decorators.roles import admin_required
 
-estadio_bp = Blueprint("estadios", __name__)
+estadio_routes = Blueprint("estadios", __name__)
 
-@estadio_bp.route("/api/estadios", methods=["GET"])
+@estadio_routes.route("", methods=["GET"])
+@admin_required
 def get_estadios():
     estadios = EstadioService.get_estadios()
     return jsonify(estadios), 200
 
-@estadio_bp.route("/api/estadios/<int:id>", methods=["GET"])
+@estadio_routes.route("/<int:id>", methods=["GET"])
+@admin_required
 def get_estadio(id):
     try:
         estadio = EstadioService.get_estadio(id)
