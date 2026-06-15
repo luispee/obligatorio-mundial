@@ -40,12 +40,20 @@ export default function Header({ variant }: HeaderProps) {
           ) : (
             <div className="flex items-center gap-4">
               {isAdministrador && (
-                <a
-                  href="/events/create"
-                  className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
-                >
-                  Agregar Evento
-                </a>
+                <div className="flex items-center gap-4">
+                  <a
+                    href="/stadiums"
+                    className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
+                  >
+                    Estadios
+                  </a>
+                  <a
+                    href="/events/create"
+                    className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
+                  >
+                    Agregar Evento
+                  </a>
+                </div>
               )}
               <IconButton
                 icon={displayProfile ? <UserFilledIcon /> : <UserIcon />}
