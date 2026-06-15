@@ -1,6 +1,7 @@
 from src.database.get_connection import get_connection
 
 class EstadioRepository:
+
   @staticmethod
   def get_estadios(pais_sede):
     conn = get_connection()
@@ -52,32 +53,33 @@ class EstadioRepository:
       conn.close()
 
   @staticmethod
-  def get_all_estadios():
-      conn = get_connection()
+  def get_estadios_by_pais_sede(pais_sede):
 
-      if not conn:
-          raise RuntimeError("No se pudo conectar a la base de datos")
+    conn = get_connection()
 
-      try:
-          cursor = conn.cursor(dictionary=True)
+    if not conn:
+        raise RuntimeError("No se pudo conectar a la base de datos")
+    try:
+        cursor = conn.cursor(dictionary=True)
 
-          cursor.execute("""
-              SELECT
-                  e.id,
-                  e.nombre,
-                  e.ciudad,
-                  p.nombre AS pais_sede
-              FROM estadio e
-              JOIN pais p
-                  ON p.codigo = e.codigo_pais_sede
-              ORDER BY e.nombre
-          """)
+        cursor.execute("""
+            SELECT
+                e.id,
+                e.nombre,
+                e.ciudad,
+                p.nombre AS pais_sede
+            FROM estadio e
+            JOIN pais p
+                ON p.codigo = e.codigo_pais_sede
+            WHERE e.codigo_pais_sede = %s
+            ORDER BY e.nombre
+        """, (pais_sede,))
 
-          return cursor.fetchall()
+        return cursor.fetchall()
 
-      finally:
-          cursor.close()
-          conn.close()
+    finally:
+       cursor.close()
+       conn.close()
 
   @staticmethod
   def get_estadio_by_id(id_estadio):
