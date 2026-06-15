@@ -11,6 +11,9 @@ import CreateEvento from './features/evento/pages/CreateEvento';
 import ProtectedRoute from './components/ProtectedRoute';
 import EditEvento from './features/evento/pages/EditEvento';
 import Profile from './features/auth/pages/Profile';
+import Estadios from './features/estadio/pages/Estadios';
+import CreateEstadio from './features/estadio/pages/CreateEstadio';
+import EditEstadio from './features/estadio/pages/EditEstadio';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +36,30 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: '/stadiums',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <Estadios />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/stadiums/create',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <CreateEstadio />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/stadiums/:id/edit',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <EditEstadio />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: 'events',
         children: [
           {
@@ -45,7 +72,11 @@ export const router = createBrowserRouter([
           },
           {
             path: ':id/edit',
-            element: <EditEvento />,
+            element: (
+              <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+                <EditEvento />
+              </ProtectedRoute>
+            ),
           },
           {
             path: ':id',
