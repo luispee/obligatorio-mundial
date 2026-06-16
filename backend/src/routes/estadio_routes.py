@@ -24,7 +24,7 @@ def get_estadio(id):
         return jsonify({"error": str(e)}), 500
 
 @estadio_routes.route('/<int:id>', methods=['PUT'])
-@admin_required
+#@admin_required
 def update_estadio(id):
     data = request.get_json()
 

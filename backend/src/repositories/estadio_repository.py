@@ -170,26 +170,29 @@ class EstadioRepository:
 
         cursor.execute("""
             UPDATE estadio
-            SET ciudad = %s
+            SET nombre = %s,
+                ciudad = %s
             WHERE id = %s
-        """, (data["ciudad"], id_estadio))
+        """, (
+            data["nombre"],
+            data["ciudad"],
+            id_estadio
+        ))
 
-        cursor.execute("""
-            DELETE FROM sector
-            WHERE id_estadio = %s
-        """, (id_estadio,))
+        if cursor.rowcount == 0:
+            raise ValueError("Estadio no encontrado")
 
         for sector in data["sectores"]:
             cursor.execute("""
-                INSERT INTO sector (
-                    nombre,
-                    capacidad_maxima,
-                    id_estadio
-                )
-                VALUES (%s, %s, %s)
+                UPDATE sector
+                SET nombre = %s,
+                    capacidad_maxima = %s
+                WHERE id = %s
+                  AND id_estadio = %s
             """, (
                 sector["nombre"],
                 sector["capacidad"],
+                sector["id"],
                 id_estadio
             ))
 
