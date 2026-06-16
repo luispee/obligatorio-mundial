@@ -1,6 +1,10 @@
 import { request } from '../../../utils/httpClient';
 import { TransferirEntradaRequest } from './entradaRequests';
-import { GetEntradasResponse, TransferirEntradaResponse } from './entradaResponses';
+import {
+  GetEntradasResponse,
+  GetTransferenciasResponse,
+  TransferirEntradaResponse,
+} from './entradaResponses';
 
 export function fetchEntradas(): Promise<GetEntradasResponse> {
   return request('/entradas', {
@@ -14,5 +18,11 @@ export function transferirEntrada(
   return request('/transferencias', {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+}
+
+export function fetchTransferencias(): Promise<GetTransferenciasResponse> {
+  return request('/transferencias', {
+    method: 'GET',
   });
 }

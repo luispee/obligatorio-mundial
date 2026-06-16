@@ -12,3 +12,18 @@ export type TransferirEntradaResponse = {
   success: boolean;
   message: string;
 };
+
+export type GetTransferenciasResponse = {
+  enviadas: {
+    id: number;
+    mail_destinatario: string;
+    estado: 'Pendiente' | 'Completada' | 'Rechazada';
+    evento: EventoSummaryWithNombreSector;
+  }[];
+  recibidas: {
+    id: number;
+    mail_remitente: string;
+    estado: 'Pendiente' | 'Completada' | 'Rechazada';
+    evento: EventoSummaryWithNombreSector;
+  }[];
+};

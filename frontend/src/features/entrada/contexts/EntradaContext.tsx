@@ -1,6 +1,10 @@
 import { createContext, useCallback, useContext, useState } from 'react';
-import { GetEntradasResponse, TransferirEntradaResponse } from '../api/entradaResponses';
-import { fetchEntradas } from '../api/entradaApi';
+import {
+  GetEntradasResponse,
+  GetTransferenciasResponse,
+  TransferirEntradaResponse,
+} from '../api/entradaResponses';
+import { fetchEntradas, fetchTransferencias } from '../api/entradaApi';
 import { TransferirEntradaRequest } from '../api/entradaRequests';
 import { transferirEntrada as transferirEntradaApi } from '../api/entradaApi';
 
@@ -10,6 +14,7 @@ type EntradaContextType = {
   loading: boolean;
   getEntradas: () => Promise<GetEntradasResponse>;
   transferirEntrada: (data: TransferirEntradaRequest) => Promise<TransferirEntradaResponse>;
+  getTransferencias: () => Promise<GetTransferenciasResponse>;
 };
 
 const EntradaContext = createContext<EntradaContextType | undefined>(undefined);
@@ -50,6 +55,20 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
     []
   );
 
+  const getTransferencias = useCallback(async () => {
+    setLoading(true);
+    clearError();
+    try {
+      const data = await fetchTransferencias();
+      return data;
+    } catch (err: any) {
+      setError(err.message || 'Error al cargar las transferencias');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <EntradaContext.Provider
       value={{
@@ -58,6 +77,7 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
         loading,
         getEntradas,
         transferirEntrada,
+        getTransferencias,
       }}
     >
       {children}

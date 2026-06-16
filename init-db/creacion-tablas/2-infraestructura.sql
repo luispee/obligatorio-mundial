@@ -4,6 +4,8 @@ CREATE TABLE estadio (
     ciudad VARCHAR(100) NOT NULL,
     codigo_pais_sede CHAR(3) NOT NULL,
 
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+
     CONSTRAINT fk_estadio_pais_sede
         FOREIGN KEY (codigo_pais_sede)
         REFERENCES pais_sede(codigo_pais)
