@@ -17,3 +17,20 @@ class EstadioService:
 
         return estadio
 
+    @staticmethod
+    def update_estadio(id_estadio, data):
+        estadio = EstadioRepository.get_estadio_by_id(id_estadio)
+
+        if not estadio:
+            raise ValueError("Estadio no encontrado")
+
+        if EstadioRepository.estadio_tiene_eventos(id_estadio):
+            raise ValueError(
+                "No se puede modificar un estadio que tiene eventos asociados"
+            )
+
+        EstadioRepository.update_estadio(id_estadio, data)
+
+        return {
+            "message": "Estadio actualizado con exito"
+        }

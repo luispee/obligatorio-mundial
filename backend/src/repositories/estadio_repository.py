@@ -134,3 +134,71 @@ class EstadioRepository:
           cursor.close()
           conn.close()
 
+  @staticmethod
+  def estadio_tiene_eventos(id_estadio):
+    conn = get_connection()
+
+    if not conn:
+        raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            SELECT COUNT(*)
+            FROM evento
+            WHERE id_estadio = %s
+        """, (id_estadio,))
+
+        cantidad = cursor.fetchone()[0]
+
+        return cantidad > 0
+
+    finally:
+        cursor.close()
+        conn.close()
+
+  @staticmethod
+  def update_estadio(id_estadio, data):
+    conn = get_connection()
+
+    if not conn:
+        raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE estadio
+            SET ciudad = %s
+            WHERE id = %s
+        """, (data["ciudad"], id_estadio))
+
+        cursor.execute("""
+            DELETE FROM sector
+            WHERE id_estadio = %s
+        """, (id_estadio,))
+
+        for sector in data["sectores"]:
+            cursor.execute("""
+                INSERT INTO sector (
+                    nombre,
+                    capacidad_maxima,
+                    id_estadio
+                )
+                VALUES (%s, %s, %s)
+            """, (
+                sector["nombre"],
+                sector["capacidad"],
+                id_estadio
+            ))
+
+        conn.commit()
+
+    except:
+        conn.rollback()
+        raise
+
+    finally:
+        cursor.close()
+        conn.close()
