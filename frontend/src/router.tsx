@@ -15,6 +15,7 @@ import Estadios from './features/estadio/pages/Estadios';
 import CreateEstadio from './features/estadio/pages/CreateEstadio';
 import EditEstadio from './features/estadio/pages/EditEstadio';
 import ConfirmarCompra from './features/venta/pages/ConfirmarCompra';
+import Entradas from './features/entrada/pages/Entradas';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +34,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/mis-entradas',
+        element: (
+          <ProtectedRoute requiredRoles={['CLIENTE']}>
+            <Entradas />
           </ProtectedRoute>
         ),
       },

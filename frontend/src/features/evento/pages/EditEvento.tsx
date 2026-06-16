@@ -9,7 +9,7 @@ import Button from '../../../components/Button';
 import SectorRow from '../components/SectorRow';
 import { CreateEventoForm as UpdateEventoForm } from '../types/createEventoForm';
 import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
-import ConfirmBajaModal from '../components/ConfirmBajaModal';
+import ConfirmBajaEventoModal from '../components/ConfirmBajaEventoModal';
 
 export default function EditEvento() {
   const { loading, error, getFormData, clearError, updateEvento, getEvento, deactivateEvento } =
@@ -150,7 +150,7 @@ export default function EditEvento() {
         }}
       >
         {showBajaConfirm && (
-          <ConfirmBajaModal
+          <ConfirmBajaEventoModal
             onClose={() => setShowBajaConfirm(false)}
             onConfirm={handleDeactivate}
           />

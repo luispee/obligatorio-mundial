@@ -1,15 +1,18 @@
 import Button from '../../../components/Button';
 
-type ConfirmBajaModalProps = {
-  onClose?: () => void;
-  onConfirm?: () => void;
+type ConfirmBajaEventoModalProps = {
+  onClose: () => void;
+  onConfirm: () => void;
 };
 
-export default function ConfirmBajaModal({ onClose, onConfirm }: ConfirmBajaModalProps) {
+export default function ConfirmBajaEventoModal({
+  onClose,
+  onConfirm,
+}: ConfirmBajaEventoModalProps) {
   return (
     <div
       className="fixed inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-10"
-      onClick={() => onClose?.()}
+      onClick={() => onClose()}
     >
       <div
         className="bg-white p-6 rounded-lg shadow-lg shadow-gray w-full max-w-md"
@@ -22,11 +25,11 @@ export default function ConfirmBajaModal({ onClose, onConfirm }: ConfirmBajaModa
           <Button
             text="Cancelar"
             color="gray"
-            onClick={() => onClose?.()}
+            onClick={() => onClose()}
             type="button"
             textColor="black"
           />
-          <Button text="Confirmar" color="red" onClick={() => onConfirm?.()} type="button" />
+          <Button text="Confirmar" color="red" onClick={() => onConfirm()} type="button" />
         </div>
       </div>
     </div>

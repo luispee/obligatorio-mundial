@@ -70,7 +70,11 @@ export default function ConfirmarCompra() {
           <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
             Confirmar Compra
           </h1>
-          <TimerCompra initialSeconds={5} onExpire={() => setTimerExpired(true)} stop={stopTimer} />
+          <TimerCompra
+            initialSeconds={300}
+            onExpire={() => setTimerExpired(true)}
+            stop={stopTimer}
+          />
         </div>
 
         <Input

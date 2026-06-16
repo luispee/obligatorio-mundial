@@ -28,8 +28,8 @@ export function updateEstadio(id: number, data: UpdateEstadioRequest) {
   });
 }
 
-export function deleteEstadio(id: number) {
-  return request(`/estadios/${id}`, {
-    method: 'DELETE',
+export function deactivateEstadio(id: number) {
+  return request(`/estadios/${id}/baja`, {
+    method: 'PATCH',
   });
 }
