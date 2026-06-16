@@ -120,7 +120,19 @@ export default function EditEstadio() {
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
 
-        <Button text={loading ? 'Guardando...' : 'Guardar Cambios'} type="submit" />
+        {successMessage ? (
+          <Button
+            text="Volver a Estadios"
+            color="blue"
+            textColor="white"
+            onClick={() => {
+              setSuccessMessage('');
+              window.location.href = '/estadios';
+            }}
+          />
+        ) : (
+          <Button text={loading ? 'Agregando...' : 'Editar Estadio'} type="submit" />
+        )}
       </form>
     </main>
   );

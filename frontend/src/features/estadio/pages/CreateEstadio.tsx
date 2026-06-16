@@ -109,8 +109,19 @@ export default function CreateEstadio() {
           {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
-
-        <Button text={loading ? 'Agregando...' : 'Agregar Estadio'} type="submit" />
+        {successMessage ? (
+          <Button
+            text="Volver a Estadios"
+            color="blue"
+            textColor="white"
+            onClick={() => {
+              setSuccessMessage('');
+              window.location.href = '/estadios';
+            }}
+          />
+        ) : (
+          <Button text={loading ? 'Agregando...' : 'Agregar Estadio'} type="submit" />
+        )}
       </form>
     </main>
   );
