@@ -12,3 +12,9 @@ export type Evento = {
 export type EventoSummary = Omit<Evento, 'estadio'> & {
   estadio: EstadioSummary;
 };
+
+export type EventoSummaryWithNombreSector = Omit<EventoSummary, 'estadio'> & {
+  estadio: EstadioSummary & {
+    sector: string;
+  };
+};

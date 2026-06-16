@@ -9,6 +9,8 @@ from src.routes.monitoring_routes import monitoring_routes
 from src.routes.evento_routes import evento_routes
 from src.routes.venta_routes import venta_routes
 from src.routes.estadio_routes import estadio_routes
+from src.routes.entrada_routes import entrada_routes
+from src.routes.transferencia_routes import transferencia_routes
 
 REQUEST_COUNT = Counter('app_requests_total', 'Total requests')
 
@@ -20,6 +22,8 @@ app.register_blueprint(auth_routes, url_prefix="/api/auth")
 app.register_blueprint(evento_routes, url_prefix="/api/eventos")
 app.register_blueprint(venta_routes, url_prefix="/api/ventas")
 app.register_blueprint(estadio_routes, url_prefix="/api/estadios")
+app.register_blueprint(entrada_routes, url_prefix="/api/entradas")
+app.register_blueprint(transferencia_routes, url_prefix="/api/transferencias")
 
 @app.route('/api/')
 def home():
