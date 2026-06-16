@@ -22,6 +22,7 @@ class EstadioRepository:
                         FROM estadio e
                         JOIN sector s ON e.id = s.id_estadio
                         WHERE codigo_pais_sede = %s
+                          AND e.activo = TRUE
                         ORDER BY e.nombre ASC
                     """, (pais_sede,))
 
@@ -59,6 +60,7 @@ class EstadioRepository:
 
     if not conn:
         raise RuntimeError("No se pudo conectar a la base de datos")
+
     try:
         cursor = conn.cursor(dictionary=True)
 
@@ -71,7 +73,8 @@ class EstadioRepository:
             FROM estadio e
             JOIN pais p
                 ON p.codigo = e.codigo_pais_sede
-            WHERE e.codigo_pais_sede = %s
+            WHERE codigo_pais_sede = %s
+              AND e.activo = TRUE
             ORDER BY e.nombre
         """, (pais_sede,))
 
@@ -106,6 +109,7 @@ class EstadioRepository:
               JOIN sector s
                   ON s.id_estadio = e.id
               WHERE e.id = %s
+                AND e.activo = TRUE
           """, (id_estadio,))
 
           rows = cursor.fetchall()
@@ -133,4 +137,80 @@ class EstadioRepository:
       finally:
           cursor.close()
           conn.close()
+
+  @staticmethod
+  def baja_estadio(id_estadio):
+    conn = get_connection()
+
+    if not conn:
+        raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE estadio
+            SET activo = FALSE
+            WHERE id = %s
+              AND activo = TRUE
+        """, (id_estadio,))
+
+        conn.commit()
+
+        return cursor.rowcount > 0
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+
+  @staticmethod
+  def update_estadio(id_estadio, data):
+    conn = get_connection()
+
+    if not conn:
+        raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+        cursor = conn.cursor()
+
+        # actualizar estadio (solo si está activo)
+        cursor.execute("""
+            UPDATE estadio
+            SET nombre = %s,
+                ciudad = %s
+            WHERE id = %s
+              AND activo = TRUE
+        """, (
+            data["nombre"],
+            data["ciudad"],
+            id_estadio
+        ))
+
+        if cursor.rowcount == 0:
+            return False
+
+        # actualizar sectores (no se crean ni eliminan, solo update)
+        for sector in data["sectores"]:
+            cursor.execute("""
+                UPDATE sector
+                SET nombre = %s,
+                    capacidad_maxima = %s
+                WHERE id = %s
+                  AND id_estadio = %s
+            """, (
+                sector["nombre"],
+                sector["capacidad"],
+                sector["id"],
+                id_estadio
+            ))
+
+        conn.commit()
+        return True
+
+    finally:
+        cursor.close()
+        conn.close()
+
 
