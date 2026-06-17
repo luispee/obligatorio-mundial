@@ -53,7 +53,7 @@ class EstadioRepository:
       conn.close()
 
   @staticmethod
-  def get_estadios_by_pais_sede(pais_sede):
+  def get_estadios_summary(pais_sede):
 
     conn = get_connection()
 

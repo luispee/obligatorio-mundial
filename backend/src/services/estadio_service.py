@@ -6,7 +6,7 @@ class EstadioService:
     @staticmethod
     def get_estadios():
         pais_sede = AdministradorRepository.get_pais_sede_administrador()
-        return EstadioRepository.get_estadios_by_pais_sede(pais_sede)
+        return EstadioRepository.get_estadios_summary(pais_sede)
 
     @staticmethod
     def get_estadio(id_estadio):

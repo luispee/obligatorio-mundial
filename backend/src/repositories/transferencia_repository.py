@@ -75,7 +75,7 @@ class TransferenciaRepository:
                 ORDER BY t.fecha_hora DESC
             """
 
-            cursor.execute(BASE_QUERY.format("t.mail_cliente_destinatario = %s AND t.id_estado_transferencia != 3"), (mail_usuario,))
+            cursor.execute(BASE_QUERY.format("t.mail_cliente_destinatario = %s"), (mail_usuario,))
             recibidas_raw = cursor.fetchall()
 
             cursor.execute(BASE_QUERY.format("t.mail_cliente_remitente = %s"), (mail_usuario,))

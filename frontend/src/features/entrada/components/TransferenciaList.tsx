@@ -3,13 +3,17 @@ import Button from '../../../components/Button';
 
 type TransferenciaListProps = {
   transferencias: GetTransferenciasResponse['enviadas'] | GetTransferenciasResponse['recibidas'];
-  onTransferirClick: (transferenciaId: number) => void;
+  onAceptar?: (transferenciaId: number) => void;
+  onCancelar?: (transferenciaId: number) => void;
+  onRechazar?: (transferenciaId: number) => void;
   variant: 'enviadas' | 'recibidas';
 };
 
 export default function TransferenciaList({
   transferencias,
-  onTransferirClick,
+  onAceptar,
+  onCancelar,
+  onRechazar,
   variant,
 }: TransferenciaListProps) {
   if (transferencias.length === 0) {
@@ -83,11 +87,13 @@ export default function TransferenciaList({
                       text="Cancelar"
                       color="red"
                       textColor="white"
-                      onClick={() => onTransferirClick(transferencia.id)}
+                      onClick={() => onCancelar(transferencia.id)}
                     />
                   </>
                 ) : transferencia.estado === 'Completada' ? (
                   <p className="text-sm text-green-400 font-semibold">Transferencia aceptada</p>
+                ) : transferencia.estado === 'Cancelada' ? (
+                  <p className="text-sm text-red-400 font-semibold">Transferencia cancelada</p>
                 ) : (
                   <p className="text-sm text-red-400 font-semibold">Transferencia rechazada</p>
                 )}
@@ -106,13 +112,13 @@ export default function TransferenciaList({
                       text="Aceptar"
                       color="white"
                       textColor="blue"
-                      onClick={() => onTransferirClick(transferencia.id)}
+                      onClick={() => onAceptar(transferencia.id)}
                     />
                     <Button
                       text="Rechazar"
                       color="red"
                       textColor="white"
-                      onClick={() => onTransferirClick(transferencia.id)}
+                      onClick={() => onRechazar(transferencia.id)}
                     />
                   </div>
                 )}
@@ -121,6 +127,9 @@ export default function TransferenciaList({
                 )}
                 {transferencia.estado === 'Rechazada' && (
                   <p className="text-sm text-red-400 font-semibold">Transferencia rechazada</p>
+                )}
+                {transferencia.estado === 'Cancelada' && (
+                  <p className="text-sm text-red-400 font-semibold">Transferencia cancelada</p>
                 )}
               </div>
             )}

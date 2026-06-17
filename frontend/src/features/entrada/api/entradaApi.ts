@@ -26,3 +26,21 @@ export function fetchTransferencias(): Promise<GetTransferenciasResponse> {
     method: 'GET',
   });
 }
+
+export function aceptarTransferencia(transferenciaId: number): Promise<void> {
+  return request(`/transferencias/${transferenciaId}/aceptar`, {
+    method: 'PATCH',
+  });
+}
+
+export function cancelarTransferencia(transferenciaId: number): Promise<void> {
+  return request(`/transferencias/${transferenciaId}/cancelar`, {
+    method: 'PATCH',
+  });
+}
+
+export function rechazarTransferencia(transferenciaId: number): Promise<void> {
+  return request(`/transferencias/${transferenciaId}/rechazar`, {
+    method: 'PATCH',
+  });
+}

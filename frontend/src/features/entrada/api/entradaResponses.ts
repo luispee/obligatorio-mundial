@@ -17,13 +17,13 @@ export type GetTransferenciasResponse = {
   enviadas: {
     id: number;
     mail_destinatario: string;
-    estado: 'Pendiente' | 'Completada' | 'Rechazada';
+    estado: 'Pendiente' | 'Completada' | 'Rechazada' | 'Cancelada';
     evento: EventoSummaryWithNombreSector;
   }[];
   recibidas: {
     id: number;
     mail_remitente: string;
-    estado: 'Pendiente' | 'Completada' | 'Rechazada';
+    estado: 'Pendiente' | 'Completada' | 'Rechazada' | 'Cancelada';
     evento: EventoSummaryWithNombreSector;
   }[];
 };
