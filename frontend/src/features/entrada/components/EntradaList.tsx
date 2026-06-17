@@ -64,7 +64,7 @@ export default function EntradaList({ entradas, onTransferirClick }: EntradaList
             ) : (
               <>
                 {entrada.limite_transferencias_alcanzado ? (
-                  <p className="text-sm text-red-300 font-semibold">
+                  <p className="text-sm text-red-300 font-semibold text-right">
                     Límite de transferencias alcanzado
                   </p>
                 ) : (

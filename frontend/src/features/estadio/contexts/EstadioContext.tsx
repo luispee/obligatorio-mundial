@@ -6,6 +6,7 @@ import {
 } from '../api/estadioApi';
 import { GetEstadioResponse, GetEstadiosResponse } from '../api/estadioResponses';
 import { CreateEstadioRequest, UpdateEstadioRequest } from '../api/estadioRequests';
+import { deactivateEstadio as deactivateEstadioApi } from '../api/estadioApi';
 
 type EstadioContextType = {
   getEstadios: () => Promise<GetEstadiosResponse>;
@@ -15,6 +16,7 @@ type EstadioContextType = {
   error: string | null;
   clearError: () => void;
   loading: boolean;
+  deactivateEstadio: (id: number) => Promise<void>;
 };
 
 const EstadioContext = createContext<EstadioContextType | undefined>(undefined);
@@ -84,9 +86,32 @@ export function EstadioProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const deactivateEstadio = useCallback(async (id: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deactivateEstadioApi(id);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Error al dar de baja el estadio';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <EstadioContext.Provider
-      value={{ getEstadios, getEstadio, createEstadio, updateEstadio, error, clearError, loading }}
+      value={{
+        getEstadios,
+        getEstadio,
+        createEstadio,
+        updateEstadio,
+        error,
+        clearError,
+        loading,
+        deactivateEstadio,
+      }}
     >
       {children}
     </EstadioContext.Provider>
