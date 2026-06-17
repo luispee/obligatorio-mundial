@@ -51,3 +51,16 @@ def get_evento(id):
     return jsonify({"error": str(e)}), 400
   except Exception as e:
     return jsonify({"error": str(e)}), 500
+
+@evento_routes.route('/<int:id>/baja', methods=['PATCH'])
+#@admin_required
+def baja_evento(id):
+    try:
+        resultado = EventoService.baja_evento(id)
+        return jsonify(resultado), 200
+
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 404
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

@@ -34,7 +34,7 @@ class EventoService:
   def create_evento(data):
     if data['codigo_seleccion_local'] == data['codigo_seleccion_visitante']:
       raise ValueError("La selección local y visitante no pueden ser la misma")
-    
+
     if data['fecha_hora'] < datetime.now().isoformat():
       raise ValueError("La fecha y hora del evento no pueden ser en el pasado")
 
@@ -60,7 +60,7 @@ class EventoService:
   def update_evento(id, data):
     if data['codigo_seleccion_local'] == data['codigo_seleccion_visitante']:
       raise ValueError("La selección local y visitante no pueden ser la misma")
-    
+
     if data['fecha_hora'] < datetime.now().isoformat():
       raise ValueError("La fecha y hora del evento no pueden ser en el pasado")
 
@@ -81,3 +81,14 @@ class EventoService:
       raise ve
     except Exception as e:
       raise RuntimeError(f'Error al actualizar el evento: {str(e)}')
+
+  @staticmethod
+  def baja_evento(id_evento):
+    actualizado = EventoRepository.baja_evento(id_evento)
+
+    if not actualizado:
+        raise ValueError("Evento no encontrado")
+
+    return {
+        "message": f"El evento {id_evento} fue dado de baja con exito"
+    }
