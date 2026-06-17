@@ -7,4 +7,4 @@ export type CreateEstadioRequest = Omit<Estadio, 'id' | 'sectores'> & {
   }[];
 };
 
-export type UpdateEstadioRequest = CreateEstadioRequest;
+export type UpdateEstadioRequest = Omit<Estadio, 'id'>;

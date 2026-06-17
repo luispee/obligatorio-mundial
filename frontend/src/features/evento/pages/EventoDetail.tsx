@@ -163,6 +163,7 @@ export default function EventoDetail() {
               text="Proceder al pago"
               onClick={handleCompra}
               color={isCliente ? 'green' : 'gray'}
+              disabled={!isCliente || loading}
             />
           </div>
           {!isCliente && (

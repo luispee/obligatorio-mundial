@@ -31,13 +31,13 @@ def get_estadio(id):
 def update_estadio(id):
     try:
         data = request.get_json()
-
+        EstadioValidator.validate_estadio(data)
         estadio = EstadioService.update_estadio(id, data)
 
         return jsonify(estadio), 200
 
     except ValueError as e:
-        return jsonify({"error": str(e)}), 404
+        return jsonify({"error": str(e)}), 400
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -51,10 +51,11 @@ def baja_estadio(id):
         return jsonify(resultado), 200
 
     except ValueError as e:
-        return jsonify({"error": str(e)}), 404
+        return jsonify({"error": str(e)}), 400
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 @estadio_routes.route('', methods=['POST'])
 @admin_required
 def create_evento():

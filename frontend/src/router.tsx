@@ -116,11 +116,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ':id',
-            element: (
-              <ProtectedRoute requiredRoles={['CLIENTE']}>
-                <EventoDetail />
-              </ProtectedRoute>
-            ),
+            element: <EventoDetail />,
           },
         ],
       },

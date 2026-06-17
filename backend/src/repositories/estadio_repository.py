@@ -168,53 +168,70 @@ class EstadioRepository:
 
   @staticmethod
   def update_estadio(id_estadio, data):
-    conn = get_connection()
+        conn = get_connection()
 
-    if not conn:
-        raise RuntimeError("No se pudo conectar a la base de datos")
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
 
-    try:
-        cursor = conn.cursor()
+        cursor = None
+        try:
+            cursor = conn.cursor()
 
-        # actualizar estadio (solo si está activo)
-        cursor.execute("""
-            UPDATE estadio
-            SET nombre = %s,
-                ciudad = %s
-            WHERE id = %s
-              AND activo = TRUE
-        """, (
-            data["nombre"],
-            data["ciudad"],
-            id_estadio
-        ))
-
-        if cursor.rowcount == 0:
-            return False
-
-        # actualizar sectores (no se crean ni eliminan, solo update)
-        for sector in data["sectores"]:
             cursor.execute("""
-                UPDATE sector
+                SELECT id FROM estadio WHERE id = %s AND activo = TRUE
+            """, (id_estadio,))
+
+            if cursor.fetchone() is None:
+                conn.rollback()
+                return False
+
+            cursor.execute("""
+                UPDATE estadio
                 SET nombre = %s,
-                    capacidad_maxima = %s
+                    ciudad = %s
                 WHERE id = %s
-                  AND id_estadio = %s
+                AND activo = TRUE
             """, (
-                sector["nombre"],
-                sector["capacidad"],
-                sector["id"],
+                data["nombre"],
+                data["ciudad"],
                 id_estadio
             ))
 
-        conn.commit()
-        return True
+            for sector in data["sectores"]:
+                cursor.execute("""
+                    SELECT id FROM sector WHERE id = %s AND id_estadio = %s
+                """, (sector["id"], id_estadio))
 
-    finally:
-        cursor.close()
-        conn.close()
+                if cursor.fetchone() is None:
+                    conn.rollback()
+                    raise ValueError(f"Sector {sector['id']} no existe o no pertenece al estadio {id_estadio}")
+
+                cursor.execute("""
+                    UPDATE sector
+                    SET nombre = %s,
+                        capacidad_maxima = %s
+                    WHERE id = %s
+                    AND id_estadio = %s
+                """, (
+                    sector["nombre"],
+                    sector["capacidad"],
+                    sector["id"],
+                    id_estadio
+                ))
+
+            conn.commit()
+            return True
+
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            if cursor:
+                cursor.close()
+            conn.close()
 
 
+  @staticmethod
   def create_estadio(data):
         conn = get_connection()
         if not conn:

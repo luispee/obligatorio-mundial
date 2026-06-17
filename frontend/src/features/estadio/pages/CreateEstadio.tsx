@@ -70,6 +70,7 @@ export default function CreateEstadio() {
       console.error('Error creating estadio:', error);
     }
   };
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       <form
@@ -120,7 +121,11 @@ export default function CreateEstadio() {
             }}
           />
         ) : (
-          <Button text={loading ? 'Agregando...' : 'Agregar Estadio'} type="submit" />
+          <Button
+            text={loading ? 'Agregando...' : 'Agregar Estadio'}
+            type="submit"
+            disabled={loading}
+          />
         )}
       </form>
     </main>

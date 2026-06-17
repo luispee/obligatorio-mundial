@@ -7,12 +7,13 @@ import { useEffect, useState } from 'react';
 import { UpdateEstadioRequest } from '../api/estadioRequests';
 import { Sector } from '../../../types/sector';
 import { UpdateEstadioForm } from '../types/estadioForm';
+import ConfirmBajaEstadioModal from '../components/ConfirmBajaEstadioModal';
 
 export default function EditEstadio() {
-  const { loading, error, getEstadio, updateEstadio } = useEstadio();
+  const { loading, error, getEstadio, updateEstadio, deactivateEstadio } = useEstadio();
   const [successMessage, setSuccessMessage] = useState('');
+  const [displayBajaModal, setDisplayBajaModal] = useState(false);
   const [estadio, setEstadio] = useState<UpdateEstadioForm>({
-    id: 0,
     nombre: '',
     ciudad: '',
     sectores: [],
@@ -27,7 +28,6 @@ export default function EditEstadio() {
       try {
         const data = await getEstadio(Number(id));
         setEstadio({
-          id: data.id,
           nombre: data.nombre,
           ciudad: data.ciudad,
           sectores: data.sectores.map((s) => ({
@@ -68,18 +68,28 @@ export default function EditEstadio() {
         nombre: estadio.nombre,
         ciudad: estadio.ciudad,
         sectores: estadio.sectores.map((s) => ({
+          id: s.id,
           nombre: s.nombre,
           capacidad: Number(s.capacidad),
         })),
       };
       console.log('Request to update estadio:', request);
       const response = await updateEstadio(Number(id), request);
-      setSuccessMessage(response.message);
-      navigate('/estadios');
+      setSuccessMessage('Estadio actualizado con éxito.');
     } catch (error) {
       console.error('Error updating estadio:', error);
     }
   };
+
+  const handleDeactivate = async () => {
+    try {
+      await deactivateEstadio(Number(id));
+      navigate('/estadios');
+    } catch (error) {
+      console.error('Error deactivating estadio:', error);
+    }
+  };
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       <form
@@ -89,9 +99,23 @@ export default function EditEstadio() {
           handleSubmit();
         }}
       >
+        {displayBajaModal && (
+          <ConfirmBajaEstadioModal
+            onClose={() => setDisplayBajaModal(false)}
+            onConfirm={handleDeactivate}
+          />
+        )}
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
           Editar Estadio
         </h1>
+        <div className="absolute top-4 right-4">
+          <Button
+            text="Dar de baja"
+            color="red"
+            onClick={() => setDisplayBajaModal(true)}
+            type="button"
+          />
+        </div>
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
           <Input
             label="Nombre"
@@ -116,8 +140,8 @@ export default function EditEstadio() {
         ))}
 
         <div className="text-center min-h-[20px]">
-          {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
-          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {successMessage && <p className="text-green-500">{successMessage}</p>}
+          {error && <p className="text-red-500">{error}</p>}
         </div>
 
         {successMessage ? (
@@ -131,7 +155,11 @@ export default function EditEstadio() {
             }}
           />
         ) : (
-          <Button text={loading ? 'Agregando...' : 'Editar Estadio'} type="submit" />
+          <Button
+            text={loading ? 'Actualizando...' : 'Editar Estadio'}
+            type="submit"
+            disabled={loading}
+          />
         )}
       </form>
     </main>

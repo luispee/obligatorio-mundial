@@ -7,6 +7,10 @@ export type CreateEstadioForm = Omit<Estadio, 'id' | 'sectores'> & {
   }[];
 };
 
-export type UpdateEstadioForm = CreateEstadioForm & {
-  id: number;
+export type UpdateEstadioForm = Omit<Estadio, 'id' | 'sectores'> & {
+  sectores: {
+    id: number;
+    nombre: string;
+    capacidad: string;
+  }[];
 };
