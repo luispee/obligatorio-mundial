@@ -16,6 +16,27 @@ class EstadioService:
             raise ValueError("Estadio no encontrado")
 
         return estadio
+
+    @staticmethod
+    def update_estadio(id_estadio, data):
+        # actualiza estadio + sectores
+        actualizado = EstadioRepository.update_estadio(id_estadio, data)
+
+        if not actualizado:
+            raise ValueError("Estadio no encontrado")
+
+        return EstadioRepository.get_estadio_by_id(id_estadio)
+
+    @staticmethod
+    def baja_estadio(id_estadio):
+        actualizado = EstadioRepository.baja_estadio(id_estadio)
+
+        if not actualizado:
+            raise ValueError("Estadio no encontrado")
+
+        return {
+            "message": f"El estadio {id_estadio} fue dado de baja con exito"
+        }
     
     @staticmethod
     def create_estadio(data):
