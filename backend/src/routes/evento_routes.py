@@ -2,10 +2,12 @@ from flask import Blueprint, jsonify, request
 from src.services.evento_service import EventoService
 from src.decorators.roles import admin_required
 from src.validators.evento_validator import EventoValidator
+from src.decorators.optional_jwt import optional_jwt
 
 evento_routes = Blueprint('evento_routes', __name__)
 
 @evento_routes.route('/', methods=['GET'])
+@optional_jwt
 def get_eventos():
   return jsonify(EventoService.get_eventos()), 200
 

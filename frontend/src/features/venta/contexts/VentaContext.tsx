@@ -3,7 +3,8 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { createVenta as createVentaApi } from '../api/ventaApi';
 import { pagarVenta as pagarVentaApi } from '../api/ventaApi';
 import { cancelarVenta as cancelarVentaApi } from '../api/ventaApi';
-import { CreateVentaResponse, PagarVentaResponse } from '../api/ventaResponses';
+import { CreateVentaResponse, GetVentasResponse, PagarVentaResponse } from '../api/ventaResponses';
+import { fetchVentas } from '../api/ventaApi';
 
 type VentaContextType = {
   loading: boolean;
@@ -13,6 +14,7 @@ type VentaContextType = {
   pagarVenta: (id: number) => Promise<PagarVentaResponse>;
   cancelarVenta: (id: number) => Promise<void>;
   porcentaje_comision: number;
+  getVentas: () => Promise<GetVentasResponse>;
 };
 
 export const VentaContext = createContext<VentaContextType | undefined>(undefined);
@@ -68,6 +70,21 @@ export function VentaProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const getVentas = async (): Promise<GetVentasResponse> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchVentas();
+      return data;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Error al cargar las ventas';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <VentaContext.Provider
       value={{
@@ -78,6 +95,7 @@ export function VentaProvider({ children }: { children: ReactNode }) {
         pagarVenta,
         cancelarVenta,
         porcentaje_comision,
+        getVentas,
       }}
     >
       {children}

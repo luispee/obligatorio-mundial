@@ -82,7 +82,7 @@ class EventoRepository:
       conn.close()
 
   @staticmethod
-  def get_eventos():
+  def get_eventos(pais_sede=None):
     conn = get_connection()
     if not conn:
       raise RuntimeError("No se pudo conectar a la base de datos")
@@ -121,10 +121,12 @@ class EventoRepository:
 
         WHERE e.activo = 1 AND
 
-        e.fecha_hora >= NOW()
+        e.fecha_hora >= NOW() AND
+
+        (%s IS NULL OR pe.codigo = %s)
 
         ORDER BY e.fecha_hora ASC
-      """)
+      """, (pais_sede, pais_sede))
 
       rows = cursor.fetchall()
 

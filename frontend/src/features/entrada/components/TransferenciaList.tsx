@@ -99,15 +99,16 @@ export default function TransferenciaList({
                 )}
               </div>
             ) : (
-              <div>
+              <div className="flex flex-col items-end gap-2">
+                <div className="mb-4 text-right">
+                  <p className="text-sm text-gray-300">
+                    <strong>Remitente:</strong>
+                  </p>
+                  <p className="text-sm text-gray-300">{transferencia.mail_remitente}</p>
+                </div>
                 {transferencia.estado === 'Pendiente' && (
                   <div className="flex flex-col items-end gap-2">
-                    <div className="mb-4 text-right">
-                      <p className="text-sm text-gray-300">
-                        <strong>Remitente:</strong>
-                      </p>
-                      <p className="text-sm text-gray-300">{transferencia.mail_remitente}</p>
-                    </div>
+                    <div className="mb-4 text-right"></div>
                     <Button
                       text="Aceptar"
                       color="white"
