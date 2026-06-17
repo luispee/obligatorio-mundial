@@ -82,7 +82,7 @@ export default function TransferenciaList({
                 </div>
                 {transferencia.estado === 'Pendiente' ? (
                   <>
-                    <p className="text-sm text-yellow-300 font-semibold">Transferida (pendiente)</p>
+                    <p className="text-sm text-yellow-300 font-semibold">Pendiente</p>
                     <Button
                       text="Cancelar"
                       color="red"
@@ -91,11 +91,11 @@ export default function TransferenciaList({
                     />
                   </>
                 ) : transferencia.estado === 'Completada' ? (
-                  <p className="text-sm text-green-400 font-semibold">Transferencia aceptada</p>
+                  <p className="text-sm text-green-400 font-semibold">Aceptada</p>
                 ) : transferencia.estado === 'Cancelada' ? (
-                  <p className="text-sm text-red-400 font-semibold">Transferencia cancelada</p>
+                  <p className="text-sm text-red-400 font-semibold">Cancelada</p>
                 ) : (
-                  <p className="text-sm text-red-400 font-semibold">Transferencia rechazada</p>
+                  <p className="text-sm text-red-400 font-semibold">Rechazada</p>
                 )}
               </div>
             ) : (
@@ -123,13 +123,13 @@ export default function TransferenciaList({
                   </div>
                 )}
                 {transferencia.estado === 'Completada' && (
-                  <p className="text-sm text-green-400 font-semibold">Transferencia aceptada</p>
+                  <p className="text-sm text-green-400 font-semibold">Aceptada</p>
                 )}
                 {transferencia.estado === 'Rechazada' && (
-                  <p className="text-sm text-red-400 font-semibold">Transferencia rechazada</p>
+                  <p className="text-sm text-red-400 font-semibold">Rechazada</p>
                 )}
                 {transferencia.estado === 'Cancelada' && (
-                  <p className="text-sm text-red-400 font-semibold">Transferencia cancelada</p>
+                  <p className="text-sm text-red-400 font-semibold">Cancelada</p>
                 )}
               </div>
             )}
