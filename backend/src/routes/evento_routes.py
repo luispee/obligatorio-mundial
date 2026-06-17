@@ -53,7 +53,7 @@ def get_evento(id):
     return jsonify({"error": str(e)}), 500
 
 @evento_routes.route('/<int:id>/baja', methods=['PATCH'])
-#@admin_required
+@admin_required
 def baja_evento(id):
     try:
         resultado = EventoService.baja_evento(id)
