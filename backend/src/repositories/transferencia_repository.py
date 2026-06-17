@@ -17,7 +17,7 @@ class TransferenciaRepository:
             cursor.execute("""
                 SELECT 1
                 FROM transferencia
-                WHERE id_entrada = %s AND id_estado_transferencia IN (1, 2)
+                WHERE id_entrada = %s AND id_estado_transferencia = 1
             """, (id_entrada,))
             if cursor.fetchone():
                 raise ValueError("La entrada ya está en proceso de transferencia")
@@ -114,6 +114,112 @@ class TransferenciaRepository:
                 "recibidas": [mapear(t, es_recibida=True) for t in recibidas_raw],
                 "enviadas": [mapear(t) for t in enviadas_raw],
             } 
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def aceptar_transferencia(id_transferencia, mail_cliente):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT id_entrada, mail_cliente_remitente
+                FROM transferencia
+                WHERE id = %s AND mail_cliente_destinatario = %s AND id_estado_transferencia = 1
+            """, (id_transferencia, mail_cliente))
+            transferencia = cursor.fetchone()
+            if not transferencia:
+                raise ValueError("La transferencia no existe, no le pertenece al cliente, o no está en estado Pendiente")
+
+            id_entrada = transferencia[0]
+
+            cursor.execute("""
+                UPDATE transferencia
+                SET id_estado_transferencia = 2, fecha_hora = NOW()
+                WHERE id = %s
+            """, (id_transferencia,))
+
+            cursor.execute("""
+                UPDATE entrada
+                SET mail_cliente_propietario = %s,
+                    cantidad_transferencias = cantidad_transferencias + 1
+                WHERE id = %s
+            """, (mail_cliente, id_entrada)) 
+
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def cancelar_transferencia(id_transferencia, mail_cliente):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT id
+                FROM transferencia
+                WHERE id = %s AND mail_cliente_remitente = %s AND id_estado_transferencia = 1
+            """, (id_transferencia, mail_cliente))
+            if not cursor.fetchone():
+                raise ValueError("La transferencia no existe, no le pertenece al cliente, o no está en estado Pendiente")
+
+            cursor.execute("""
+                UPDATE transferencia
+                SET id_estado_transferencia = 4, fecha_hora = NOW()
+                WHERE id = %s
+            """, (id_transferencia,))
+
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def rechazar_transferencia(id_transferencia, mail_cliente):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        
+        try:
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                SELECT id
+                FROM transferencia
+                WHERE id = %s AND mail_cliente_destinatario = %s AND id_estado_transferencia = 1
+            """, (id_transferencia, mail_cliente))
+            if not cursor.fetchone():
+                raise ValueError("La transferencia no existe, no le pertenece al cliente, o no está en estado Pendiente")
+
+            cursor.execute("""
+                UPDATE transferencia
+                SET id_estado_transferencia = 3, fecha_hora = NOW()
+                WHERE id = %s
+            """, (id_transferencia,))
+
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
 
         finally:
             cursor.close()
