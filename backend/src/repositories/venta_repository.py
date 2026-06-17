@@ -207,3 +207,79 @@ class VentaRepository:
         finally:
             cursor.close()
             conn.close()
+
+    @staticmethod
+    def get_ventas_by_usuario(mail_cliente):
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                ve.id,
+                ve.fecha_hora AS fecha_hora_venta,
+                ve.monto_total,
+                ve.porcentaje_comision,
+
+                ev.fecha_hora AS fecha_hora_evento,
+                ev.codigo_seleccion_local,
+                ev.codigo_seleccion_visitante,
+
+                pl.nombre AS nombre_seleccion_local,
+                pv.nombre AS nombre_seleccion_visitante,
+
+                es.ciudad,
+                es.nombre AS nombre_estadio,
+
+                s.nombre AS nombre_sector,
+
+                ps.nombre AS pais_sede
+            FROM venta ve
+            JOIN entrada en ON en.id_venta = ve.id
+            JOIN sector s ON en.id_sector = s.id
+            JOIN evento ev ON en.id_evento = ev.id
+            JOIN estadio es ON ev.id_estadio = es.id
+            JOIN pais pl ON ev.codigo_seleccion_local = pl.codigo
+            JOIN pais pv ON ev.codigo_seleccion_visitante = pv.codigo
+            JOIN pais ps ON es.codigo_pais_sede = ps.codigo
+            WHERE mail_cliente = %s
+            ORDER BY fecha_hora_venta DESC
+        """, (mail_cliente,))
+
+        rows = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        ventas_por_id = {}
+
+        for r in rows:
+            venta_id = r["id"]
+
+            if venta_id not in ventas_por_id:
+                ventas_por_id[venta_id] = {
+                    "id": venta_id,
+                    "fecha_hora": r["fecha_hora_venta"].isoformat() if r["fecha_hora_venta"] else None,
+                    "monto_total": float(r["monto_total"]),
+                    "porcentaje_comision": float(r["porcentaje_comision"]),
+                    "evento": {
+                        "seleccion_local": {
+                            "codigo": r["codigo_seleccion_local"],
+                            "nombre": r["nombre_seleccion_local"],
+                        },
+                        "seleccion_visitante": {
+                            "codigo": r["codigo_seleccion_visitante"],
+                            "nombre": r["nombre_seleccion_visitante"],
+                        },
+                        "estadio": {
+                            "nombre": r["nombre_estadio"],
+                            "ciudad": r["ciudad"],
+                            "pais_sede": r["pais_sede"],
+                        },
+                        "fecha_hora": r["fecha_hora_evento"].isoformat() if r["fecha_hora_evento"] else None,
+                    },
+                    "sectores": [],
+                }
+
+            ventas_por_id[venta_id]["sectores"].append(r["nombre_sector"])
+
+        return list(ventas_por_id.values())

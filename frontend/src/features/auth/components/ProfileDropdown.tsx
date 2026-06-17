@@ -88,6 +88,13 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
               color="white"
               textColor="blue"
             />
+
+            <Button
+              text="Mis Compras"
+              onClick={() => navigate('/mis-compras')}
+              color="white"
+              textColor="blue"
+            />
           </>
         )}
         <Button text="Cerrar Sesión" onClick={() => handleLogout()} color="red" />

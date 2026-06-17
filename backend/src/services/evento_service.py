@@ -4,6 +4,7 @@ from src.repositories.administrador_repositroy import AdministradorRepository
 from src.repositories.administrador_repositroy import AdministradorRepository
 from src.repositories.evento_repository import EventoRepository
 from src.repositories.sector_repository import SectorRepository
+from flask import g
 
 from datetime import datetime
 
@@ -11,7 +12,13 @@ class EventoService:
 
   @staticmethod
   def get_eventos():
-    return EventoRepository.get_eventos()
+    user_mail = g.user_mail
+    user_role = g.user_role
+    if user_role == 'ADMINISTRADOR':
+      pais_sede = AdministradorRepository.get_pais_sede_administrador()
+      return EventoRepository.get_eventos(pais_sede)
+    else:
+      return EventoRepository.get_eventos()
 
   @staticmethod
   def get_evento(id):

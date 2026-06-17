@@ -30,3 +30,8 @@ class VentaService:
     def cancelar_venta(id):
         mail_cliente = g.user_mail
         return VentaRepository.cancelar_venta_transaction(id, mail_cliente)
+
+    @staticmethod
+    def get_ventas_usuario():
+        mail_cliente = g.user_mail
+        return VentaRepository.get_ventas_by_usuario(mail_cliente)
