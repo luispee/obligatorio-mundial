@@ -83,8 +83,8 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
               textColor="blue"
             />
             <Button
-              text="Notificaciones"
-              onClick={() => navigate('/notificaciones')}
+              text="Transferencias"
+              onClick={() => navigate('/transferencias')}
               color="white"
               textColor="blue"
             />

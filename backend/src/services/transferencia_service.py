@@ -21,3 +21,9 @@ class TransferenciaService:
             'message': f'Entrada {id_entrada} transferida a {mail_destinatario} exitosamente.',
             'success': True
         }
+
+    @staticmethod
+    def get_transferencias_usuario():
+        mail_cliente = g.user_mail
+        transferencias = TransferenciaRepository.get_transferencias_by_usuario(mail_cliente)
+        return transferencias

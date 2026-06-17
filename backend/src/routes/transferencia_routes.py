@@ -17,3 +17,12 @@ def transferir_entrada():
         return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@transferencia_routes.route('', methods=['GET'])
+@cliente_required
+def get_transferencias():
+    try:
+        result = TransferenciaService.get_transferencias_usuario()
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

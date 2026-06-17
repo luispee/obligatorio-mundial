@@ -16,6 +16,7 @@ import CreateEstadio from './features/estadio/pages/CreateEstadio';
 import EditEstadio from './features/estadio/pages/EditEstadio';
 import ConfirmarCompra from './features/venta/pages/ConfirmarCompra';
 import Entradas from './features/entrada/pages/Entradas';
+import Transferencias from './features/entrada/pages/Transferencias';
 
 export const router = createBrowserRouter([
   {
@@ -42,6 +43,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRoles={['CLIENTE']}>
             <Entradas />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/transferencias',
+        element: (
+          <ProtectedRoute requiredRoles={['CLIENTE']}>
+            <Transferencias />
           </ProtectedRoute>
         ),
       },
