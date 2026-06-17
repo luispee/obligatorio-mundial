@@ -63,3 +63,14 @@ def cancelar_venta(id):
         return jsonify({
             "error": str(e)
         }), 500
+
+@venta_routes.route("", methods=["GET"])
+@cliente_required
+def get_ventas():
+    try:
+        ventas = VentaService.get_ventas_usuario()
+        return jsonify(ventas), 200
+    except Exception as e:
+        return jsonify({
+            "error": str(e)
+        }), 500

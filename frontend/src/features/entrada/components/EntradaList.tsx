@@ -75,7 +75,9 @@ export default function EntradaList({ entradas, onTransferirClick }: EntradaList
                     onClick={() => onTransferirClick(entrada.id)}
                   />
                 )}
-                <Button text="Ver QR" color="white" textColor="blue" onClick={() => {}} />
+                <div className="flex justify-end">
+                  <Button text="Ver QR" color="white" textColor="blue" onClick={() => {}} />
+                </div>
               </>
             )}
           </div>

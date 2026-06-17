@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from src.services.estadio_service import EstadioService
 from src.decorators.roles import admin_required
+from src.validators.estadio_validator import EstadioValidator
 
 estadio_routes = Blueprint("estadios", __name__)
 
@@ -54,3 +55,15 @@ def baja_estadio(id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+@estadio_routes.route('', methods=['POST'])
+@admin_required
+def create_evento():
+  data = request.get_json()
+  try:
+    EstadioValidator.validate_estadio(data)
+    estadio = EstadioService.create_estadio(data)
+    return jsonify({"message": "Esatdio creado exitosamente", "estadio": estadio}), 201
+  except ValueError as e:
+    return jsonify({"error": str(e)}), 400
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500

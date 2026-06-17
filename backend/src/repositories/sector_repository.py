@@ -19,3 +19,12 @@ class SectorRepository:
       row[0]: row[1]
       for row in cursor.fetchall()
     }
+  
+  @staticmethod
+  def create_sector(estadio_id, sector, cursor):
+
+    query = """
+        INSERT INTO sector (nombre, capacidad_maxima, id_estadio)
+        VALUES (%s, %s, %s)
+    """
+    cursor.execute(query, (sector['nombre'], sector['capacidad'], estadio_id))

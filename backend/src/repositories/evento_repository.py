@@ -9,7 +9,7 @@ class EventoRepository:
     conn = get_connection()
     if not conn:
       raise RuntimeError("No se pudo conectar a la base de datos")
-    
+
     try:
       cursor = conn.cursor(dictionary=True)
       cursor.execute(
@@ -82,7 +82,7 @@ class EventoRepository:
       conn.close()
 
   @staticmethod
-  def get_eventos():
+  def get_eventos(pais_sede=None):
     conn = get_connection()
     if not conn:
       raise RuntimeError("No se pudo conectar a la base de datos")
@@ -121,10 +121,12 @@ class EventoRepository:
 
         WHERE e.activo = 1 AND
 
-        e.fecha_hora >= NOW()
+        e.fecha_hora >= NOW() AND
+
+        (%s IS NULL OR pe.codigo = %s)
 
         ORDER BY e.fecha_hora ASC
-      """)
+      """, (pais_sede, pais_sede))
 
       rows = cursor.fetchall()
 
@@ -265,13 +267,13 @@ class EventoRepository:
       capacidades = SectorRepository.get_sectores_by_estadio(
         data['estadio']['id'],
         sector_ids,
-        cursor   
+        cursor
       )
 
       for sector in data['estadio']['sectores']:
 
         capacidad = capacidades.get(sector['id'])
-      
+
         cursor.execute(
           """
           INSERT INTO sector_evento (
@@ -292,7 +294,7 @@ class EventoRepository:
       conn.commit()
 
       return evento_id
-      
+
     except Exception as e:
       conn.rollback()
       raise e
@@ -342,7 +344,7 @@ class EventoRepository:
       capacidades = SectorRepository.get_sectores_by_estadio(
         data['estadio']['id'],
         sector_ids,
-        cursor   
+        cursor
       )
 
       cursor.execute("DELETE FROM sector_evento WHERE id_evento = %s", (id,))
@@ -373,3 +375,24 @@ class EventoRepository:
     finally:
       cursor.close()
       conn.close()
+
+  @staticmethod
+  def baja_evento(id_evento):
+    conn = get_connection()
+
+    try:
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            UPDATE evento
+            SET activo = FALSE
+            WHERE id = %s
+        """, (id_evento,))
+
+        conn.commit()
+
+        return cursor.rowcount > 0
+
+    finally:
+        cursor.close()
+        conn.close()

@@ -10,6 +10,7 @@ import { UpdateEstadioForm } from '../types/estadioForm';
 
 export default function EditEstadio() {
   const { loading, error, getEstadio, updateEstadio } = useEstadio();
+  const [successMessage, setSuccessMessage] = useState('');
   const [estadio, setEstadio] = useState<UpdateEstadioForm>({
     id: 0,
     nombre: '',
@@ -60,7 +61,8 @@ export default function EditEstadio() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSuccessMessage('');
     try {
       const request = {
         nombre: estadio.nombre,
@@ -71,7 +73,8 @@ export default function EditEstadio() {
         })),
       };
       console.log('Request to update estadio:', request);
-      updateEstadio(Number(id), request);
+      const response = await updateEstadio(Number(id), request);
+      setSuccessMessage(response.message);
       navigate('/estadios');
     } catch (error) {
       console.error('Error updating estadio:', error);
@@ -113,10 +116,23 @@ export default function EditEstadio() {
         ))}
 
         <div className="text-center min-h-[20px]">
+          {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
 
-        <Button text={loading ? 'Guardando...' : 'Guardar Cambios'} type="submit" />
+        {successMessage ? (
+          <Button
+            text="Volver a Estadios"
+            color="blue"
+            textColor="white"
+            onClick={() => {
+              setSuccessMessage('');
+              window.location.href = '/estadios';
+            }}
+          />
+        ) : (
+          <Button text={loading ? 'Agregando...' : 'Editar Estadio'} type="submit" />
+        )}
       </form>
     </main>
   );

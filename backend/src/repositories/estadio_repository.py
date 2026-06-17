@@ -1,4 +1,5 @@
 from src.database.get_connection import get_connection
+from src.repositories.sector_repository import SectorRepository
 
 class EstadioRepository:
 
@@ -54,7 +55,7 @@ class EstadioRepository:
       conn.close()
 
   @staticmethod
-  def get_estadios_by_pais_sede(pais_sede):
+  def get_estadios_summary(pais_sede):
 
     conn = get_connection()
 
@@ -214,3 +215,41 @@ class EstadioRepository:
         conn.close()
 
 
+  def create_estadio(data):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        
+        cursor = conn.cursor()
+
+        try:
+            conn.autocommit = False
+            cursor = conn.cursor()
+
+            cursor.execute("""
+                INSERT INTO estadio (nombre, ciudad, codigo_pais_sede, activo)
+                VALUES (%s, %s, %s, %s)
+            """, 
+            (
+            data['nombre'],
+            data['ciudad'],
+            data.get('codigo_pais_sede'),
+            data.get('activo', True)
+            ))
+        
+            id_estadio = cursor.lastrowid
+
+            if 'sectores' in data and len(data['sectores']) > 0:
+                for sector in data['sectores']:
+                    SectorRepository.create_sector(id_estadio, sector, cursor)
+
+            conn.commit()
+
+            return id_estadio
+
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            cursor.close()
+            conn.close()

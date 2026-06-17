@@ -9,6 +9,7 @@ import { useEstadio } from '../contexts/EstadioContext';
 import { CreateEstadioForm } from '../types/estadioForm';
 
 export default function CreateEstadio() {
+  const [successMessage, setSuccessMessage] = useState('');
   const [estadio, setEstadio] = useState<CreateEstadioForm>({
     nombre: '',
     ciudad: '',
@@ -52,7 +53,8 @@ export default function CreateEstadio() {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setSuccessMessage('');
     try {
       const request = {
         nombre: estadio.nombre,
@@ -62,7 +64,8 @@ export default function CreateEstadio() {
           capacidad: Number(s.capacidad),
         })),
       };
-      createEstadio(request);
+      const response = await createEstadio(request);
+      setSuccessMessage(response.message);
     } catch (error) {
       console.error('Error creating estadio:', error);
     }
@@ -103,10 +106,22 @@ export default function CreateEstadio() {
         ))}
 
         <div className="text-center min-h-[20px]">
+          {successMessage && <p className="text-green-500 mb-4">{successMessage}</p>}
           {error && <p className="text-red-500 mb-4">{error}</p>}
         </div>
-
-        <Button text={loading ? 'Agregando...' : 'Agregar Estadio'} type="submit" />
+        {successMessage ? (
+          <Button
+            text="Volver a Estadios"
+            color="blue"
+            textColor="white"
+            onClick={() => {
+              setSuccessMessage('');
+              window.location.href = '/estadios';
+            }}
+          />
+        ) : (
+          <Button text={loading ? 'Agregando...' : 'Agregar Estadio'} type="submit" />
+        )}
       </form>
     </main>
   );

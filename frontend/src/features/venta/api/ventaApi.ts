@@ -1,6 +1,6 @@
 import { request } from '../../../utils/httpClient';
 import { CreateVentaRequest } from './ventaRequests';
-import { CreateVentaResponse, PagarVentaResponse } from './ventaResponses';
+import { CreateVentaResponse, GetVentasResponse, PagarVentaResponse } from './ventaResponses';
 
 export function createVenta(data: CreateVentaRequest): Promise<CreateVentaResponse> {
   return request('/ventas', {
@@ -18,5 +18,11 @@ export function pagarVenta(id: number): Promise<PagarVentaResponse> {
 export function cancelarVenta(id: number) {
   return request(`/ventas/${id}/cancelar`, {
     method: 'PATCH',
+  });
+}
+
+export function fetchVentas(): Promise<GetVentasResponse> {
+  return request('/ventas', {
+    method: 'GET',
   });
 }
