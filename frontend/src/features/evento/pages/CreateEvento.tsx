@@ -36,27 +36,15 @@ export default function CreateEvento() {
   };
 
   const handleSectorToggle = (sectorId: number) => {
-    setForm((prev) => {
-      const sectores = prev.estadio.sectores;
-      const index = sectores.findIndex((s) => s.id === sectorId);
-      if (index === -1) {
-        return {
-          ...prev,
-          estadio: {
-            ...prev.estadio,
-            sectores: [...sectores, { id: sectorId, precio: '' }],
-          },
-        };
-      } else {
-        return {
-          ...prev,
-          estadio: {
-            ...prev.estadio,
-            sectores: sectores.filter((s) => s.id !== sectorId),
-          },
-        };
-      }
-    });
+    setForm((prev) => ({
+      ...prev,
+      estadio: {
+        ...prev.estadio,
+        sectores: prev.estadio.sectores.map((s) =>
+          s.id === sectorId ? { ...s, activo: !s.activo } : s
+        ),
+      },
+    }));
   };
 
   useEffect(() => {
@@ -76,7 +64,7 @@ export default function CreateEvento() {
     clearError();
     try {
       for (const sector of form.estadio.sectores) {
-        if (!sector.precio) {
+        if (sector.activo && !sector.precio) {
           setEmptyPrecio(true);
           return;
         }
@@ -88,7 +76,8 @@ export default function CreateEvento() {
           ...form.estadio,
           sectores: form.estadio.sectores.map((s) => ({
             id: s.id,
-            precio: Number(s.precio.replace(',', '.')),
+            precio: Number(s.precio.replace(',', '.')) || 0,
+            activo: s.activo,
           })),
         },
       };
@@ -105,7 +94,8 @@ export default function CreateEvento() {
   const capacidadTotal = () => {
     let capacidad = 0;
     for (const sector of selectedEstadio?.sectores || []) {
-      if (form.estadio.sectores.some((s) => s.id === sector.id)) {
+      const formSector = form.estadio.sectores.find((s) => s.id === sector.id);
+      if (formSector?.activo) {
         capacidad += sector.capacidad!;
       }
     }
@@ -165,7 +155,8 @@ export default function CreateEvento() {
 
                 estadio: {
                   id: Number(value),
-                  sectores: estadio?.sectores.map((s) => ({ id: s.id, precio: '' })) || [],
+                  sectores:
+                    estadio?.sectores.map((s) => ({ id: s.id, precio: '', activo: true })) || [],
                 },
               }));
             }}
@@ -183,27 +174,30 @@ export default function CreateEvento() {
         {selectedEstadio && <p>Capacidad: {capacidadTotal()}</p>}
 
         <div className="flex flex-col gap-2">
-          {selectedEstadio?.sectores.map((sector, index) => (
-            <SectorRow
-              key={sector.id}
-              number={index + 1}
-              sector={sector}
-              precio={form.estadio.sectores.find((s) => s.id === sector.id)?.precio}
-              onToggle={() => handleSectorToggle(sector.id)}
-              isSelected={form.estadio.sectores.some((s) => s.id === sector.id)}
-              onChange={(precio) => {
-                setForm((prev) => ({
-                  ...prev,
-                  estadio: {
-                    ...prev.estadio,
-                    sectores: prev.estadio.sectores.map((s) =>
-                      s.id === sector.id ? { ...s, precio } : s
-                    ),
-                  },
-                }));
-              }}
-            />
-          ))}
+          {selectedEstadio?.sectores.map((sector, index) => {
+            const formSector = form.estadio.sectores.find((s) => s.id === sector.id);
+            return (
+              <SectorRow
+                key={sector.id}
+                number={index + 1}
+                sector={sector}
+                precio={formSector?.precio}
+                onToggle={() => handleSectorToggle(sector.id)}
+                isSelected={formSector?.activo ?? false}
+                onChange={(precio) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    estadio: {
+                      ...prev.estadio,
+                      sectores: prev.estadio.sectores.map((s) =>
+                        s.id === sector.id ? { ...s, precio } : s
+                      ),
+                    },
+                  }));
+                }}
+              />
+            );
+          })}
         </div>
 
         <div className="text-center text-red-500 min-h-[20px]">

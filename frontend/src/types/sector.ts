@@ -7,4 +7,5 @@ export type Sector = {
 export type ExtendedSector = Omit<Sector, 'capacidad'> & {
   precio: number;
   disponible: boolean;
+  activo: boolean;
 };

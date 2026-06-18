@@ -4,7 +4,7 @@ export type CreateEventoRequest = {
   fecha_hora: string;
   estadio: {
     id: number;
-    sectores: { id: number; precio: number }[];
+    sectores: { id: number; precio: number; activo: boolean }[];
   };
 };
 
