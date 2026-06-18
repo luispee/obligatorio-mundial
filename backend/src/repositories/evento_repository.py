@@ -43,7 +43,8 @@ class EventoRepository:
           s.id,
           s.nombre,
           se.precio,
-          se.capacidad_disponible > 0 AS disponibilidad
+          se.capacidad_disponible > 0 AS disponibilidad,
+          se.activo
         FROM sector_evento se
         JOIN sector s ON s.id = se.id_sector
         WHERE se.id_evento = %s
@@ -72,7 +73,8 @@ class EventoRepository:
             "id": s['id'],
             "precio": float(s['precio']),
             "nombre": s['nombre'],
-            "disponible": bool(s['disponibilidad'])
+            "disponible": bool(s['disponibilidad']),
+            "activo": bool(s['activo'])
           } for s in sectores
         ]
         },
@@ -235,6 +237,9 @@ class EventoRepository:
     cursor = conn.cursor()
 
     try:
+      if not any(sector['activo'] for sector in data['estadio']['sectores']):
+        raise ValueError("El evento debe tener al menos un sector habilitado")
+
       cursor.execute(
         """
         INSERT INTO evento (
@@ -272,7 +277,7 @@ class EventoRepository:
 
       for sector in data['estadio']['sectores']:
 
-        capacidad = capacidades.get(sector['id'])
+        capacidad = capacidades.get(sector['id'], 0)
 
         cursor.execute(
           """
@@ -280,14 +285,16 @@ class EventoRepository:
             id_evento,
             id_sector,
             precio,
-            capacidad_disponible
-          ) VALUES (%s, %s, %s, %s)
+            capacidad_disponible,
+            activo
+          ) VALUES (%s, %s, %s, %s, %s)
           """,
           (
             evento_id,
             sector['id'],
             sector['precio'],
-            capacidades.get(sector['id'], 0)
+            capacidad,
+            sector['activo']
           )
         )
 
@@ -311,6 +318,9 @@ class EventoRepository:
     cursor = conn.cursor()
 
     try:
+      if not any(sector['activo'] for sector in data['estadio']['sectores']):
+        raise ValueError("El evento debe tener al menos un sector habilitado")
+        
       cursor.execute(
         """
         UPDATE evento
@@ -347,23 +357,23 @@ class EventoRepository:
         cursor
       )
 
-      cursor.execute("DELETE FROM sector_evento WHERE id_evento = %s", (id,))
 
       for sector in data['estadio']['sectores']:
         cursor.execute(
           """
-          INSERT INTO sector_evento (
-            id_evento,
-            id_sector,
-            precio,
-            capacidad_disponible)
-          VALUES (%s, %s, %s, %s)
+          UPDATE sector_evento
+          SET
+            precio = %s,
+            capacidad_disponible = %s,
+            activo = %s
+          WHERE id_evento = %s AND id_sector = %s
           """,
           (
-            id,
-            sector['id'],
             sector['precio'],
-            capacidades.get(sector['id'], 0)
+            capacidades.get(sector['id'], 0),
+            sector['activo'],
+            id,
+            sector['id']
           )
         )
 

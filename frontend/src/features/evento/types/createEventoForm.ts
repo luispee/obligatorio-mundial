@@ -4,6 +4,6 @@ export type CreateEventoForm = {
   fecha_hora: string;
   estadio: {
     id: number;
-    sectores: { id: number; precio: string }[];
+    sectores: { id: number; precio: string; activo: boolean }[];
   };
 };

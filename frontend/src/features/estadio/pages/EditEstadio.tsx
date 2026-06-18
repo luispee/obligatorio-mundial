@@ -73,8 +73,7 @@ export default function EditEstadio() {
           capacidad: Number(s.capacidad),
         })),
       };
-      console.log('Request to update estadio:', request);
-      const response = await updateEstadio(Number(id), request);
+      await updateEstadio(Number(id), request);
       setSuccessMessage('Estadio actualizado con éxito.');
     } catch (error) {
       console.error('Error updating estadio:', error);

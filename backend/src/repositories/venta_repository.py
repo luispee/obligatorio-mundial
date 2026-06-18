@@ -34,7 +34,7 @@ class VentaRepository:
                 capacidad, precio = row
 
                 if capacidad < cantidad:
-                    raise Exception(f"Sin capacidad en sector {id_sector}")
+                    raise Exception(f"No hay entradas disponibles para uno de los sectores seleccionados")
 
                 total += precio * cantidad
 

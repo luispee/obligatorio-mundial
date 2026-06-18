@@ -18,6 +18,15 @@ export default function SelectedEntradas({
   const precio = (sectorId: number) => {
     return evento.estadio.sectores.find((s) => s.id === sectorId)?.precio || 0;
   };
+
+  const getLabel = (sectorId: number) => {
+    const sector = evento.estadio.sectores.find((s) => s.id === sectorId);
+    return sector
+      ? sector.disponible
+        ? `${sector.nombre} ($${sector.precio})`
+        : `${sector.nombre} - Agotado`
+      : 'Seleccionar sector';
+  };
   return (
     <ul className="flex w-full flex-col gap-4">
       {Array.from({ length: cantidad }, (_, i) => (
@@ -30,10 +39,12 @@ export default function SelectedEntradas({
           </div>
           <Select
             label="Sector"
-            options={evento.estadio.sectores.map((sector) => ({
-              value: sector.id.toString(),
-              label: sector.nombre + ' ($' + sector.precio.toFixed(2) + ')',
-            }))}
+            options={evento.estadio.sectores
+              .filter((sector) => sector.activo)
+              .map((sector) => ({
+                value: sector.id.toString(),
+                label: getLabel(sector.id),
+              }))}
             value={selectedSectores[i]?.id.toString() || ''}
             onChange={(value) => onChange(i, Number(value))}
             whiteLabel
