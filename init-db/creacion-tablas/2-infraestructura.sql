@@ -59,6 +59,8 @@ CREATE TABLE sector_evento (
     precio DECIMAL(10,2) NOT NULL,
     capacidad_disponible INT NOT NULL,
 
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+
     PRIMARY KEY (id_sector, id_evento),
 
     CONSTRAINT fk_sector_evento_sector

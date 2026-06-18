@@ -1,9 +1,8 @@
 from src.database.get_connection import get_connection
 
+TIEMPO_LIMITE_PENDIENTE_MINUTOS = 5
+
 class VentaRepository:
-
-    
-
     @staticmethod
     def crear_venta_transaction(mail_cliente, id_evento, sectores):
         porcentaje_comision = 5
@@ -13,6 +12,8 @@ class VentaRepository:
 
         try:
             conn.start_transaction()
+
+            VentaRepository.liberar_ventas_vencidas()
 
             # lock de stock
             total = 0
@@ -136,6 +137,34 @@ class VentaRepository:
             conn.close()
 
     @staticmethod
+    def _liberar_entradas_de_venta(cursor, id_venta):
+        cursor.execute("""
+            SELECT id_sector, id_evento, COUNT(*)
+            FROM entrada
+            WHERE id_venta = %s
+            GROUP BY id_sector, id_evento
+        """, (id_venta,))
+
+        entradas = cursor.fetchall()
+
+        cursor.execute("""
+            DELETE FROM entrada
+            WHERE id_venta = %s
+        """, (id_venta,))
+
+        for id_sector, id_evento, cantidad in entradas:
+            cursor.execute("""
+                UPDATE sector_evento
+                SET capacidad_disponible = capacidad_disponible + %s
+                WHERE id_evento = %s AND id_sector = %s
+            """, (
+                cantidad,
+                id_evento,
+                id_sector
+            ))
+            
+
+    @staticmethod
     def cancelar_venta_transaction(id_venta, mail_cliente):
         
         conn = get_connection()
@@ -171,32 +200,7 @@ class VentaRepository:
                 mail_cliente
             ))
 
-            cursor.execute("""
-                SELECT id_sector, id_evento, COUNT(*)
-                FROM entrada
-                WHERE id_venta = %s
-                GROUP BY id_sector, id_evento
-            """, (id_venta,))
-
-            entradas = cursor.fetchall()
-
-            cursor.execute("""
-                DELETE FROM entrada
-                WHERE id_venta = %s
-            """, (id_venta,))
-
-            for row in entradas:
-                id_sector, id_evento, cantidad = row
-
-                cursor.execute("""
-                    UPDATE sector_evento
-                    SET capacidad_disponible = capacidad_disponible + %s
-                    WHERE id_evento = %s AND id_sector = %s
-                """, (
-                    cantidad,
-                    id_evento,
-                    id_sector
-                ))
+            VentaRepository._liberar_entradas_de_venta(cursor, id_venta)
 
             conn.commit()
 
@@ -241,7 +245,8 @@ class VentaRepository:
             JOIN pais pl ON ev.codigo_seleccion_local = pl.codigo
             JOIN pais pv ON ev.codigo_seleccion_visitante = pv.codigo
             JOIN pais ps ON es.codigo_pais_sede = ps.codigo
-            WHERE mail_cliente = %s
+            WHERE mail_cliente = %s AND 
+            ve.id_estado_venta = 2
             ORDER BY fecha_hora_venta DESC
         """, (mail_cliente,))
 
@@ -283,3 +288,44 @@ class VentaRepository:
             ventas_por_id[venta_id]["sectores"].append(r["nombre_sector"])
 
         return list(ventas_por_id.values())
+
+    @staticmethod
+    def liberar_ventas_vencidas():
+        conn = get_connection()
+        
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+
+        cursor = None
+
+        try:
+            cursor = conn.cursor()
+            conn.start_transaction()
+
+            cursor.execute("""
+                SELECT id FROM venta
+                WHERE id_estado_venta = 1
+                AND fecha_hora < (NOW() - INTERVAL %s MINUTE)
+                FOR UPDATE
+            """, (TIEMPO_LIMITE_PENDIENTE_MINUTOS,))
+
+            ventas_vencidas = cursor.fetchall()
+
+            for (id_venta,) in ventas_vencidas:
+                cursor.execute("""
+                    UPDATE venta
+                    SET id_estado_venta = 3
+                    WHERE id = %s
+                """, (id_venta,))
+
+                VentaRepository._liberar_entradas_de_venta(cursor, id_venta)
+
+            conn.commit()
+
+        except Exception as e:
+            conn.rollback()
+            raise e
+
+        finally:
+            cursor.close()
+            conn.close()
