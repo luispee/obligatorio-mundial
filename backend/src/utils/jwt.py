@@ -30,3 +30,21 @@ class JwtUtils:
       SECRET_KEY,
       algorithms=["HS256"]
     )
+
+  @staticmethod
+  def generate_entrada_token(entrada_id, sector_id, evento_id):
+
+    payload = {
+      "id_entrada": entrada_id,
+      "id_sector": sector_id,
+      "id_evento": evento_id,
+      "iat": datetime.utcnow(),
+      "nbf": datetime.utcnow(),
+      "exp": datetime.utcnow() + timedelta(seconds=35)
+    }
+
+    return jwt.encode(
+      payload,
+      SECRET_KEY,
+      algorithm="HS256"
+    )

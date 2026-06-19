@@ -4,14 +4,16 @@ import {
   GetEntradasResponse,
   GetTransferenciasResponse,
   TransferirEntradaResponse,
+  ValidarEntradaResponse,
 } from '../api/entradaResponses';
 import { fetchEntradas, fetchTransferencias } from '../api/entradaApi';
-import { TransferirEntradaRequest } from '../api/entradaRequests';
+import { TransferirEntradaRequest, ValidarEntradaRequest } from '../api/entradaRequests';
 import { transferirEntrada as transferirEntradaApi } from '../api/entradaApi';
 import { aceptarTransferencia as aceptarTransferenciaApi } from '../api/entradaApi';
 import { cancelarTransferencia as cancelarTransferenciaApi } from '../api/entradaApi';
 import { rechazarTransferencia as rechazarTransferenciaApi } from '../api/entradaApi';
 import { fetchEntrada } from '../api/entradaApi';
+import { validarEntrada as validarEntradaApi } from '../api/entradaApi';
 
 type EntradaContextType = {
   error: string | null;
@@ -24,6 +26,7 @@ type EntradaContextType = {
   cancelarTransferencia: (transferenciaId: number) => Promise<void>;
   rechazarTransferencia: (transferenciaId: number) => Promise<void>;
   getEntrada: (entradaId: number) => Promise<GetEntradaResponse>;
+  validarEntrada: (data: ValidarEntradaRequest) => Promise<ValidarEntradaResponse>;
 };
 
 const EntradaContext = createContext<EntradaContextType | undefined>(undefined);
@@ -131,6 +134,23 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const validarEntrada = useCallback(
+    async (data: ValidarEntradaRequest): Promise<ValidarEntradaResponse> => {
+      setLoading(true);
+      clearError();
+      try {
+        const response = await validarEntradaApi(data);
+        return response;
+      } catch (err: any) {
+        setError(err.message || 'Error al validar la entrada');
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
   return (
     <EntradaContext.Provider
       value={{
@@ -144,6 +164,7 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
         cancelarTransferencia,
         rechazarTransferencia,
         getEntrada,
+        validarEntrada,
       }}
     >
       {children}

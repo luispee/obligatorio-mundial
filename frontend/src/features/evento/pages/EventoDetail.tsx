@@ -5,7 +5,7 @@ import SelectedEntradas from '../components/SelectedEntradas';
 import Button from '../../../components/Button';
 import { Evento } from '../../../types/evento';
 import { useEvento } from '../contexts/EventoContext';
-import { formatDate } from '../../../utils/data';
+import { formatDate } from '../../../utils/date';
 import SelectCantidadEntradas from '../components/SelectCantidadEntradas';
 import { CreateVentaRequest } from '../../venta/api/ventaRequests';
 import { useVenta } from '../../venta/contexts/VentaContext';

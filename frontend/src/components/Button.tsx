@@ -4,7 +4,7 @@ type ButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   color?: 'green' | 'red' | 'white' | 'gray' | 'blue';
-  textColor?: 'white' | 'black' | 'blue';
+  textColor?: 'white' | 'black' | 'blue' | 'red' | 'gray' | 'green';
 };
 
 export default function Button({
