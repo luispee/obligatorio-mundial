@@ -32,7 +32,7 @@ export default function SelectedEntradas({
       {Array.from({ length: cantidad }, (_, i) => (
         <li
           key={i}
-          className="flex items-center justify-between gap-4 rounded-lg bg-blue p-4 shadow-lg shadow-gray"
+          className="flex flex-col md:flex-row items-center justify-between gap-4 rounded-lg bg-blue p-4 shadow-lg shadow-gray"
         >
           <div className="flex flex-col gap-2">
             <span className="text-white text-xl font-bold uppercase">Entrada {i + 1}</span>

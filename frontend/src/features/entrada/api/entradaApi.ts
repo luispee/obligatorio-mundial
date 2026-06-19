@@ -1,6 +1,7 @@
 import { request } from '../../../utils/httpClient';
 import { TransferirEntradaRequest } from './entradaRequests';
 import {
+  GetEntradaResponse,
   GetEntradasResponse,
   GetTransferenciasResponse,
   TransferirEntradaResponse,
@@ -42,5 +43,11 @@ export function cancelarTransferencia(transferenciaId: number): Promise<void> {
 export function rechazarTransferencia(transferenciaId: number): Promise<void> {
   return request(`/transferencias/${transferenciaId}/rechazar`, {
     method: 'PATCH',
+  });
+}
+
+export function fetchEntrada(entradaId: number): Promise<GetEntradaResponse> {
+  return request(`/entradas/${entradaId}`, {
+    method: 'GET',
   });
 }

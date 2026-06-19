@@ -18,13 +18,10 @@ export default function TransferirModal({
 }: TransferirModalProps) {
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-10"
+      className="fixed inset-0 flex items-center justify-center bg-black/80 bg-opacity-50 z-10"
       onClick={() => onClose()}
     >
-      <div
-        className="bg-white p-6 rounded-lg shadow-lg shadow-gray w-full max-w-md"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="bg-white p-6 rounded-lg w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-bold mb-4">Transferir</h2>
         <Input
           label="Correo del destinatario"

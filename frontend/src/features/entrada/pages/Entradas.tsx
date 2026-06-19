@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { useEntrada } from '../contexts/EntradaContext';
 import EntradaList from '../components/EntradaList';
 import TransferirModal from '../components/TransferirModal';
+import QRModal from '../components/QRModal';
 
 export default function Entradas() {
   const { getEntradas, transferirEntrada, error, clearError } = useEntrada();
   const [entradas, setEntradas] = useState([]);
   const [entradaTransferencia, setEntradaTransferencia] = useState(null);
   const [destinatarioTransferencia, setDestinatarioTransferencia] = useState('');
+  const [displayQREntradaId, setDisplayQREntradaId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +41,8 @@ export default function Entradas() {
     }
   };
 
+  const qrModalEvento = entradas.find((e) => e.id === displayQREntradaId)?.evento;
+
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col items-center justify-center px-4 py-8">
       {entradaTransferencia && (
@@ -50,13 +54,24 @@ export default function Entradas() {
           error={error}
         />
       )}
+      {displayQREntradaId !== null && (
+        <QRModal
+          onClose={() => setDisplayQREntradaId(null)}
+          entradaId={displayQREntradaId}
+          evento={qrModalEvento}
+        />
+      )}
       <div className="relative flex flex-col gap-4 w-full max-w-2xl bg-white p-6 rounded-lg shadow-lg shadow-gray">
         <div className="absolute top-4 right-4"></div>
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
           Mis Entradas
         </h1>
 
-        <EntradaList entradas={entradas} onTransferirClick={setEntradaTransferencia} />
+        <EntradaList
+          entradas={entradas}
+          onTransferirClick={setEntradaTransferencia}
+          onVerQRClick={setDisplayQREntradaId}
+        />
       </div>
     </main>
   );

@@ -11,13 +11,10 @@ export default function ConfirmBajaEstadioModal({
 }: ConfirmBajaEstadioModalProps) {
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-10"
+      className="fixed inset-0 flex items-center justify-center bg-black/80 bg-opacity-50 z-10"
       onClick={() => onClose()}
     >
-      <div
-        className="bg-white p-6 rounded-lg shadow-lg shadow-gray w-full max-w-md"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="bg-white p-6 rounded-lg w-full max-w-md" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-xl font-bold mb-4">Confirmar Baja</h2>
         <p className="mb-6">¿Estás seguro de que deseas dar de baja este estadio?</p>
         <p className="mb-6 text-xs text-gray-500">Esta acción no se puede deshacer.</p>

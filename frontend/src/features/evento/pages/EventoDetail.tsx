@@ -157,8 +157,10 @@ export default function EventoDetail() {
         <div className="w-full flex flex-col items-end mt-6">
           <div>
             <div className="flex flex-col items-end gap-2 mr-4">
-              <span className="text-sm font-bold text-gray">Subtotal: ${total.toFixed(2)}</span>
-              <span className="text-sm font-bold text-gray">Comisión: 5%</span>
+              <span className="text-sm font-bold text-gray-dark">
+                Subtotal: ${total.toFixed(2)}
+              </span>
+              <span className="text-sm font-bold text-gray-dark">Comisión: 5%</span>
               <span className="text-lg font-bold text-gray-dark">
                 Total: ${(total * 1.05).toFixed(2)}
               </span>

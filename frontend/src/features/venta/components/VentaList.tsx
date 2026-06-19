@@ -18,7 +18,7 @@ export default function VentaList({ ventas }: VentaListProps) {
     <ul className="p-4">
       {ventas.map((venta) => (
         <div
-          className="flex justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
+          className="flex flex-col md:flex-row justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
           key={venta.id}
         >
           <div className="flex text-white gap-4">

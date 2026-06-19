@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState } from 'react';
 import {
+  GetEntradaResponse,
   GetEntradasResponse,
   GetTransferenciasResponse,
   TransferirEntradaResponse,
@@ -10,6 +11,7 @@ import { transferirEntrada as transferirEntradaApi } from '../api/entradaApi';
 import { aceptarTransferencia as aceptarTransferenciaApi } from '../api/entradaApi';
 import { cancelarTransferencia as cancelarTransferenciaApi } from '../api/entradaApi';
 import { rechazarTransferencia as rechazarTransferenciaApi } from '../api/entradaApi';
+import { fetchEntrada } from '../api/entradaApi';
 
 type EntradaContextType = {
   error: string | null;
@@ -21,6 +23,7 @@ type EntradaContextType = {
   aceptarTransferencia: (transferenciaId: number) => Promise<void>;
   cancelarTransferencia: (transferenciaId: number) => Promise<void>;
   rechazarTransferencia: (transferenciaId: number) => Promise<void>;
+  getEntrada: (entradaId: number) => Promise<GetEntradaResponse>;
 };
 
 const EntradaContext = createContext<EntradaContextType | undefined>(undefined);
@@ -114,6 +117,20 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
+  const getEntrada = useCallback(async (entradaId: number): Promise<GetEntradaResponse> => {
+    setLoading(true);
+    clearError();
+    try {
+      const data = await fetchEntrada(entradaId);
+      return data;
+    } catch (err: any) {
+      setError(err.message || 'Error al cargar la entrada');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return (
     <EntradaContext.Provider
       value={{
@@ -126,6 +143,7 @@ export function EntradaProvider({ children }: { children: React.ReactNode }) {
         aceptarTransferencia,
         cancelarTransferencia,
         rechazarTransferencia,
+        getEntrada,
       }}
     >
       {children}
