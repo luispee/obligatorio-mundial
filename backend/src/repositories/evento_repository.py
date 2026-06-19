@@ -123,7 +123,7 @@ class EventoRepository:
 
         WHERE e.activo = 1 AND
 
-        e.fecha_hora >= NOW() AND
+        e.fecha_hora >= DATE_SUB(NOW(), INTERVAL 3 HOUR) AND
 
         (%s IS NULL OR pe.codigo = %s)
 

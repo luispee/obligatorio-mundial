@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Evento, EventoSummary } from '../../../types/evento';
 import Button from '../../../components/Button';
 import { useAuth } from '../../auth/contexts/AuthContext';
-import { formatDate } from '../../../utils/data';
+import { formatDate } from '../../../utils/date';
 
 type EventoCardProps = {
   evento: EventoSummary;

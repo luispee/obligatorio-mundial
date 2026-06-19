@@ -31,3 +31,12 @@ export type GetTransferenciasResponse = {
 export type GetEntradaResponse = {
   token_entrada: string;
 };
+
+export type ValidarEntradaResponse = {
+  valid: boolean;
+  message: string;
+  entrada: {
+    mail: string;
+    evento: EventoSummaryWithNombreSector;
+  } | null;
+};

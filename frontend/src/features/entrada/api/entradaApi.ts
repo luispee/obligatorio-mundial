@@ -1,10 +1,11 @@
 import { request } from '../../../utils/httpClient';
-import { TransferirEntradaRequest } from './entradaRequests';
+import { TransferirEntradaRequest, ValidarEntradaRequest } from './entradaRequests';
 import {
   GetEntradaResponse,
   GetEntradasResponse,
   GetTransferenciasResponse,
   TransferirEntradaResponse,
+  ValidarEntradaResponse,
 } from './entradaResponses';
 
 export function fetchEntradas(): Promise<GetEntradasResponse> {
@@ -49,5 +50,12 @@ export function rechazarTransferencia(transferenciaId: number): Promise<void> {
 export function fetchEntrada(entradaId: number): Promise<GetEntradaResponse> {
   return request(`/entradas/${entradaId}`, {
     method: 'GET',
+  });
+}
+
+export function validarEntrada(data: ValidarEntradaRequest): Promise<ValidarEntradaResponse> {
+  return request('/entradas/validar', {
+    method: 'POST',
+    body: JSON.stringify(data),
   });
 }

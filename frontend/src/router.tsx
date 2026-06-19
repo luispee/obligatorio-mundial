@@ -18,6 +18,7 @@ import ConfirmarCompra from './features/venta/pages/ConfirmarCompra';
 import Entradas from './features/entrada/pages/Entradas';
 import Transferencias from './features/entrada/pages/Transferencias';
 import Ventas from './features/venta/pages/Ventas';
+import Funcionario from './features/entrada/pages/Funcionario';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/funcionario',
+        element: (
+          <ProtectedRoute requiredRoles={['FUNCIONARIO']}>
+            <Funcionario />
           </ProtectedRoute>
         ),
       },

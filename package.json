@@ -4,6 +4,7 @@
     "tailwindcss": "^4.3.0"
   },
   "dependencies": {
+    "qrcode.react": "^4.2.0",
     "react-router-dom": "^7.16.0"
   }
 }

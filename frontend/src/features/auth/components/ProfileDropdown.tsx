@@ -14,7 +14,7 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
   const { closeProfileDropdown } = useUI();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
-  const { user, logout, isAdministrador } = useAuth();
+  const { user, logout, isCliente } = useAuth();
 
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -74,7 +74,7 @@ export default function ProfileDropdown({ isOpen, parentRef }: Props) {
           color="white"
           textColor="blue"
         />
-        {!isAdministrador && (
+        {isCliente && (
           <>
             <Button
               text="Mis Entradas"
