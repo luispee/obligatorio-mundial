@@ -4,9 +4,14 @@ import Button from '../../../components/Button';
 type EntradaListProps = {
   entradas: GetEntradasResponse;
   onTransferirClick: (entradaId: number) => void;
+  onVerQRClick: (entradaId: number) => void;
 };
 
-export default function EntradaList({ entradas, onTransferirClick }: EntradaListProps) {
+export default function EntradaList({
+  entradas,
+  onTransferirClick,
+  onVerQRClick,
+}: EntradaListProps) {
   if (entradas.length === 0) {
     return <p className="p-4 text-center text-gray-500">No tienes entradas</p>;
   }
@@ -15,7 +20,7 @@ export default function EntradaList({ entradas, onTransferirClick }: EntradaList
     <ul className="p-4">
       {entradas.map((entrada) => (
         <div
-          className="flex justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
+          className="flex flex-col md:flex-row justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
           key={entrada.id}
         >
           <div className="flex text-white gap-4">
@@ -56,11 +61,14 @@ export default function EntradaList({ entradas, onTransferirClick }: EntradaList
               </p>
             </div>
           </div>
+
           <div className="flex flex-col justify-around gap-2">
             {entrada.usada ? (
               <p className="text-md text-white font-semibold">Usada</p>
             ) : entrada.transferencia_pendiente ? (
               <p className="text-sm text-yellow-300 font-semibold">Transferida (pendiente)</p>
+            ) : new Date(entrada.evento.fecha_hora) < new Date() ? (
+              <p className="text-sm text-gray-300 font-semibold">Evento pasado</p>
             ) : (
               <>
                 {entrada.limite_transferencias_alcanzado ? (
@@ -75,9 +83,13 @@ export default function EntradaList({ entradas, onTransferirClick }: EntradaList
                     onClick={() => onTransferirClick(entrada.id)}
                   />
                 )}
-                <div className="flex justify-end">
-                  <Button text="Ver QR" color="white" textColor="blue" onClick={() => {}} />
-                </div>
+
+                <Button
+                  text="Ver QR"
+                  color="white"
+                  textColor="blue"
+                  onClick={() => onVerQRClick(entrada.id)}
+                />
               </>
             )}
           </div>

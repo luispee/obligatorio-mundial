@@ -30,11 +30,11 @@ export default function TransferenciaList({
     <ul className="p-4">
       {transferencias.map((transferencia) => (
         <div
-          className="flex justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
+          className="flex flex-col md:flex-row justify-between bg-blue p-4 rounded-lg mb-2 shadow-md shadow-gray"
           key={transferencia.id}
         >
-          <div className="flex text-white gap-4">
-            <div className=" flex flex-col text-sm justify-around gap-4 p-2 rounded-lg text-gray-dark">
+          <div className="flex flex-col md:flex-row text-white gap-4">
+            <div className="flex flex-row md:flex-col text-sm justify-around gap-4 p-2 rounded-lg text-gray-dark">
               <img
                 src={`/flags/${transferencia.evento.seleccion_local.codigo}.svg`}
                 alt={transferencia.evento.seleccion_local.nombre}

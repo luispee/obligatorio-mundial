@@ -74,6 +74,7 @@ export default function ConfirmarCompra() {
             initialSeconds={300}
             onExpire={() => setTimerExpired(true)}
             stop={stopTimer}
+            expiredMessage="Tu reserva ha expirado. Por favor, vuelve a iniciar el proceso de compra."
           />
         </div>
 

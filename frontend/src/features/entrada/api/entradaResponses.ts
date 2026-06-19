@@ -27,3 +27,7 @@ export type GetTransferenciasResponse = {
     evento: EventoSummaryWithNombreSector;
   }[];
 };
+
+export type GetEntradaResponse = {
+  token_entrada: string;
+};
