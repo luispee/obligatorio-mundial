@@ -55,7 +55,7 @@ export default function QRModal({ onClose, entradaId, evento }: QRModalProps) {
           <img
             src={`/flags/${evento.seleccion_local.codigo}.svg`}
             alt="Seleccion Local"
-            className="w-10 h-8 mx-auto border border-gray-dark rounded"
+            className="w-10 h-8 mx-auto border border-gray-dark object-cover rounded"
           />
           <p className="text-lg font-bold text-center">
             {evento?.seleccion_local.nombre} vs {evento?.seleccion_visitante.nombre}
@@ -63,7 +63,7 @@ export default function QRModal({ onClose, entradaId, evento }: QRModalProps) {
           <img
             src={`/flags/${evento.seleccion_visitante.codigo}.svg`}
             alt="Seleccion Visitante"
-            className="w-10 h-8 mx-auto border border-gray-dark rounded"
+            className="w-10 h-8 mx-auto border object-cover border-gray-dark rounded"
           />
         </div>
         {initialLoading && <p className="text-center">Generando QR...</p>}

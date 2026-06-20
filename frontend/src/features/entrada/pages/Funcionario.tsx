@@ -19,7 +19,11 @@ export default function Funcionario() {
         setValidacion(response);
       }
     } catch (err: any) {
-      alert('Error de conexión');
+      setValidacion({
+        valid: false,
+        message: err.message || 'Error al validar la entrada',
+        entrada: null,
+      });
     }
   };
 

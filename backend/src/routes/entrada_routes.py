@@ -33,5 +33,7 @@ def validar_entrada():
         data = request.get_json()
         entrada = EntradaService.validar_entrada(data)
         return jsonify(entrada), 200
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500

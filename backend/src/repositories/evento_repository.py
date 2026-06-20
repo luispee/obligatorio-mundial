@@ -406,3 +406,65 @@ class EventoRepository:
     finally:
         cursor.close()
         conn.close()
+
+  @staticmethod
+  def get_eventos_con_mas_entradas():
+    conn = get_connection()
+    if not conn:
+      raise RuntimeError("No se pudo conectar a la base de datos")
+
+    try:
+      cursor = conn.cursor(dictionary=True)
+      cursor.execute("""
+        SELECT
+          e.id,
+          e.fecha_hora,
+          e.codigo_seleccion_local,
+          pl.nombre AS nombre_seleccion_local,
+          e.codigo_seleccion_visitante,
+          pv.nombre AS nombre_seleccion_visitante,
+          est.nombre AS estadio_nombre,
+          est.ciudad,
+          p.nombre AS pais_sede,
+          COUNT(en.id) AS total_entradas
+        FROM evento e
+        JOIN entrada en ON en.id_evento = e.id
+        JOIN estadio est ON est.id = e.id_estadio
+        JOIN pais p ON p.codigo = est.codigo_pais_sede
+        JOIN pais pl ON pl.codigo = e.codigo_seleccion_local
+        JOIN pais pv ON pv.codigo = e.codigo_seleccion_visitante
+        WHERE e.activo = 1
+        GROUP BY e.id, pl.nombre, pv.nombre, est.nombre
+        ORDER BY total_entradas DESC
+        LIMIT 10
+      """)
+
+      rows = cursor.fetchall()
+
+      eventos = []
+
+      for row in rows:
+        eventos.append({
+          "id": row['id'],
+          "fecha_hora": row['fecha_hora'].isoformat(),
+          "seleccion_local": {
+            "codigo": row['codigo_seleccion_local'],
+            "nombre": row['nombre_seleccion_local']
+          },
+          "seleccion_visitante": {
+            "codigo": row['codigo_seleccion_visitante'],
+            "nombre": row['nombre_seleccion_visitante']
+          },
+          "estadio": {
+            "nombre": row['estadio_nombre'],
+            "ciudad": row['ciudad'],
+            "pais_sede": row['pais_sede']
+          },
+          "total_entradas": row['total_entradas']
+        })
+
+      return eventos
+
+    finally:
+      cursor.close()
+      conn.close()

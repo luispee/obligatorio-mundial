@@ -31,21 +31,22 @@ export default function Overlay({ validacion }: OverlayProps) {
               <p className="text-gray-600">{validacion.message}</p>
             </>
           )}
-
-          <div className="mt-4 text-left">
-            <strong>Datos de la entrada:</strong>
-            <p>Cliente: {validacion.entrada?.mail}</p>
-            <p>
-              Partido: {validacion.entrada?.evento.seleccion_local.nombre} vs{' '}
-              {validacion.entrada?.evento.seleccion_visitante.nombre}
-            </p>
-            <p>Estadio: {validacion.entrada?.evento.estadio.nombre}</p>
-            <p>Sector: {validacion.entrada?.evento.estadio.sector}</p>
-            <p>
-              Horario: {formatDate(validacion.entrada?.evento.fecha_hora.split('T')[0])}{' '}
-              {validacion.entrada?.evento.fecha_hora.split('T')[1].slice(0, 5)}
-            </p>
-          </div>
+          {validacion.entrada && (
+            <div className="mt-4 text-left">
+              <strong>Datos de la entrada:</strong>
+              <p>Cliente: {validacion.entrada.mail}</p>
+              <p>
+                Partido: {validacion.entrada.evento.seleccion_local.nombre} vs{' '}
+                {validacion.entrada?.evento.seleccion_visitante.nombre}
+              </p>
+              <p>Estadio: {validacion.entrada?.evento.estadio.nombre}</p>
+              <p>Sector: {validacion.entrada?.evento.estadio.sector}</p>
+              <p>
+                Horario: {formatDate(validacion.entrada?.evento.fecha_hora.split('T')[0])}{' '}
+                {validacion.entrada?.evento.fecha_hora.split('T')[1].slice(0, 5)}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* ocupa exactamente mismo ancho */}
