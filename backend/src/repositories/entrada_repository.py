@@ -153,6 +153,7 @@ class EntradaRepository:
             cursor.execute("""
                 SELECT
                 en.mail_cliente_propietario AS mail,
+                en.usada,
 
                 ev.codigo_seleccion_local,
                 ev.codigo_seleccion_visitante,
@@ -176,8 +177,7 @@ class EntradaRepository:
                 JOIN sector s ON s.id = en.id_sector
                 WHERE en.id = %s
                 AND en.id_sector = %s
-                AND en.id_evento = %s
-                AND en.usada = FALSE;
+                AND en.id_evento = %s;
             """, (id_entrada, id_sector, id_evento))
 
             entrada_info = cursor.fetchone()
@@ -206,6 +206,9 @@ class EntradaRepository:
                     }
             }
 
+            if entrada_info["usada"]:
+                return {"valid": False, "entrada": entrada, "message": "La entrada ya fue usada."}
+
             if not autorizacion:
                 return {"valid": False, "entrada": entrada, "message": "Evento o sector incorrecto."}
 
@@ -233,6 +236,56 @@ class EntradaRepository:
                 "entrada": entrada,
                 "message": "Entrada validada exitosamente"
             }
+        except Exception as e:
+            raise e
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def get_total_entradas():
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+
+        try:
+            cursor = conn.cursor()
+            cursor.execute("""
+                SELECT 
+                COUNT(*) 
+                FROM entrada 
+                JOIN venta v ON v.id = entrada.id_venta
+                WHERE v.id_estado_venta = 2;
+            """)
+            total_entradas = cursor.fetchone()[0]
+            return total_entradas
+        except Exception as e:
+            raise e
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def get_top_compradores():
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+
+        try:
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("""
+                SELECT 
+                v.mail_cliente AS mail, 
+                COUNT(*) AS total_entradas
+                FROM entrada
+                JOIN venta v ON v.id = entrada.id_venta
+                WHERE v.id_estado_venta = 2
+                GROUP BY v.mail_cliente
+                ORDER BY total_entradas DESC
+                LIMIT 10;
+            """)
+            top_compradores = cursor.fetchall()
+            return top_compradores
         except Exception as e:
             raise e
         finally:

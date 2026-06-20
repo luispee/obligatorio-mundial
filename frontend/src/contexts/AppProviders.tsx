@@ -5,6 +5,7 @@ import { EventoProvider } from '../features/evento/contexts/EventoContext';
 import { EstadioProvider } from '../features/estadio/contexts/EstadioContext';
 import { VentaProvider } from '../features/venta/contexts/VentaContext';
 import { EntradaProvider } from '../features/entrada/contexts/EntradaContext';
+import { EstadisticasProvider } from '../features/monitoring/contexts/EstadisticasContext';
 
 type Props = { children?: React.ReactNode };
 
@@ -15,7 +16,9 @@ export default function AppProviders({ children }: Props) {
         <EstadioProvider>
           <VentaProvider>
             <EntradaProvider>
-              <UIProvider>{children}</UIProvider>
+              <EstadisticasProvider>
+                <UIProvider>{children}</UIProvider>
+              </EstadisticasProvider>
             </EntradaProvider>
           </VentaProvider>
         </EstadioProvider>

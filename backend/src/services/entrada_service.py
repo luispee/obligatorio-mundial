@@ -24,13 +24,13 @@ class EntradaService:
         if not token_entrada:
             raise ValueError("Token de entrada es requerido")
 
-        payload = JwtUtils.decode_token(token_entrada)
-        id_entrada = payload.get('id_entrada')
-        id_sector = payload.get('id_sector')
-        id_evento = payload.get('id_evento')
-
-        if not id_entrada or not id_sector or not id_evento:
-            raise ValueError("Token de entrada inválido")
+        try:
+            payload = JwtUtils.decode_token(token_entrada)
+            id_entrada = payload.get('id_entrada')
+            id_sector = payload.get('id_sector')
+            id_evento = payload.get('id_evento')
+        except Exception as e:
+            raise ValueError("Token de entrada inválido o expirado")
 
         mail_funcionario = g.user_mail
 

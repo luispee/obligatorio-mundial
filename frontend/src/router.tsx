@@ -19,6 +19,7 @@ import Entradas from './features/entrada/pages/Entradas';
 import Transferencias from './features/entrada/pages/Transferencias';
 import Ventas from './features/venta/pages/Ventas';
 import Funcionario from './features/entrada/pages/Funcionario';
+import Estadisticas from './features/monitoring/pages/Estadisticas';
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRoles={['FUNCIONARIO']}>
             <Funcionario />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/estadisticas',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <Estadisticas />
           </ProtectedRoute>
         ),
       },

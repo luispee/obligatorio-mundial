@@ -149,7 +149,7 @@ export default function ConfirmarCompra() {
           <div className="flex flex-col gap-4 md:flex-row justify-center">
             <Button type="button" onClick={handleCancel} text="Cancelar Compra" color="red" />
 
-            <Button type="submit" onClick={handleSubmit} text="Confirmar Compra" />
+            <Button type="submit" text="Confirmar Compra" />
           </div>
         )}
       </form>
