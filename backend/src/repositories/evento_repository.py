@@ -242,6 +242,17 @@ class EventoRepository:
 
       cursor.execute(
         """
+        SELECT id FROM evento WHERE id_estadio = %s
+        AND DATE(fecha_hora) = DATE(%s)
+        """,
+        (data['estadio']['id'], data['fecha_hora'])
+      )
+
+      if cursor.fetchone():
+        raise ValueError("Ya existe un evento en este estadio en la misma fecha")
+
+      cursor.execute(
+        """
         INSERT INTO evento (
           codigo_seleccion_local,
           codigo_seleccion_visitante,
@@ -320,6 +331,17 @@ class EventoRepository:
     try:
       if not any(sector['activo'] for sector in data['estadio']['sectores']):
         raise ValueError("El evento debe tener al menos un sector habilitado")
+
+      cursor.execute(
+        """
+        SELECT id FROM evento WHERE id_estadio = %s
+        AND DATE(fecha_hora) = DATE(%s)
+        """,
+        (data['estadio']['id'], data['fecha_hora'])
+      )
+
+      if cursor.fetchone():
+        raise ValueError("Ya existe un evento en este estadio en la misma fecha")
         
       cursor.execute(
         """

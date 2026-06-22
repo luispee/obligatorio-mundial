@@ -57,6 +57,7 @@ export default function EditEvento() {
     async function fetchAll() {
       try {
         const [evento, data] = await Promise.all([getEvento(Number(id)), getFormData()]);
+        console.log(evento);
         setFormData(data);
         setForm({
           codigo_seleccion_local: evento?.seleccion_local.codigo || '',
