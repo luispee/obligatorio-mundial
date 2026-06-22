@@ -5,6 +5,7 @@ from src.repositories.administrador_repositroy import AdministradorRepository
 from src.repositories.evento_repository import EventoRepository
 from src.repositories.sector_repository import SectorRepository
 from flask import g
+from datetime import datetime, timedelta
 
 from datetime import datetime
 
@@ -42,8 +43,12 @@ class EventoService:
     if data['codigo_seleccion_local'] == data['codigo_seleccion_visitante']:
       raise ValueError("La selección local y visitante no pueden ser la misma")
 
-    if data['fecha_hora'] < datetime.now().isoformat():
-      raise ValueError("La fecha y hora del evento no pueden ser en el pasado")
+    ahora_local = datetime.now() - timedelta(hours=3)
+
+    fecha_evento = datetime.fromisoformat(data["fecha_hora"])
+
+    if fecha_evento < ahora_local:
+        raise ValueError("La fecha y hora del evento no pueden ser en el pasado")
 
     if len(data['estadio']['sectores']) == 0:
       raise ValueError("Debe seleccionar al menos un sector para el evento")
