@@ -8,7 +8,7 @@ class DispositivoRepository:
             raise RuntimeError("No se pudo conectar a la base de datos")
 
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT id, modelo FROM dispositivo WHERE operativo=1")
+        cursor.execute("SELECT id, modelo, numero_serie FROM dispositivo WHERE operativo=1")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()
