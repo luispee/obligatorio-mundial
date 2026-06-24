@@ -66,3 +66,16 @@ def baja_evento(id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+@evento_routes.route('/<int:id_evento>/sectores/<int:id_sector>/funcionarios', methods=['GET'])
+@admin_required
+def funcionarios_dispositivos_sector(id_evento, id_sector):
+  try:
+    resultado = EventoService.get_funcionarios_dispositivos_evento(id_evento, id_sector)
+    return jsonify(resultado), 200
+  
+  except ValueError as e:
+    return jsonify({"error": str(e)}), 404
+
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
