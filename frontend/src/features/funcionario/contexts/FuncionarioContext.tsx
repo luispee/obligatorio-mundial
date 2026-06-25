@@ -1,10 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import { GetFuncionariosResponse } from '../api/funcionarioResponses';
 import { fetchFuncionarios } from '../api/funcionarioApi';
+import { CreateFuncionarioRequest } from '../api/funcionarioRequests';
+import { createFuncionario as createFuncionarioApi } from '../api/funcionarioApi';
 
 type FuncionarioContextType = {
   getFuncionarios: () => Promise<GetFuncionariosResponse>;
-
+  createFuncionario: (data: CreateFuncionarioRequest) => Promise<any>;
   error: string | null;
   clearError: () => void;
   loading: boolean;
@@ -33,12 +35,27 @@ export function FuncionarioProvider({ children }: { children: React.ReactNode })
     }
   };
 
+  const createFuncionario = async (data: CreateFuncionarioRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await createFuncionarioApi(data);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      setError(err?.message || 'Error creating funcionario');
+      setLoading(false);
+      throw err;
+    }
+  };
+
   return (
     <FuncionarioContext.Provider
       value={{
         getFuncionarios,
-        error,
+        createFuncionario,
         clearError,
+        error,
         loading,
         deactivateFuncionario: async (id: number) => {
           // Implement the deactivateFuncionario function here

@@ -23,6 +23,10 @@ class FuncionarioService:
         if funcionario_existente:
             raise ValueError(f"El funcionario con el mail {mail_funcionario} ya existe.")
         
+        numero_legajo_existente = FuncionarioRepository.get_funcionario_by_numero_legajo(numero_legajo)
+        if numero_legajo_existente:
+            raise ValueError(f"El funcionario con el legajo {numero_legajo} ya existe.")
+        
         AuthService.register(data, rol="funcionario")
         
         return FuncionarioRepository.create_funcionario(mail_funcionario, numero_legajo)

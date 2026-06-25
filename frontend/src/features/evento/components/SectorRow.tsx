@@ -10,6 +10,7 @@ type SectorRowProps = {
   isSelected: boolean;
   onChange: (precio: string) => void;
   precio?: string;
+  variant?: 'create' | 'update';
 };
 
 export default function SectorRow({
@@ -19,6 +20,7 @@ export default function SectorRow({
   isSelected,
   onChange,
   precio,
+  variant = 'create',
 }: SectorRowProps) {
   const navigate = useNavigate();
   const opacityClass = isSelected ? 'opacity-100' : 'opacity-40';
@@ -58,13 +60,15 @@ export default function SectorRow({
         />
       </div>
       <div className={`flex items-center gap-4 ${opacityClass}`}>
-        <Button
-          text="Funcionarios"
-          color="blue"
-          type="button"
-          onClick={() => navigate(`${location.pathname}/sectores/${sector.id}/funcionarios`)}
-          disabled={!isSelected}
-        />
+        {variant === 'update' && (
+          <Button
+            text="Funcionarios"
+            color="blue"
+            type="button"
+            onClick={() => navigate(`${location.pathname}/sectores/${sector.id}/funcionarios`)}
+            disabled={!isSelected}
+          />
+        )}
       </div>
     </div>
   );

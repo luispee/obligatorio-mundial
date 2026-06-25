@@ -227,6 +227,7 @@ export default function EditEvento() {
                 precio={formSector?.precio}
                 onToggle={() => handleSectorToggle(sector.id)}
                 isSelected={formSector?.activo ?? false}
+                variant="update"
                 onChange={(precio) => {
                   setForm((prev) => ({
                     ...prev,

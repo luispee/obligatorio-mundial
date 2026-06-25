@@ -23,6 +23,7 @@ import Estadisticas from './features/monitoring/pages/Estadisticas';
 import FuncionariosSector from './features/evento/pages/FuncionariosSector';
 import Dispositivos from './features/dispositivo/pages/Dispositivos';
 import Funcionarios from './features/funcionario/pages/Funcionarios';
+import CreateFuncionario from './features/funcionario/pages/CreateFuncionario';
 
 export const router = createBrowserRouter([
   {
@@ -105,6 +106,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
             <Funcionarios />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/funcionarios/crear',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <CreateFuncionario />
           </ProtectedRoute>
         ),
       },

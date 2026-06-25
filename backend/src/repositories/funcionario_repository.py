@@ -65,7 +65,21 @@ class FuncionarioRepository:
         conn.close()
 
         return row
-    
+
+    @staticmethod
+    def get_funcionario_by_numero_legajo(numero_legajo):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT 1 from funcionario WHERE numero_legajo = %s", (numero_legajo,))
+        row = cursor.fetchone()
+        cursor.close()
+        conn.close()
+
+        return row
+        
     @staticmethod
     def get_funcionarios():
         conn = get_connection()
