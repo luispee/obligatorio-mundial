@@ -1,8 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import { GetFuncionariosResponse } from '../api/funcionarioResponses';
 import { fetchFuncionarios } from '../api/funcionarioApi';
-import { CreateFuncionarioRequest } from '../api/funcionarioRequests';
+import { CreateFuncionarioRequest, UpdateFuncionarioRequest } from '../api/funcionarioRequests';
 import { createFuncionario as createFuncionarioApi } from '../api/funcionarioApi';
+import { GetFuncionarioResponse } from '../api/funcionarioResponses';
+import { getFuncionario as getFuncionarioApi } from '../api/funcionarioApi';
+import { deactivateFuncionario as deactivateFuncionarioApi } from '../api/funcionarioApi';
+import { updateFuncionario as updateFuncionarioApi } from '../api/funcionarioApi';
 
 type FuncionarioContextType = {
   getFuncionarios: () => Promise<GetFuncionariosResponse>;
@@ -10,7 +14,9 @@ type FuncionarioContextType = {
   error: string | null;
   clearError: () => void;
   loading: boolean;
-  deactivateFuncionario: (id: number) => Promise<void>;
+  deactivateFuncionario: (mail_funcionario: string) => Promise<void>;
+  updateFuncionario: (mail_funcionario: string, data: UpdateFuncionarioRequest) => Promise<any>;
+  getFuncionario: (mail_funcionario: string) => Promise<GetFuncionarioResponse>;
 };
 
 const FuncionarioContext = createContext<FuncionarioContextType | undefined>(undefined);
@@ -49,19 +55,58 @@ export function FuncionarioProvider({ children }: { children: React.ReactNode })
     }
   };
 
+  const getFuncionario = async (mail_funcionario: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getFuncionarioApi(mail_funcionario);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      setError('Error fetching funcionario');
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const deactivateFuncionario = async (mail_funcionario: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deactivateFuncionarioApi(mail_funcionario);
+      setLoading(false);
+    } catch (err) {
+      setError('Error deactivating funcionario');
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const updateFuncionario = async (mail_funcionario: string, data: UpdateFuncionarioRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await updateFuncionarioApi(mail_funcionario, data);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      setError(err?.message || 'Error updating funcionario');
+      setLoading(false);
+      throw err;
+    }
+  };
+
   return (
     <FuncionarioContext.Provider
       value={{
+        getFuncionario,
         getFuncionarios,
         createFuncionario,
         clearError,
         error,
         loading,
-        deactivateFuncionario: async (id: number) => {
-          // Implement the deactivateFuncionario function here
-          // For now, just log the id
-          console.log(`Deactivate funcionario with id: ${id}`);
-        },
+        deactivateFuncionario,
+        updateFuncionario,
       }}
     >
       {children}

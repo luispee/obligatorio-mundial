@@ -24,6 +24,7 @@ import FuncionariosSector from './features/evento/pages/FuncionariosSector';
 import Dispositivos from './features/dispositivo/pages/Dispositivos';
 import Funcionarios from './features/funcionario/pages/Funcionarios';
 import CreateFuncionario from './features/funcionario/pages/CreateFuncionario';
+import UpdateFuncionario from './features/funcionario/pages/UpdateFuncionario';
 
 export const router = createBrowserRouter([
   {
@@ -114,6 +115,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
             <CreateFuncionario />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/funcionarios/:mail/editar',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <UpdateFuncionario />
           </ProtectedRoute>
         ),
       },

@@ -18,6 +18,7 @@ class FuncionarioRepository:
                        JOIN funcionario f ON sefd.mail_funcionario = f.mail
 
                        WHERE d.operativo = 1
+                        AND f.activo = 1
                         AND sefd.id_evento = %s 
                         AND sefd.id_sector = %s
                        """
@@ -45,7 +46,7 @@ class FuncionarioRepository:
             raise RuntimeError("No se pudo conectar a la base de datos")
         
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT mail, numero_legajo from funcionario")
+        cursor.execute("SELECT mail, numero_legajo from funcionario WHERE activo = 1")
         rows = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -59,7 +60,7 @@ class FuncionarioRepository:
             raise RuntimeError("No se pudo conectar a la base de datos")
         
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT 1 from funcionario WHERE mail = %s", (mail_funcionario,))
+        cursor.execute("SELECT numero_legajo from funcionario WHERE mail = %s", (mail_funcionario,))
         row = cursor.fetchone()
         cursor.close()
         conn.close()
@@ -73,27 +74,12 @@ class FuncionarioRepository:
             raise RuntimeError("No se pudo conectar a la base de datos")
         
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT 1 from funcionario WHERE numero_legajo = %s", (numero_legajo,))
+        cursor.execute("SELECT 1 from funcionario WHERE numero_legajo = %s AND activo = 1", (numero_legajo,))
         row = cursor.fetchone()
         cursor.close()
         conn.close()
 
         return row
-        
-    @staticmethod
-    def get_funcionarios():
-        conn = get_connection()
-        if not conn:
-            raise RuntimeError("No se pudo conectar a la base de datos")
-        try:
-            cursor = conn.cursor(dictionary=True)
-            cursor.execute("SELECT mail, numero_legajo FROM funcionario")
-            rows = cursor.fetchall()
-
-            return rows
-        finally:
-            cursor.close()
-            conn.close()
 
     @staticmethod
     def create_funcionario(mail_funcionario, numero_legajo):
@@ -111,6 +97,49 @@ class FuncionarioRepository:
 
             
             return mail_funcionario
+            
+        except Exception as e:
+            conn.rollback()
+            raise e  
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def update_funcionario(mail_funcionario, nuevo_numero_legajo):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        try:
+            cursor = conn.cursor()
+            query = """
+                UPDATE funcionario SET numero_legajo = %s WHERE mail = %s
+            """
+            cursor.execute(query, (nuevo_numero_legajo, mail_funcionario))
+            conn.commit()
+
+            
+            return mail_funcionario
+            
+        except Exception as e:
+            conn.rollback()
+            raise e  
+        finally:
+            cursor.close()
+            conn.close()
+
+    @staticmethod
+    def deactivate_funcionario(mail_funcionario):
+        conn = get_connection()
+        if not conn:
+            raise RuntimeError("No se pudo conectar a la base de datos")
+        try:
+            cursor = conn.cursor()
+            query = """
+                UPDATE funcionario SET activo = 0 WHERE mail = %s
+            """
+            cursor.execute(query, (mail_funcionario,))
+            conn.commit()
             
         except Exception as e:
             conn.rollback()

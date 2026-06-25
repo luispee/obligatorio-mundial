@@ -40,7 +40,7 @@ class AuthValidator:
         raise ValueError(f'El campo {field} no puede estar vacío')
 
       if missing_fields:
-        raise ValueError(f'Missing fields: {", ".join(missing_fields)}')
+        raise ValueError(f'Campos faltantes: {", ".join(missing_fields)}')
 
     if not data.get('telefonos') or all(not t.strip() for t in data['telefonos']):
       raise ValueError('Debe ingresar al menos un teléfono')
