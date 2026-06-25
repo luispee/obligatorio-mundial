@@ -27,7 +27,7 @@ class AuthService:
     return {"token": token, "mail": user['mail'], "role": role}
 
   @staticmethod
-  def register(data):
+  def register(data, rol="cliente"):
     if UsuarioRepository.find_by_mail(data['mail']) is not None:
       raise ValueError('Ya existe un usuario con ese mail')
 
@@ -38,7 +38,8 @@ class AuthService:
     try:
       UsuarioRepository.create_usuario(
         data,
-        hash_contrasena
+        hash_contrasena,
+        rol
       )
     except Exception as e:
       raise RuntimeError(f'Error al crear el usuario: {str(e)}')
