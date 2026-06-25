@@ -80,7 +80,7 @@ class UsuarioRepository:
     return None
 
   @staticmethod
-  def create_usuario(data, hash_contrasena):
+  def create_usuario(data, hash_contrasena, rol = "cliente"):
     conn = get_connection()
     if not conn:
       raise RuntimeError("No se pudo conectar a la base de datos")
@@ -102,8 +102,8 @@ class UsuarioRepository:
       ))
 
       # cliente
-
-      cursor.execute("INSERT INTO cliente (mail, fecha_registro, verificado) VALUES (%s, %s, %s)", (data['mail'], datetime.now(), False))
+      if rol == "cliente":
+       cursor.execute("INSERT INTO cliente (mail, fecha_registro, verificado) VALUES (%s, %s, %s)", (data['mail'], datetime.now(), False))
 
       #telefonos
       

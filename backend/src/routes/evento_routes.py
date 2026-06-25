@@ -1,7 +1,9 @@
 from flask import Blueprint, jsonify, request
 from src.services.evento_service import EventoService
+from src.services.sefd_service import SefdService
 from src.decorators.roles import admin_required
 from src.validators.evento_validator import EventoValidator
+from src.validators.sefd_validator import SefdValidator
 from src.decorators.optional_jwt import optional_jwt
 
 evento_routes = Blueprint('evento_routes', __name__)
@@ -77,5 +79,22 @@ def funcionarios_dispositivos_sector(id_evento, id_sector):
   except ValueError as e:
     return jsonify({"error": str(e)}), 404
 
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
+  
+@evento_routes.route('/<int:id_evento>/sectores/<int:id_sector>/funcionarios', methods=['POST'])
+@admin_required
+def asignar_funcionario_dispositivo(id_evento, id_sector):
+
+  try:
+    data = request.get_json()
+    SefdValidator.validate_data(data)
+
+    SefdService.register_assignation_sefd(data, id_evento, id_sector)
+
+    return jsonify({"message": "Asignación creada exitosamente"}), 201
+
+  except ValueError as e:
+    return jsonify({'error': str(e)}), 400
   except Exception as e:
     return jsonify({"error": str(e)}), 500
