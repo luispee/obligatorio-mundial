@@ -42,6 +42,18 @@ export default function Header({ variant }: HeaderProps) {
               {isAdministrador && (
                 <div className="flex items-center gap-4">
                   <a
+                    href="/dispositivos"
+                    className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
+                  >
+                    Dispositivos
+                  </a>
+                  <a
+                    href="/funcionarios"
+                    className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
+                  >
+                    Funcionarios
+                  </a>
+                  <a
                     href="/estadios"
                     className="text-white-900 hover:underline focus:ring-blue-300 font-medium rounded-lg text-lg px-4 py-2 text-center"
                   >

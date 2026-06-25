@@ -6,6 +6,8 @@ import { EstadioProvider } from '../features/estadio/contexts/EstadioContext';
 import { VentaProvider } from '../features/venta/contexts/VentaContext';
 import { EntradaProvider } from '../features/entrada/contexts/EntradaContext';
 import { EstadisticasProvider } from '../features/monitoring/contexts/EstadisticasContext';
+import { DispositivoProvider } from '../features/dispositivo/contexts/DispositivoContext';
+import { FuncionarioProvider } from '../features/funcionario/contexts/FuncionarioContext';
 
 type Props = { children?: React.ReactNode };
 
@@ -17,7 +19,11 @@ export default function AppProviders({ children }: Props) {
           <VentaProvider>
             <EntradaProvider>
               <EstadisticasProvider>
-                <UIProvider>{children}</UIProvider>
+                <DispositivoProvider>
+                  <FuncionarioProvider>
+                    <UIProvider>{children}</UIProvider>
+                  </FuncionarioProvider>
+                </DispositivoProvider>
               </EstadisticasProvider>
             </EntradaProvider>
           </VentaProvider>

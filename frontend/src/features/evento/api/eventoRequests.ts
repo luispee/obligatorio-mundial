@@ -11,3 +11,8 @@ export type CreateEventoRequest = {
 export type VerifyUserRequest = {
   mail: string;
 };
+
+export type AsignarFuncionarioRequest = {
+  mail_funcionario: string;
+  id_dispositivo: number;
+};

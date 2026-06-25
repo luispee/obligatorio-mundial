@@ -1,6 +1,7 @@
-import { useState } from 'react';
 import Input from '../../../components/Input';
 import { Sector } from '../../../types/sector';
+import Button from '../../../components/Button';
+import { useNavigate } from 'react-router-dom';
 
 type SectorRowProps = {
   number: number;
@@ -19,7 +20,9 @@ export default function SectorRow({
   onChange,
   precio,
 }: SectorRowProps) {
+  const navigate = useNavigate();
   const opacityClass = isSelected ? 'opacity-100' : 'opacity-40';
+
   return (
     <div className={`flex w-full justify-between items-center gap-4 rounded-lg `}>
       <div className="flex justify-between items-center gap-4">
@@ -52,6 +55,15 @@ export default function SectorRow({
           placeholder="Precio por entrada"
           value={precio || ''}
           onChange={(e) => onChange(e.target.value)}
+        />
+      </div>
+      <div className={`flex items-center gap-4 ${opacityClass}`}>
+        <Button
+          text="Funcionarios"
+          color="blue"
+          type="button"
+          onClick={() => navigate(`${location.pathname}/sectores/${sector.id}/funcionarios`)}
+          disabled={!isSelected}
         />
       </div>
     </div>

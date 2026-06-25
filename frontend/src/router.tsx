@@ -20,6 +20,9 @@ import Transferencias from './features/entrada/pages/Transferencias';
 import Ventas from './features/venta/pages/Ventas';
 import Funcionario from './features/entrada/pages/Funcionario';
 import Estadisticas from './features/monitoring/pages/Estadisticas';
+import FuncionariosSector from './features/evento/pages/FuncionariosSector';
+import Dispositivos from './features/dispositivo/pages/Dispositivos';
+import Funcionarios from './features/funcionario/pages/Funcionarios';
 
 export const router = createBrowserRouter([
   {
@@ -90,6 +93,22 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: '/dispositivos',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <Dispositivos />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/funcionarios',
+        element: (
+          <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+            <Funcionarios />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: '/estadios/crear',
         element: (
           <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
@@ -129,6 +148,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
                 <EditEvento />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':id/editar/sectores/:sectorId/funcionarios',
+            element: (
+              <ProtectedRoute requiredRoles={['ADMINISTRADOR']}>
+                <FuncionariosSector />
               </ProtectedRoute>
             ),
           },
