@@ -4,6 +4,8 @@ from src.repositories.administrador_repositroy import AdministradorRepository
 from src.repositories.administrador_repositroy import AdministradorRepository
 from src.repositories.evento_repository import EventoRepository
 from src.repositories.sector_repository import SectorRepository
+from src.repositories.funcionario_repository import FuncionarioRepository
+from src.repositories.dispositivo_repository import DispositivoRepository
 from flask import g
 from datetime import datetime, timedelta
 
@@ -104,3 +106,19 @@ class EventoService:
     return {
         "message": f"El evento {id_evento} fue dado de baja con exito"
     }
+
+  @staticmethod
+  def get_funcionarios_dispositivos_evento(id_evento, id_sector):
+    asignados = FuncionarioRepository.get_funcionarios_dispositivos(id_evento, id_sector)
+    funcionarios = FuncionarioRepository.get_funcionarios()
+    dispositivos = DispositivoRepository.get_dispositivos()
+
+    funcionarios_filtrados = [f for f in funcionarios if f['mail'] not in [a['mail_funcionario'] for a in asignados]]
+
+    dispositivos_filtrados = [d for d in dispositivos if d['id'] not in [a['id_dispositivo'] for a in asignados]]
+    
+    return {
+      "asignados": asignados,
+      "funcionarios": funcionarios_filtrados,
+      "dispositivos": dispositivos_filtrados
+      }

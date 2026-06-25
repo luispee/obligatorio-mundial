@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Funcionario } from '../../../types/funcionario';
-import { useEvento } from '../contexts/EventoContext';
 import Button from '../../../components/Button';
+import { asignarFuncionario } from '../api/eventoApi';
+import { AsignarFuncionarioRequest } from '../api/eventoRequests';
 import { GetFuncionariosBySectorResponse } from '../api/eventoResponses';
 import AsignarFuncionarioModal from '../components/AsignarFuncionarioModal';
-import { AsignarFuncionarioRequest } from '../api/eventoRequests';
-import { asignarFuncionario } from '../api/eventoApi';
+import { useEvento } from '../contexts/EventoContext';
 
 export default function FuncionariosSector() {
   const { id, sectorId } = useParams();
-  const { getFuncionariosBySector, error } = useEvento();
+  const { getFuncionariosBySector, error, desvincularFuncionario } = useEvento();
   const [displayFuncionariosModal, setDisplayFuncionariosModal] = useState(false);
   const [funcionariosData, setFuncionariosData] = useState<GetFuncionariosBySectorResponse | null>({
     asignados: [],
@@ -62,9 +61,17 @@ export default function FuncionariosSector() {
     }
   };
 
-  if (loading) {
-    return <p>Cargando funcionarios...</p>;
-  }
+  const handleDesvincularFuncionario = async (mail_funcionario: string) => {
+    if (id && sectorId) {
+      try {
+        await desvincularFuncionario(Number(id), Number(sectorId), mail_funcionario);
+        const data = await getFuncionariosBySector(Number(id), Number(sectorId));
+        setFuncionariosData(data);
+      } catch (error) {
+        console.error('Error desvinculando funcionario:', error);
+      }
+    }
+  };
 
   if (!funcionariosData) {
     return <p>No se pudieron cargar los funcionarios.</p>;
@@ -88,18 +95,36 @@ export default function FuncionariosSector() {
           />
         )}
         <h2 className="text-xl font-semibold mb-4 uppercase">Funcionarios del Sector</h2>
-        {funcionariosData?.asignados.length === 0 ? (
+        {loading ? (
+          <p className="text-center">Cargando funcionarios...</p>
+        ) : funcionariosData?.asignados.length === 0 ? (
           <p className="text-center">No hay funcionarios asignados a este sector.</p>
         ) : (
           <ul className="space-y-2">
             {funcionariosData.asignados.map((funcionario) => (
               <li
                 key={funcionario.mail_funcionario}
-                className="bg-gray-100 p-2 rounded shadow-sm flex justify-between items-center"
+                className="bg-blue px-2 py-4 rounded shadow-gray-dark shadow-sm flex justify-between items-center"
               >
-                <span>{funcionario.mail_funcionario}</span>
-                <span className="text-sm text-gray-600">{funcionario.numero_serie}</span>
-                <span className="text-sm text-gray-600">{funcionario.modelo}</span>
+                <div className="flex flex-col">
+                  <span className="text-md font-bold text-white">
+                    {funcionario.mail_funcionario}
+                  </span>
+                  <span className="text-sm text-white">Nº Legajo: {funcionario.numero_legajo}</span>
+                </div>
+                <div className="flex items-center gap-16">
+                  <div className="flex flex-col items-end">
+                    <span className="text-md font-bold text-white">Dispositivo:</span>
+                    <span className="text-sm text-white">{funcionario.modelo_dispositivo}</span>
+                    <span className="text-sm text-white">Nº Serie: {funcionario.numero_serie}</span>
+                  </div>
+                  <Button
+                    text="Desvincular"
+                    color="red"
+                    textColor="white"
+                    onClick={() => handleDesvincularFuncionario(funcionario.mail_funcionario)}
+                  />
+                </div>
               </li>
             ))}
           </ul>

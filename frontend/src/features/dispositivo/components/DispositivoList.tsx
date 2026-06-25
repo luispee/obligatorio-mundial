@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 type DispositivoListProps = {
   dispositivos: Dispositivo[];
+  onClickEditar: (id: number) => void;
 };
-export default function DispositivoList({ dispositivos }: DispositivoListProps) {
+export default function DispositivoList({ dispositivos, onClickEditar }: DispositivoListProps) {
   const navigate = useNavigate();
   return (
     <ul className="p-4">
@@ -24,7 +25,7 @@ export default function DispositivoList({ dispositivos }: DispositivoListProps) 
             text="Editar"
             color="white"
             textColor="blue"
-            onClick={() => navigate(`/dispositivos/${dispositivo.id}/editar`)}
+            onClick={() => onClickEditar(dispositivo.id)}
           />
         </div>
       ))}

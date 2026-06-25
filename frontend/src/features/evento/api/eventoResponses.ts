@@ -21,9 +21,10 @@ export type GetEventoResponse = Evento;
 export type GetFuncionariosBySectorResponse = {
   asignados: {
     mail_funcionario: string;
+    numero_legajo: string;
     id_dispositivo: number;
     numero_serie: string;
-    modelo: string;
+    modelo_dispositivo: string;
   }[];
   funcionarios: Funcionario[];
   dispositivos: Dispositivo[];

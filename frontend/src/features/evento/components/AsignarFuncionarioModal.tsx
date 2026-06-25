@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import Button from '../../../components/Button';
-import Input from '../../../components/Input';
 import Select from '../../../components/Select';
 import { Dispositivo } from '../../../types/dispositivo';
 import { Funcionario } from '../../../types/funcionario';
@@ -35,22 +33,33 @@ export default function AsignarFuncionarioModal({
         <Select
           label="Funcionario"
           options={funcionarios.map((f) => ({
-            value: f.mail_funcionario,
-            label: f.mail_funcionario,
+            value: f.mail,
+            label: f.mail,
           }))}
           value={selectedFuncionario?.mail_funcionario || ''}
           onChange={onSelectChange('mail_funcionario')}
         />
+        {funcionarios.length === 0 && (
+          <p className="text-sm text-red-500 mt-2 text-center">
+            No hay funcionarios disponibles para asignar.
+          </p>
+        )}
 
         <Select
           label="Dispositivo"
           options={dispositivos.map((d) => ({
-            value: d.id_dispositivo.toString(),
-            label: d.numero_serie,
+            value: d.id.toString(),
+            label: `${d.modelo} - Nº Serie: ${d.numero_serie}`,
           }))}
           value={selectedFuncionario?.id_dispositivo?.toString() || ''}
           onChange={onSelectChange('id_dispositivo')}
         />
+
+        {dispositivos.length === 0 && (
+          <p className="text-sm text-red-500 mt-2 text-center">
+            No hay dispositivos disponibles para asignar.
+          </p>
+        )}
 
         <p className="mt-2 text-sm text-center text-red-500 min-h-[20px]">{error}</p>
 

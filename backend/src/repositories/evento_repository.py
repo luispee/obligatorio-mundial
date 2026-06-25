@@ -1,6 +1,7 @@
 from src.database.get_connection import get_connection
 from src.repositories.sector_repository import SectorRepository
 from src.repositories.estadio_repository import EstadioRepository
+from src.repositories.funcionario_repository import FuncionarioRepository
 
 class EventoRepository:
 

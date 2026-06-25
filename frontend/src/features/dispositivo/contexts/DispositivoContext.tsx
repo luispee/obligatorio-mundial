@@ -1,12 +1,15 @@
 import { createContext, useContext, useState } from 'react';
 import { GetDispositivosResponse } from '../api/dispositivoResponses';
 import { fetchDispositivos } from '../api/dispositivoApi';
+import { CreateDispositivoRequest } from '../api/dispositivoRequest';
+import { createDispositivo as createDispositivoApi } from '../api/dispositivoApi';
+import { UpdateDispositivoRequest } from '../api/dispositivoRequest';
+import { updateDispositivo as updateDispositivoApi } from '../api/dispositivoApi';
 
 type DispositivoContextType = {
   getDispositivos: () => Promise<GetDispositivosResponse>;
-  //getDispositivo: (id: number) => Promise<GetDispositivoResponse>;
-  //createDispositivo: (data: CreateDispositivoRequest) => Promise<any>;
-  //updateDispositivo: (id: number, data: UpdateDispositivoRequest) => Promise<any>;
+  createDispositivo: (data: CreateDispositivoRequest) => Promise<any>;
+  updateDispositivo: (id: number, data: UpdateDispositivoRequest) => Promise<any>;
   error: string | null;
   clearError: () => void;
   loading: boolean;
@@ -35,10 +38,40 @@ export function DispositivoProvider({ children }: { children: React.ReactNode })
     }
   };
 
+  const createDispositivo = async (data: CreateDispositivoRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await createDispositivoApi(data);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      setError('Error creating dispositivo');
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const updateDispositivo = async (id: number, data: UpdateDispositivoRequest) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await updateDispositivoApi(id, data);
+      setLoading(false);
+      return response;
+    } catch (err) {
+      setError('Error updating dispositivo');
+      setLoading(false);
+      throw err;
+    }
+  };
+
   return (
     <DispositivoContext.Provider
       value={{
         getDispositivos,
+        createDispositivo,
+        updateDispositivo,
         error,
         clearError,
         loading,

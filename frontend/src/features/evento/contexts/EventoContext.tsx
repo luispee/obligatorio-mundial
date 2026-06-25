@@ -10,6 +10,7 @@ import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequest
 import { deactivateEvento as deactivateEventoApi } from '../api/eventoApi';
 import { fetchFuncionariosBySector } from '../api/eventoApi';
 import { asignarFuncionario as asignarFuncionarioApi } from '../api/eventoApi';
+import { desvincularFuncionario as desvincularFuncionarioApi } from '../api/eventoApi';
 
 type EventoContextType = {
   loading: boolean;
@@ -31,6 +32,11 @@ type EventoContextType = {
     sectorId: number,
     mail_funcionario: string,
     id_dispositivo: number
+  ) => Promise<void>;
+  desvincularFuncionario: (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string
   ) => Promise<void>;
 };
 
@@ -157,6 +163,24 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const desvincularFuncionario = async (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await desvincularFuncionarioApi(eventoId, sectorId, mail_funcionario);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to unassign funcionario';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = () => setError(null);
 
   return (
@@ -174,6 +198,7 @@ export function EventoProvider({ children }: { children: ReactNode }) {
         deactivateEvento,
         getFuncionariosBySector,
         asignarFuncionario,
+        desvincularFuncionario,
       }}
     >
       {children}

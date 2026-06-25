@@ -59,3 +59,13 @@ export function asignarFuncionario(
     body: JSON.stringify({ mail_funcionario, id_dispositivo }),
   });
 }
+
+export function desvincularFuncionario(
+  eventoId: number,
+  sectorId: number,
+  mail_funcionario: string
+): Promise<void> {
+  return request(`/eventos/${eventoId}/sectores/${sectorId}/funcionarios/${mail_funcionario}`, {
+    method: 'DELETE',
+  });
+}
