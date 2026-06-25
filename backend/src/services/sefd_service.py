@@ -32,3 +32,19 @@ class SefdService:
             raise ValueError("Asignación ya existente.")
         
         SefdRepository.register_assignation_sefd(id_evento, id_sector, mail_funcionario, id_dispositivo)
+
+    @staticmethod
+    def remove_assignation_sefd(id_evento, id_sector, mail_funcionario):
+        evento = EventoRepository.get_evento_by_id(id_evento)
+        if not evento:
+            raise ValueError(f"El evento con ID {id_evento} no existe.")
+        
+        ids_sectores_del_evento = [s['id'] for s in evento['estadio']['sectores']]
+        if id_sector not in ids_sectores_del_evento:
+            raise ValueError(f"El sector {id_sector} no pertenece al evento")
+        
+        funcionario = FuncionarioRepository.get_funcionario_by_mail(mail_funcionario)
+        if not funcionario:
+            raise ValueError(f"El funcionario con mail {mail_funcionario} no existe.")
+        
+        SefdRepository.remove_assignation(id_evento, id_sector, mail_funcionario)

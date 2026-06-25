@@ -24,3 +24,29 @@ def create_dispositivo():
 def get_dispositivos():
     dispositivos = DispositivoService.get_dispositivos()
     return jsonify(dispositivos), 200
+
+@dispositivo_routes.route('/<int:id>', methods=['PUT'])
+@admin_required
+def update_dispositivo(id):
+    data = request.get_json()
+    try:
+        DispositivoValidator.validate_dispositivo(data)
+        dispositivo = DispositivoService.update_dispositivo(id, data)
+        return jsonify({"message": "Dispositivo actualizado exitosamente", "dispositivo": dispositivo}), 200
+    
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@dispositivo_routes.route('/<int:id>/baja', methods=['PATCH'])
+@admin_required
+def deactivate_dispositivo(id):
+    try:
+        DispositivoService.deactivate_dispositivo(id)
+        return jsonify({"message": "Dispositivo dado de baja exitosamente"}), 200
+    
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

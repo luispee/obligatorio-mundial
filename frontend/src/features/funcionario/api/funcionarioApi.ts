@@ -2,5 +2,5 @@ import { request } from '../../../utils/httpClient';
 import { GetFuncionariosResponse } from './funcionarioResponses';
 
 export function fetchFuncionarios(): Promise<GetFuncionariosResponse> {
-  return request('/api/funcionarios');
+  return request('/funcionarios');
 }

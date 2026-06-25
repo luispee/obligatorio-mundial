@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '../../../components/Button';
-import { asignarFuncionario } from '../api/eventoApi';
 import { AsignarFuncionarioRequest } from '../api/eventoRequests';
 import { GetFuncionariosBySectorResponse } from '../api/eventoResponses';
 import AsignarFuncionarioModal from '../components/AsignarFuncionarioModal';
@@ -9,7 +8,8 @@ import { useEvento } from '../contexts/EventoContext';
 
 export default function FuncionariosSector() {
   const { id, sectorId } = useParams();
-  const { getFuncionariosBySector, error, desvincularFuncionario } = useEvento();
+  const { getFuncionariosBySector, error, desvincularFuncionario, asignarFuncionario } =
+    useEvento();
   const [displayFuncionariosModal, setDisplayFuncionariosModal] = useState(false);
   const [funcionariosData, setFuncionariosData] = useState<GetFuncionariosBySectorResponse | null>({
     asignados: [],
@@ -50,7 +50,7 @@ export default function FuncionariosSector() {
           Number(id),
           Number(sectorId),
           selectedFuncionario.mail_funcionario,
-          selectedFuncionario.id_dispositivo
+          Number(selectedFuncionario.id_dispositivo)
         );
         setDisplayFuncionariosModal(false);
         const data = await getFuncionariosBySector(Number(id), Number(sectorId));

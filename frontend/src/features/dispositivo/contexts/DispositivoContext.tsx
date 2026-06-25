@@ -5,6 +5,7 @@ import { CreateDispositivoRequest } from '../api/dispositivoRequest';
 import { createDispositivo as createDispositivoApi } from '../api/dispositivoApi';
 import { UpdateDispositivoRequest } from '../api/dispositivoRequest';
 import { updateDispositivo as updateDispositivoApi } from '../api/dispositivoApi';
+import { deactivateDispositivo as deactivateDispositivoApi } from '../api/dispositivoApi';
 
 type DispositivoContextType = {
   getDispositivos: () => Promise<GetDispositivosResponse>;
@@ -46,7 +47,7 @@ export function DispositivoProvider({ children }: { children: React.ReactNode })
       setLoading(false);
       return response;
     } catch (err) {
-      setError('Error creating dispositivo');
+      setError(err?.message || 'Error creating dispositivo');
       setLoading(false);
       throw err;
     }
@@ -60,7 +61,20 @@ export function DispositivoProvider({ children }: { children: React.ReactNode })
       setLoading(false);
       return response;
     } catch (err) {
-      setError('Error updating dispositivo');
+      setError(err?.message || 'Error updating dispositivo');
+      setLoading(false);
+      throw err;
+    }
+  };
+
+  const deactivateDispositivo = async (id: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await deactivateDispositivoApi(id);
+      setLoading(false);
+    } catch (err) {
+      setError(err?.message || 'Error deactivating dispositivo');
       setLoading(false);
       throw err;
     }
@@ -75,11 +89,7 @@ export function DispositivoProvider({ children }: { children: React.ReactNode })
         error,
         clearError,
         loading,
-        deactivateDispositivo: async (id: number) => {
-          // Implement the deactivateDispositivo function here
-          // For now, just log the id
-          console.log(`Deactivate dispositivo with id: ${id}`);
-        },
+        deactivateDispositivo,
       }}
     >
       {children}

@@ -8,8 +8,15 @@ import { CreateDispositivoRequest } from '../api/dispositivoRequest';
 import DispositivoModal from '../components/DispositivoModal';
 
 export default function Dispositivos() {
-  const { getDispositivos, loading, error, createDispositivo, updateDispositivo } =
-    useDispositivo();
+  const {
+    getDispositivos,
+    deactivateDispositivo,
+    clearError,
+    loading,
+    error,
+    createDispositivo,
+    updateDispositivo,
+  } = useDispositivo();
   const [dispositivos, setDispositivos] = useState<GetDispositivosResponse>([]);
   const [form, setForm] = useState<CreateDispositivoRequest>({
     numero_serie: '',
@@ -41,9 +48,23 @@ export default function Dispositivos() {
       await createDispositivo(form);
       setDisplayAgregarModal(false);
       const data = await getDispositivos();
+      setForm({ numero_serie: '', modelo: '' });
+      clearError();
       setDispositivos(data);
     } catch (error) {
       console.error('Error creating dispositivo:', error);
+    }
+  };
+
+  const handleClickEditar = (id: number) => {
+    clearError();
+    const dispositivoToEdit = dispositivos.find((dispositivo) => dispositivo.id === id);
+    if (dispositivoToEdit) {
+      setForm({
+        numero_serie: dispositivoToEdit.numero_serie,
+        modelo: dispositivoToEdit.modelo,
+      });
+      setEditarId(id);
     }
   };
 
@@ -51,10 +72,22 @@ export default function Dispositivos() {
     try {
       await updateDispositivo(editarId, form);
       setEditarId(null);
+      setForm({ numero_serie: '', modelo: '' });
       const data = await getDispositivos();
       setDispositivos(data);
     } catch (error) {
       console.error('Error editing dispositivo:', error);
+    }
+  };
+
+  const handleDarDeBajaDispositivo = async (id: number) => {
+    try {
+      await deactivateDispositivo(id);
+      const data = await getDispositivos();
+      setEditarId(null);
+      setDispositivos(data);
+    } catch (error) {
+      console.error('Error deactivating dispositivo:', error);
     }
   };
 
@@ -80,11 +113,18 @@ export default function Dispositivos() {
             onClose={() => setEditarId(null)}
             form={form}
             onChange={handleChange}
+            onDelete={() => handleDarDeBajaDispositivo(editarId)}
             error={error}
           />
         )}
         <div className="absolute top-4 right-4">
-          <Button text="Nuevo Dispositivo" onClick={() => setDisplayAgregarModal(true)} />
+          <Button
+            text="Nuevo Dispositivo"
+            onClick={() => {
+              setForm({ numero_serie: '', modelo: '' });
+              setDisplayAgregarModal(true);
+            }}
+          />
         </div>
         <h1 className="text-center text-3xl font-bold text-gray-dark mb-6 uppercase">
           Dispositivos
@@ -95,7 +135,10 @@ export default function Dispositivos() {
         ) : dispositivos.length === 0 ? (
           <p className="text-center text-gray-dark">No hay dispositivos registrados.</p>
         ) : (
-          <DispositivoList dispositivos={dispositivos} onClickEditar={(id) => setEditarId(id)} />
+          <DispositivoList
+            dispositivos={dispositivos}
+            onClickEditar={(id) => handleClickEditar(id)}
+          />
         )}
       </div>
     </main>

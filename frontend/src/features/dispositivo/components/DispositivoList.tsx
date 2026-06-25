@@ -1,13 +1,11 @@
 import Button from '../../../components/Button';
 import { Dispositivo } from '../../../types/dispositivo';
-import { useNavigate } from 'react-router-dom';
 
 type DispositivoListProps = {
   dispositivos: Dispositivo[];
   onClickEditar: (id: number) => void;
 };
 export default function DispositivoList({ dispositivos, onClickEditar }: DispositivoListProps) {
-  const navigate = useNavigate();
   return (
     <ul className="p-4">
       {dispositivos.map((dispositivo) => (
@@ -16,10 +14,8 @@ export default function DispositivoList({ dispositivos, onClickEditar }: Disposi
           key={dispositivo.id}
         >
           <div className="flex flex-col text-white">
-            <p className="font-bold uppercase">{dispositivo.numero_serie}</p>
-            <div className=" flex text-sm">
-              <p>{dispositivo.modelo}</p>
-            </div>
+            <p className="font-bold uppercase">{dispositivo.modelo}</p>
+            <div className=" flex text-sm">Nº Serie: {dispositivo.numero_serie}</div>
           </div>
           <Button
             text="Editar"

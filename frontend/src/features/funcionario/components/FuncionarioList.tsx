@@ -18,7 +18,7 @@ export default function FuncionarioList({ funcionarios }: FuncionarioListProps) 
           <div className="flex flex-col text-white">
             <p className="font-bold uppercase">{funcionario.mail}</p>
             <div className=" flex text-sm">
-              <p>{funcionario.numero_legajo}</p>
+              <p>Nº Legajo: {funcionario.numero_legajo}</p>
             </div>
           </div>
           <Button

@@ -152,6 +152,7 @@ export function EventoProvider({ children }: { children: ReactNode }) {
   ) => {
     setLoading(true);
     setError(null);
+    console.log('Asignando funcionario:', { eventoId, sectorId, mail_funcionario, id_dispositivo });
     try {
       await asignarFuncionarioApi(eventoId, sectorId, mail_funcionario, id_dispositivo);
     } catch (e: any) {
