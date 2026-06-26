@@ -135,6 +135,8 @@ class FuncionarioRepository:
             raise RuntimeError("No se pudo conectar a la base de datos")
         try:
             cursor = conn.cursor()
+
+            cursor.execute("DELETE FROM sector_evento_funcionario_dispositivo WHERE mail_funcionario = %s", (mail_funcionario,))
             query = """
                 UPDATE funcionario SET activo = 0 WHERE mail = %s
             """
