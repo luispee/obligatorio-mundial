@@ -112,8 +112,13 @@ class EventoService:
     asignados = FuncionarioRepository.get_funcionarios_dispositivos(id_evento, id_sector)
     funcionarios = FuncionarioRepository.get_funcionarios()
     dispositivos = DispositivoRepository.get_dispositivos()
+
+    funcionarios_filtrados = [f for f in funcionarios if f['mail'] not in [a['mail_funcionario'] for a in asignados]]
+
+    dispositivos_filtrados = [d for d in dispositivos if d['id'] not in [a['id_dispositivo'] for a in asignados]]
+    
     return {
       "asignados": asignados,
-      "funcionarios": funcionarios,
-      "dispositivos": dispositivos
+      "funcionarios": funcionarios_filtrados,
+      "dispositivos": dispositivos_filtrados
       }

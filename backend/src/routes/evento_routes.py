@@ -98,3 +98,17 @@ def asignar_funcionario_dispositivo(id_evento, id_sector):
     return jsonify({'error': str(e)}), 400
   except Exception as e:
     return jsonify({"error": str(e)}), 500
+
+@evento_routes.route('/<int:id_evento>/sectores/<int:id_sector>/funcionarios/<string:mail_funcionario>', methods=['DELETE'])
+@admin_required
+def desvincular_funcionario_dispositivo(id_evento, id_sector, mail_funcionario):
+  try:
+
+    SefdService.remove_assignation_sefd(id_evento, id_sector, mail_funcionario)
+
+    return jsonify({"message": "Asignación eliminada exitosamente"}), 200
+
+  except ValueError as e:
+    return jsonify({'error': str(e)}), 400
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500

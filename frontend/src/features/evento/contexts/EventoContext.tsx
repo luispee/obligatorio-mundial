@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, ReactNode, useContext } from 'react';
 import { fetchEventos, fetchFormEventoData } from '../api/eventoApi';
-import { FormEventoResponse } from '../api/eventoResponses';
+import { FormEventoResponse, GetFuncionariosBySectorResponse } from '../api/eventoResponses';
 import { Evento, EventoSummary } from '../../../types/evento';
 import { createEvento as createEventoApi } from '../api/eventoApi';
 import { updateEvento as updateEventoApi } from '../api/eventoApi';
@@ -8,6 +8,9 @@ import { fetchEvento } from '../api/eventoApi';
 import { CreateEventoRequest } from '../api/eventoRequests';
 import { CreateEventoRequest as UpdateEventoRequest } from '../api/eventoRequests';
 import { deactivateEvento as deactivateEventoApi } from '../api/eventoApi';
+import { fetchFuncionariosBySector } from '../api/eventoApi';
+import { asignarFuncionario as asignarFuncionarioApi } from '../api/eventoApi';
+import { desvincularFuncionario as desvincularFuncionarioApi } from '../api/eventoApi';
 
 type EventoContextType = {
   loading: boolean;
@@ -20,6 +23,21 @@ type EventoContextType = {
   getEventos: () => Promise<void>;
   getEvento: (id: number) => Promise<Evento | null>;
   deactivateEvento: (id: number) => Promise<void>;
+  getFuncionariosBySector: (
+    eventoId: number,
+    sectorId: number
+  ) => Promise<GetFuncionariosBySectorResponse>;
+  asignarFuncionario: (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string,
+    id_dispositivo: number
+  ) => Promise<void>;
+  desvincularFuncionario: (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string
+  ) => Promise<void>;
 };
 
 export const EventoContext = createContext<EventoContextType | undefined>(undefined);
@@ -108,6 +126,62 @@ export function EventoProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const getFuncionariosBySector = async (
+    eventoId: number,
+    sectorId: number
+  ): Promise<GetFuncionariosBySectorResponse> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetchFuncionariosBySector(eventoId, sectorId);
+      return response;
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to fetch funcionarios';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const asignarFuncionario = async (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string,
+    id_dispositivo: number
+  ) => {
+    setLoading(true);
+    setError(null);
+    console.log('Asignando funcionario:', { eventoId, sectorId, mail_funcionario, id_dispositivo });
+    try {
+      await asignarFuncionarioApi(eventoId, sectorId, mail_funcionario, id_dispositivo);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to assign funcionario';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const desvincularFuncionario = async (
+    eventoId: number,
+    sectorId: number,
+    mail_funcionario: string
+  ) => {
+    setLoading(true);
+    setError(null);
+    try {
+      await desvincularFuncionarioApi(eventoId, sectorId, mail_funcionario);
+    } catch (e: any) {
+      const message = e?.code || e?.message || 'Failed to unassign funcionario';
+      setError(message);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearError = () => setError(null);
 
   return (
@@ -123,6 +197,9 @@ export function EventoProvider({ children }: { children: ReactNode }) {
         getEventos,
         getEvento,
         deactivateEvento,
+        getFuncionariosBySector,
+        asignarFuncionario,
+        desvincularFuncionario,
       }}
     >
       {children}

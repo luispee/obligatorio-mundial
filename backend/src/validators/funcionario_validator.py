@@ -12,3 +12,14 @@ class FuncionarioValidator:
             raise ValueError("El legajo es requerido")
         
         return True
+
+    @staticmethod
+    def validate_update_funcionario(data):
+        AuthValidator.validate_update_user(data)
+
+        numero_legajo = data.get('numero_legajo')
+
+        if not numero_legajo or not isinstance(numero_legajo, str) or len(numero_legajo.strip()) == 0:
+            raise ValueError("El legajo es requerido")
+        
+        return True

@@ -29,7 +29,7 @@ app.register_blueprint(entrada_routes, url_prefix="/api/entradas")
 app.register_blueprint(transferencia_routes, url_prefix="/api/transferencias")
 app.register_blueprint(estadisticas_routes, url_prefix="/api/estadisticas")
 app.register_blueprint(dispositivo_routes, url_prefix="/api/dispositivos")
-app.register_blueprint(funcionario_routes, url_prefix="/api/funcionario")
+app.register_blueprint(funcionario_routes, url_prefix="/api/funcionarios")
 @app.route('/api/')
 def home():
     REQUEST_COUNT.inc()

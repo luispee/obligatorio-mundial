@@ -44,6 +44,7 @@ CREATE TABLE administrador (
 CREATE TABLE funcionario (
     mail VARCHAR(255) PRIMARY KEY,
     numero_legajo VARCHAR(50) NOT NULL UNIQUE,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT fk_funcionario_usuario
         FOREIGN KEY (mail)
